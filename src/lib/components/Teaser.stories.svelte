@@ -1,0 +1,74 @@
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+  import { expect, screen, waitFor } from "storybook/test";
+  import { Tooltip } from "bits-ui";
+  import Teaser from "./Teaser.svelte";
+
+  const { Story } = defineMeta({
+    title: "Components/Teaser",
+    component: Teaser,
+    tags: ["autodocs"],
+    render: template,
+    parameters: {
+      layout: "fullscreen",
+      viewport: {
+        options: {
+          mobile: { name: "Small phone", styles: { width: "390px", height: "844px" } },
+        },
+      },
+    },
+  });
+</script>
+
+{#snippet template()}
+  <Tooltip.Provider>
+    <div class="min-h-screen bg-text p-4 text-bg sm:p-8">
+      <div class="mx-auto max-w-4xl">
+        <Teaser />
+      </div>
+    </div>
+  </Tooltip.Provider>
+{/snippet}
+
+<Story
+  name="Default"
+  play={async ({ canvas, step }) => {
+    await step("Shows the prompt and its model viewer", async () => {
+      await expect(canvas.getByRole("region", { name: "Prompt to brick build" })).toBeVisible();
+      await expect(
+        canvas.getByRole("button", { name: "Help me design… A detailed LEGO cruise ship" }),
+      ).toBeVisible();
+      await expect(
+        canvas.getByRole("figure", { name: "A detailed LEGO cruise ship" }),
+      ).toBeVisible();
+    });
+    await step("Shows the physical validity guarantees", async () => {
+      await expect(canvas.getByRole("status")).toHaveTextContent("Physically feasible");
+    });
+  }}
+/>
+
+<Story
+  name="Select a Prompt"
+  play={async ({ canvas, userEvent, step }) => {
+    const trigger = canvas.getByRole("button", { name: /^Help me design…/ });
+    for (const prompt of [
+      "A detailed LEGO giraffe",
+      "A city scene with four buildings",
+      "model of my dog",
+      "A detailed LEGO cruise ship",
+    ]) {
+      await step(`Select ${prompt}`, async () => {
+        await userEvent.click(trigger);
+        await userEvent.click(await screen.findByRole("option", { name: prompt }));
+        await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
+        await expect(trigger).toHaveAccessibleName(`Help me design… ${prompt}`);
+        await expect(trigger).toHaveFocus();
+        await expect(canvas.getByRole("figure", { name: prompt })).toBeVisible();
+        await expect(canvas.getAllByRole("figure")).toHaveLength(1);
+      });
+    }
+  }}
+/>
+
+<Story name="Mobile" globals={{ viewport: { value: "mobile", isRotated: false } }} />

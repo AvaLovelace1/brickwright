@@ -185,3 +185,15 @@
     });
   }}
 />
+
+<Story
+  name="Hidden Caption"
+  args={{ model: models[0], class: "size-64", showCaption: false }}
+  play={async ({ canvas, args, step }) => {
+    await step("Figure retains its accessible name without a visible caption", async () => {
+      const figure = canvas.getByRole("figure", { name: args.model.caption });
+      await expect(figure).toBeVisible();
+      await expect(figure.querySelector("figcaption")).toBeNull();
+    });
+  }}
+/>

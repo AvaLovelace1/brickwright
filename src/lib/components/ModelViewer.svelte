@@ -23,10 +23,17 @@
   export interface Props {
     model: LegoModelView;
     autoplay?: boolean;
+    showCaption?: boolean;
     class?: ClassValue;
   }
-  let { model = $bindable(), autoplay = false, class: className = "" }: Props = $props();
+  let {
+    model = $bindable(),
+    autoplay = false,
+    showCaption = true,
+    class: className = "",
+  }: Props = $props();
   const uid = $props.id();
+  const hasCaption = $derived(showCaption && Boolean(model.caption));
   const slug = $derived(model.ldr.split("/").pop()?.split(".")[0] ?? "model");
 
   let tooltipAnchor = $state<HTMLElement | null>(null);
@@ -161,11 +168,15 @@
   </div>
 {/snippet}
 
-<figure class={["relative", className]} aria-labelledby="{uid}-figcaption">
+<figure
+  class={["relative", className]}
+  aria-labelledby={hasCaption ? `${uid}-figcaption` : undefined}
+  aria-label={!hasCaption ? model.caption : undefined}
+>
   <HardShadow class="size-full">
     <div class={WINDOW_CLASS} bind:this={model.window}></div>
   </HardShadow>
-  {#if model.caption}
+  {#if hasCaption}
     <figcaption
       id="{uid}-figcaption"
       class="bb-badge absolute -top-2 -left-2 z-10 max-w-full bg-bg"

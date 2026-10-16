@@ -10,7 +10,7 @@
   loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
   let envMap: Promise<Texture> | undefined;
   const models: Record<string, Promise<Object3D>> = {};
-  // Parse run one at a time with a gap in between, so the browser can handle other events between models
+  // Parse models one at a time with a gap in between, so the browser can handle other events in between
   let queue: Promise<unknown> = Promise.resolve();
   const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve));
 

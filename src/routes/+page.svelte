@@ -1,11 +1,7 @@
 <script lang="ts">
   import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
   import Container from "#lib/components/Container.svelte";
-  import type { LegoModelView } from "#lib/components/ModelViewer.svelte";
-  import ModelViewer from "#lib/components/ModelViewer.svelte";
-  import ldr from "#lib/assets/ldr/cruise-ship.ldr?url";
-  import ldrPacked from "#lib/assets/ldr/cruise-ship.ldr_Packed.mpd?url";
-  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
+  import Teaser from "#lib/components/Teaser.svelte";
 
   const AUTHORS = [
     { name: "Ava\u00A0Pun", aff: 1 },
@@ -25,13 +21,6 @@
     "Stanford\u00A0University",
   ];
   const BULLET = " \u00A0▪\u00A0 ";
-
-  let models = $state<LegoModelView[]>([
-    { ldr, ldrPacked, caption: "A detailed LEGO cruise ship", maxBricks: 100, bricksShown: 1 },
-    { ldr, ldrPacked, caption: "A detailed LEGO giraffe", maxBricks: 100, bricksShown: 1 },
-    { ldr, ldrPacked, caption: "A city scene with four buildings", maxBricks: 100, bricksShown: 1 },
-    { ldr, ldrPacked, caption: "model of my dog", maxBricks: 100, bricksShown: 1 },
-  ]);
 </script>
 
 <svelte:head>
@@ -40,12 +29,7 @@
 
 <div class="flex justify-center border-b border-primary bg-text py-12 text-bg lg:py-16">
   <Container>
-    <p class="mb-6 text-lg italic">Help me design…</p>
-    <div class="mb-12 grid max-w-lg grid-cols-2 gap-4 lg:max-w-none lg:grid-cols-4">
-      {#each models as model, i (model.caption)}
-        <ModelViewer bind:model={models[i]} class="aspect-square" autoplay />
-      {/each}
-    </div>
+    <Teaser />
     <span class="bb-badge bb-badge-primary mb-4 border-bg">Preprint 2026</span>
     <hgroup>
       <h1 class="mb-1 text-5xl sm:text-6xl">
@@ -81,5 +65,3 @@
     </div>
   </Container>
 </div>
-
-<SharedCanvas bind:models />
