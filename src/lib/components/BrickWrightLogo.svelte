@@ -1,7 +1,7 @@
 <script lang="ts">
-  import brickagentMark from "$lib/assets/logos/brickagent-mark.svg";
-  import bricklayerMark from "$lib/assets/logos/bricklayer-mark.svg";
-  import brickwrightMark from "$lib/assets/logos/brickwright-mark.svg";
+  import brickagentMark from "#lib/assets/logos/brickagent-mark.svg";
+  import bricklayerMark from "#lib/assets/logos/bricklayer-mark.svg";
+  import brickwrightMark from "#lib/assets/logos/brickwright-mark.svg";
   import type { ClassValue } from "svelte/elements";
 
   type Variant = "wright" | "layer" | "agent";

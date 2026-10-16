@@ -1,7 +1,7 @@
 <script lang="ts">
   import copy from "copy-to-clipboard";
-  import Container from "$lib/components/Container.svelte";
-  import Button from "$lib/components/Button.svelte";
+  import Container from "#lib/components/Container.svelte";
+  import Button from "#lib/components/Button.svelte";
 
   const CITATION_TEXT = `@misc{pun2026brickwright,
   title = {BrickWright: Agentic Creation of Physically Feasible Brick Builds},

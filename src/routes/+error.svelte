@@ -1,6 +1,6 @@
 <script lang="ts">
   import { page } from "$app/state";
-  import Container from "$lib/components/Container.svelte";
+  import Container from "#lib/components/Container.svelte";
 </script>
 
 <svelte:head><title>BrickWright ▪ Error</title></svelte:head>

@@ -1,11 +1,11 @@
 <script lang="ts">
-  import BrickWrightLogo from "$lib/components/BrickWrightLogo.svelte";
-  import Container from "$lib/components/Container.svelte";
-  import type {LegoModelView} from "$lib/components/ModelViewer.svelte";
-  import ModelViewer from "$lib/components/ModelViewer.svelte";
-  import ldr from "$lib/assets/ldr/cruise-ship.ldr?url";
-  import ldrPacked from "$lib/assets/ldr/cruise-ship.ldr_Packed.mpd?url";
-  import SharedCanvas from "$lib/components/SharedCanvas.svelte";
+  import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
+  import Container from "#lib/components/Container.svelte";
+  import type { LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import ModelViewer from "#lib/components/ModelViewer.svelte";
+  import ldr from "#lib/assets/ldr/cruise-ship.ldr?url";
+  import ldrPacked from "#lib/assets/ldr/cruise-ship.ldr_Packed.mpd?url";
+  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   const AUTHORS = [
     { name: "Ava\u00A0Pun", aff: 1 },
@@ -76,12 +76,8 @@
 <div class="flex justify-center py-8 lg:py-12">
   <Container>
     <div class="prose prose-bb prose-ul:list-[square]">
-      <p class="lead">
-        placeholder text
-      </p>
-      <p>
-        placeholder text
-      </p>
+      <p class="lead">placeholder text</p>
+      <p>placeholder text</p>
     </div>
   </Container>
 </div>

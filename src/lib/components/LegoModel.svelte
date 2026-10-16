@@ -1,9 +1,9 @@
 <script lang="ts" module>
-  import {Box3, EquirectangularReflectionMapping, Object3D, type Texture, Vector3} from "three";
-  import {LDrawLoader} from "three/examples/jsm/loaders/LDrawLoader.js";
-  import {HDRLoader} from "three/examples/jsm/loaders/HDRLoader.js";
-  import {LDrawConditionalLineMaterial} from "three/addons/materials/LDrawConditionalLineMaterial.js";
-  import envMapUrl from "$lib/assets/studio_kontrast_02_1k.hdr?url";
+  import { Box3, EquirectangularReflectionMapping, Object3D, type Texture, Vector3 } from "three";
+  import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
+  import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
+  import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
+  import envMapUrl from "#lib/assets/studio_kontrast_02_1k.hdr?url";
 
   // One LDrawLoader shared across all LegoModel instances.
   const loader = new LDrawLoader();

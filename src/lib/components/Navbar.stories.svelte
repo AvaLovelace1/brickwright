@@ -11,7 +11,7 @@
       current: "/",
       items: [
         { label: "Home", href: "/" },
-        { label: "Citation", href: "/citation" },
+        { label: "Citation", href: "citation/" },
       ],
     },
   });
@@ -34,7 +34,7 @@
       await expect(items[0]).toHaveAttribute("aria-current", "page");
 
       await expect(items[1]).toHaveTextContent("02 Citation");
-      await expect(items[1]).toHaveAttribute("href", "/citation");
+      await expect(items[1]).toHaveAttribute("href", "/citation/");
       await expect(items[1]).not.toHaveAttribute("aria-current");
     });
     await step("Navbar labels are only visible on larger screens", async () => {

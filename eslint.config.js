@@ -35,5 +35,8 @@ export default defineConfig(
     },
   },
   globalIgnores(["!.storybook"], "Include Storybook Directory"),
-  ...storybook.configs["flat/recommended"],
+  // Storybook still declares its rules with the legacy ESLint context types.
+  .../** @type {import('eslint').Linter.Config[]} */ (
+    /** @type {unknown} */ (storybook.configs["flat/recommended"])
+  ),
 );

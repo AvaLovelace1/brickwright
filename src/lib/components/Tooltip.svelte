@@ -1,6 +1,6 @@
 <script lang="ts">
   import { Tooltip } from "bits-ui";
-  import { fly } from "$lib/motion.svelte";
+  import { fly } from "#lib/motion.svelte.js";
   import type { Snippet } from "svelte";
 
   export interface Props extends Tooltip.TriggerProps {

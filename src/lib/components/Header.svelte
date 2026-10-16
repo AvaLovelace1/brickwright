@@ -1,7 +1,7 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import BrickWrightLogo from "$lib/components/BrickWrightLogo.svelte";
-  import Button from "$lib/components/Button.svelte";
+  import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
+  import Button from "#lib/components/Button.svelte";
 </script>
 
 <header

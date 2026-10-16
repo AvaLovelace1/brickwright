@@ -1,18 +1,20 @@
 <script lang="ts">
-  import type { Pathname } from "$app/types";
+  import type { PathnameWithSearchOrHash, RouteIdWithSearchOrHash } from "$app/types";
   import { resolve } from "$app/paths";
   import type { ClassValue } from "svelte/elements";
   import { Button } from "bits-ui";
 
   interface Props {
     text: string;
-    action: Pathname | string | (() => void);
+    action: string | (() => void);
     icon?: string;
     class?: ClassValue;
   }
   let { text, action, icon = "", class: className = "" }: Props = $props();
 
-  const isInternalLink = (href: string): href is Pathname => !/^https?:\/\//.test(href);
+  const isInternalLink = (
+    href: string,
+  ): href is PathnameWithSearchOrHash | RouteIdWithSearchOrHash => !/^https?:\/\//.test(href);
 
   const BUTTON_CLASSES = "bb-btn";
 </script>

@@ -7,11 +7,11 @@
   import "@fontsource-variable/source-code-pro/wght.css";
   import "@fontsource-variable/source-code-pro/wght-italic.css";
   import "../app.css";
-  import favicon from "$lib/assets/logos/favicon.svg";
+  import favicon from "#lib/assets/logos/favicon.svg";
   import { Tooltip } from "bits-ui";
-  import Header from "$lib/components/Header.svelte";
-  import Navbar from "$lib/components/Navbar.svelte";
-  import Footer from "$lib/components/Footer.svelte";
+  import Header from "#lib/components/Header.svelte";
+  import Navbar from "#lib/components/Navbar.svelte";
+  import Footer from "#lib/components/Footer.svelte";
 
   let { children } = $props();
 </script>
@@ -27,9 +27,9 @@
       <Navbar
         items={[
           { label: "Overview", href: "/" },
-          { label: "Results", href: "/results" },
-          { label: "Acknowledgments", href: "/acknowledgments" },
-          { label: "Citation", href: "/citation" },
+          { label: "Results", href: "results/" },
+          { label: "Acknowledgments", href: "acknowledgments/" },
+          { label: "Citation", href: "citation/" },
         ]}
         current={page.url.pathname}
       />

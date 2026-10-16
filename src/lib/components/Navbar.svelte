@@ -1,11 +1,11 @@
 <script lang="ts">
-  import type { Pathname } from "$app/types";
+  import type { Path } from "$app/types";
   import { resolve } from "$app/paths";
-  import HardShadow from "$lib/components/HardShadow.svelte";
+  import HardShadow from "#lib/components/HardShadow.svelte";
 
   interface NavItem {
     label: string;
-    href: Pathname;
+    href: Path;
   }
   interface Props {
     items: NavItem[];

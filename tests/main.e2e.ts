@@ -9,9 +9,9 @@ const PAGES = [
     href: "/",
     title: "BrickWright: Agentic Creation of Physically Feasible Brick Builds",
   },
-  { label: "Results", href: "/results", title: "BrickWright ▪ Results" },
-  { label: "Acknowledgments", href: "/acknowledgments", title: "BrickWright ▪ Acknowledgments" },
-  { label: "Citation", href: "/citation", title: "BrickWright ▪ Citation" },
+  { label: "Results", href: "/results/", title: "BrickWright ▪ Results" },
+  { label: "Acknowledgments", href: "/acknowledgments/", title: "BrickWright ▪ Acknowledgments" },
+  { label: "Citation", href: "/citation/", title: "BrickWright ▪ Citation" },
 ];
 
 test("all pages have appropriate document titles", async ({ page }) => {
@@ -58,7 +58,7 @@ test("navbar links work while the LEGO models are still loading", async ({ page 
   await page.goto("/", { waitUntil: "commit" });
   const link = page.getByRole("navigation").getByRole("link", { name: "Results" });
   await link.click({ timeout: 5000 });
-  await expect(page).toHaveURL("/results");
+  await expect(page).toHaveURL("/results/");
 });
 
 test("models on the main page start building themselves", async ({ page }) => {

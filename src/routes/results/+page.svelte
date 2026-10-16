@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Container from "$lib/components/Container.svelte";
+  import Container from "#lib/components/Container.svelte";
 </script>
 
 <svelte:head><title>BrickWright ▪ Results</title></svelte:head>

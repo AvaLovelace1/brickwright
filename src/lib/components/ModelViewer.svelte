@@ -1,14 +1,14 @@
 <script lang="ts">
-  import {onDestroy} from "svelte";
-  import {Canvas} from "@threlte/core";
-  import LegoModel from "$lib/components/LegoModel.svelte";
-  import HardShadow from "$lib/components/HardShadow.svelte";
-  import type {ClassValue} from "svelte/elements";
-  import {Button, Dialog} from "bits-ui";
-  import {fade, scale} from "$lib/motion.svelte";
-  import Slider from "$lib/components/Slider.svelte";
-  import Tooltip from "$lib/components/Tooltip.svelte";
-  import {prefersReducedMotion} from "svelte/motion";
+  import { onDestroy } from "svelte";
+  import { Canvas } from "@threlte/core";
+  import LegoModel from "#lib/components/LegoModel.svelte";
+  import HardShadow from "#lib/components/HardShadow.svelte";
+  import type { ClassValue } from "svelte/elements";
+  import { Button, Dialog } from "bits-ui";
+  import { fade, scale } from "#lib/motion.svelte.js";
+  import Slider from "#lib/components/Slider.svelte";
+  import Tooltip from "#lib/components/Tooltip.svelte";
+  import { prefersReducedMotion } from "svelte/motion";
 
   export interface LegoModelView {
     ldr: string;

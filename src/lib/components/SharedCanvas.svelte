@@ -1,8 +1,8 @@
 <script lang="ts">
   import { Canvas } from "@threlte/core";
-  import LegoModel from "$lib/components/LegoModel.svelte";
+  import LegoModel from "#lib/components/LegoModel.svelte";
   import { View } from "@threlte/extras";
-  import type { LegoModelView } from "$lib/components/ModelViewer.svelte";
+  import type { LegoModelView } from "#lib/components/ModelViewer.svelte";
 
   interface Props {
     models: LegoModelView[];

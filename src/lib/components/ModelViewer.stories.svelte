@@ -1,13 +1,13 @@
 <script module lang="ts">
-  import {defineMeta} from "@storybook/addon-svelte-csf";
-  import type {Props as ModelViewerProps} from "./ModelViewer.svelte";
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+  import type { Props as ModelViewerProps } from "./ModelViewer.svelte";
   import ModelViewer from "./ModelViewer.svelte";
-  import SharedCanvas from "$lib/components/SharedCanvas.svelte";
-  import type {LegoModelView} from "$lib/components/ModelViewer.svelte";
-  import ldr from "$lib/assets/ldr/cruise-ship.ldr?url";
-  import ldrPacked from "$lib/assets/ldr/cruise-ship.ldr_Packed.mpd?url";
-  import {expect, screen, waitFor, waitForElementToBeRemoved, within} from "storybook/test";
-  import {Tooltip as BitsTooltip} from "bits-ui";
+  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
+  import type { LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import ldr from "#lib/assets/ldr/cruise-ship.ldr?url";
+  import ldrPacked from "#lib/assets/ldr/cruise-ship.ldr_Packed.mpd?url";
+  import { expect, screen, waitFor, waitForElementToBeRemoved, within } from "storybook/test";
+  import { Tooltip as BitsTooltip } from "bits-ui";
 
   const { Story } = defineMeta({
     title: "Components/Model Viewer",

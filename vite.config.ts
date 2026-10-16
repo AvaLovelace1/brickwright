@@ -17,6 +17,10 @@ export default defineConfig({
           filename.split(/[/\\]/).includes("node_modules") ? undefined : true,
       },
       adapter: adapter(),
+      paths: {
+        base: (process.env.BASE_PATH ?? "") as "" | `/${string}`,
+        relative: false,
+      },
       extensions: [".svelte", ".svx", ".md"],
     }),
   ],

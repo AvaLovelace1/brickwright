@@ -1,7 +1,6 @@
 <script lang="ts">
-  import { Slider } from "bits-ui";
-  import Tooltip from "$lib/components/Tooltip.svelte";
-  import { Tooltip as BitsTooltip } from "bits-ui";
+  import { Slider, Tooltip as BitsTooltip } from "bits-ui";
+  import Tooltip from "#lib/components/Tooltip.svelte";
 
   export interface Props {
     label: string;
