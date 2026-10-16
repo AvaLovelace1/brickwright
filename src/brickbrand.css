@@ -1,0 +1,519 @@
+:root {
+  /* Core color palette */
+  --bb-paper: #f9f7f1;
+  --bb-ink: #1b2a34;
+  --bb-red: #c91a09;
+  --bb-orange: #fe8a18;
+  --bb-yellow: #f2cd37;
+  --bb-green: #4b9f4a;
+  --bb-azure: #36aebf;
+  --bb-blue: #0055bf;
+  --bb-pink: #c870a0;
+  --bb-paper-bright: #ffffff;
+  --bb-paper-deep: #bea968;
+  --bb-ink-bright: #243946;
+  --bb-ink-deep: #10191f;
+  --bb-red-bright: #f53926;
+  --bb-red-deep: #791005;
+  --bb-orange-bright: #febb79;
+  --bb-orange-deep: #a65301;
+  --bb-yellow-bright: #f8e599;
+  --bb-yellow-deep: #a7880b;
+  --bb-green-bright: #7ac17a;
+  --bb-green-deep: #2d5f2c;
+  --bb-azure-bright: #73cbd7;
+  --bb-azure-deep: #206873;
+  --bb-blue-bright: #0373ff;
+  --bb-blue-deep: #003373;
+  --bb-pink-bright: #e6bfd4;
+  --bb-pink-deep: #873461;
+  --bb-paper-rgb: 249, 247, 241;
+  --bb-ink-rgb: 27, 42, 52;
+  --bb-red-rgb: 201, 26, 9;
+  --bb-orange-rgb: 254, 138, 24;
+  --bb-yellow-rgb: 242, 205, 55;
+  --bb-green-rgb: 75, 159, 74;
+  --bb-azure-rgb: 54, 174, 191;
+  --bb-blue-rgb: 0, 85, 191;
+  --bb-pink-rgb: 200, 112, 160;
+  --bb-paper-bright-rgb: 255, 255, 255;
+  --bb-paper-deep-rgb: 190, 169, 104;
+  --bb-ink-bright-rgb: 36, 57, 70;
+  --bb-ink-deep-rgb: 16, 25, 31;
+  --bb-red-bright-rgb: 245, 57, 38;
+  --bb-red-deep-rgb: 121, 16, 5;
+  --bb-orange-bright-rgb: 254, 187, 121;
+  --bb-orange-deep-rgb: 166, 83, 1;
+  --bb-yellow-bright-rgb: 248, 229, 153;
+  --bb-yellow-deep-rgb: 167, 136, 11;
+  --bb-green-bright-rgb: 122, 193, 122;
+  --bb-green-deep-rgb: 45, 95, 44;
+  --bb-azure-bright-rgb: 115, 203, 215;
+  --bb-azure-deep-rgb: 32, 104, 115;
+  --bb-blue-bright-rgb: 3, 115, 255;
+  --bb-blue-deep-rgb: 0, 51, 115;
+  --bb-pink-bright-rgb: 230, 191, 212;
+  --bb-pink-deep-rgb: 135, 52, 97;
+  /* Semantic color palette */
+  --bb-primary: var(--bb-orange);
+  --bb-secondary: var(--bb-azure);
+  --bb-accent: var(--bb-pink);
+  --bb-success: var(--bb-green);
+  --bb-danger: var(--bb-red);
+  --bb-warning: var(--bb-yellow);
+  --bb-info: var(--bb-blue);
+  --bb-primary-bright: var(--bb-orange-bright);
+  --bb-primary-deep: var(--bb-orange-deep);
+  --bb-secondary-bright: var(--bb-azure-bright);
+  --bb-secondary-deep: var(--bb-azure-deep);
+  --bb-accent-bright: var(--bb-pink-bright);
+  --bb-accent-deep: var(--bb-pink-deep);
+  --bb-success-bright: var(--bb-green-bright);
+  --bb-success-deep: var(--bb-green-deep);
+  --bb-danger-bright: var(--bb-red-bright);
+  --bb-danger-deep: var(--bb-red-deep);
+  --bb-warning-bright: var(--bb-yellow-bright);
+  --bb-warning-deep: var(--bb-yellow-deep);
+  --bb-info-bright: var(--bb-blue-bright);
+  --bb-info-deep: var(--bb-blue-deep);
+  --bb-primary-rgb: var(--bb-orange-rgb);
+  --bb-secondary-rgb: var(--bb-azure-rgb);
+  --bb-accent-rgb: var(--bb-pink-rgb);
+  --bb-success-rgb: var(--bb-green-rgb);
+  --bb-danger-rgb: var(--bb-red-rgb);
+  --bb-warning-rgb: var(--bb-yellow-rgb);
+  --bb-info-rgb: var(--bb-blue-rgb);
+  --bb-primary-bright-rgb: var(--bb-orange-bright-rgb);
+  --bb-primary-deep-rgb: var(--bb-orange-deep-rgb);
+  --bb-secondary-bright-rgb: var(--bb-azure-bright-rgb);
+  --bb-secondary-deep-rgb: var(--bb-azure-deep-rgb);
+  --bb-accent-bright-rgb: var(--bb-pink-bright-rgb);
+  --bb-accent-deep-rgb: var(--bb-pink-deep-rgb);
+  --bb-success-bright-rgb: var(--bb-green-bright-rgb);
+  --bb-success-deep-rgb: var(--bb-green-deep-rgb);
+  --bb-danger-bright-rgb: var(--bb-red-bright-rgb);
+  --bb-danger-deep-rgb: var(--bb-red-deep-rgb);
+  --bb-warning-bright-rgb: var(--bb-yellow-bright-rgb);
+  --bb-warning-deep-rgb: var(--bb-yellow-deep-rgb);
+  --bb-info-bright-rgb: var(--bb-blue-bright-rgb);
+  --bb-info-deep-rgb: var(--bb-blue-deep-rgb);
+  /* Role-based color palette (light mode) */
+  --bb-bg: var(--bb-paper);
+  --bb-text: var(--bb-ink);
+  --bb-surface: var(--bb-paper-bright);
+  --bb-line: var(--bb-ink);
+  --bb-link: var(--bb-primary-deep);
+  --bb-link-hover: var(--bb-primary);
+  --bb-bg-rgb: var(--bb-paper-rgb);
+  --bb-text-rgb: var(--bb-ink-rgb);
+  --bb-surface-rgb: var(--bb-paper-bright-rgb);
+  --bb-line-rgb: var(--bb-ink-rgb);
+  --bb-link-rgb: var(--bb-primary-deep-rgb);
+  --bb-link-hover-rgb: var(--bb-primary-rgb);
+  /* Font tokens */
+  --bb-body-font: "Source Sans 3 Variable", sans-serif;
+  --bb-display-font: "Rokkitt Variable", serif;
+  --bb-mono-font: "Source Code Pro Variable", monospace;
+  --bb-body-font-weight: 400;
+  --bb-display-font-weight: 800;
+  --bb-mono-font-weight: 400;
+  /* Other tokens */
+  --bb-text-base: 1rem;
+  --bb-text-sm: 0.875rem;
+  --bb-label-font-weight: 600;
+  --bb-border-width: 2px;
+  --bb-border-radius: 2px;
+  --bb-stud-width: 24px;
+  --bb-stud-width-sm: 16px;
+  --bb-stud-gap: 8px;
+  --bb-dot-radius: 1px;
+  --bb-dot-spacing: 24px;
+  --bb-dot-opacity: 15%;
+  --bb-brick-depth: 4px;
+  --bb-brick-depth-hover: 6px;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    /* Role-based color palette (dark mode) */
+    --bb-bg: var(--bb-ink);
+    --bb-text: var(--bb-paper);
+    --bb-surface: var(--bb-ink-bright);
+    --bb-line: var(--bb-paper);
+    --bb-link: var(--bb-primary);
+    --bb-link-hover: var(--bb-primary-bright);
+    --bb-bg-rgb: var(--bb-ink-rgb);
+    --bb-text-rgb: var(--bb-paper-rgb);
+    --bb-surface-rgb: var(--bb-ink-bright-rgb);
+    --bb-line-rgb: var(--bb-paper-rgb);
+    --bb-link-rgb: var(--bb-primary-rgb);
+    --bb-link-hover-rgb: var(--bb-primary-bright-rgb);
+  }
+}
+[data-theme="light"],
+[data-bs-theme="light"] {
+  /* Role-based color palette (explicit light theme) */
+  --bb-bg: var(--bb-paper);
+  --bb-text: var(--bb-ink);
+  --bb-surface: var(--bb-paper-bright);
+  --bb-line: var(--bb-ink);
+  --bb-link: var(--bb-primary-deep);
+  --bb-link-hover: var(--bb-primary);
+  --bb-bg-rgb: var(--bb-paper-rgb);
+  --bb-text-rgb: var(--bb-ink-rgb);
+  --bb-surface-rgb: var(--bb-paper-bright-rgb);
+  --bb-line-rgb: var(--bb-ink-rgb);
+  --bb-link-rgb: var(--bb-primary-deep-rgb);
+  --bb-link-hover-rgb: var(--bb-primary-rgb);
+}
+[data-theme="dark"],
+[data-bs-theme="dark"] {
+  /* Role-based color palette (explicit dark theme) */
+  --bb-bg: var(--bb-ink);
+  --bb-text: var(--bb-paper);
+  --bb-surface: var(--bb-ink-bright);
+  --bb-line: var(--bb-paper);
+  --bb-link: var(--bb-primary);
+  --bb-link-hover: var(--bb-primary-bright);
+  --bb-bg-rgb: var(--bb-ink-rgb);
+  --bb-text-rgb: var(--bb-paper-rgb);
+  --bb-surface-rgb: var(--bb-ink-bright-rgb);
+  --bb-line-rgb: var(--bb-paper-rgb);
+  --bb-link-rgb: var(--bb-primary-rgb);
+  --bb-link-hover-rgb: var(--bb-primary-bright-rgb);
+}
+
+body {
+  font-family: var(--bb-body-font);
+  font-weight: var(--bb-body-font-weight);
+  background-color: var(--bb-bg);
+  color: var(--bb-text);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--bb-display-font);
+  font-weight: var(--bb-display-font-weight);
+}
+
+@layer components {
+  /* Buttons ──────────────────────────────────────────────────────────────── */
+  .bb-btn {
+    --btn-shadow: var(--bb-line);
+    --btn-color: var(--bb-text);
+    --btn-background: var(--bb-bg);
+    --brick-face-right: var(--btn-shadow);
+    --brick-face-bottom: var(--btn-shadow);
+    --brick-depth: var(--bb-brick-depth);
+    position: relative;
+    top: calc(-1 * var(--brick-depth));
+    left: calc(-1 * var(--brick-depth));
+    display: inline-block;
+    font-family: var(--bb-body-font);
+    font-size: var(--bb-text-base);
+    font-weight: var(--bb-label-font-weight);
+    color: var(--btn-color);
+    background: var(--btn-background);
+    padding: 0.5rem 1rem;
+    border: var(--bb-border-width) solid var(--bb-line);
+    border-radius: var(--bb-border-radius);
+    text-decoration: none;
+    cursor: pointer;
+    transition:
+      top 0.08s ease-out,
+      left 0.08s ease-out;
+  }
+
+  .bb-btn::before,
+  .bb-btn::after,
+  .bb-card::before,
+  .bb-card::after {
+    content: "";
+    position: absolute;
+    z-index: -1;
+    transition:
+      width 0.08s ease-out,
+      height 0.08s ease-out;
+  }
+
+  .bb-btn::before,
+  .bb-card::before {
+    left: calc(-1 * var(--bb-border-width));
+    top: 100%;
+    width: calc(100% + var(--bb-border-width));
+    height: var(--brick-depth);
+    background: var(--brick-face-bottom);
+    transform-origin: top left;
+    transform: skewX(45deg);
+  }
+
+  .bb-btn::after,
+  .bb-card::after {
+    left: 100%;
+    top: calc(-1 * var(--bb-border-width));
+    width: var(--brick-depth);
+    height: calc(100% + var(--bb-border-width));
+    background: var(--brick-face-right);
+    transform-origin: top left;
+    transform: skewY(45deg);
+  }
+
+  /* This should be added to any element with a background that contains a button,
+   so the button "brick sides" appear above the background. */
+  .bb-btn-container {
+    isolation: isolate;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .bb-btn,
+    .bb-btn::before,
+    .bb-btn::after,
+    .bb-card::before,
+    .bb-card::after {
+      transition: none;
+    }
+  }
+
+  .bb-btn:hover {
+    --brick-depth: var(--bb-brick-depth-hover);
+    color: var(--btn-color);
+  }
+
+  .bb-btn:active {
+    --brick-depth: 0px;
+  }
+
+  .bb-btn:focus-visible {
+    outline: 3px solid var(--bb-line);
+    outline-offset: 2px;
+  }
+
+  .bb-btn:disabled,
+  .bb-btn[aria-disabled="true"] {
+    opacity: 0.5;
+    pointer-events: none;
+  }
+
+  .bb-btn-group {
+    display: inline-flex;
+  }
+
+  .bb-btn-group > .bb-btn {
+    --brick-depth: var(--bb-brick-depth);
+    top: calc(-1 * var(--brick-depth));
+    left: 0;
+    border-radius: 0;
+  }
+
+  .bb-btn-group > .bb-btn:not(:last-child)::after {
+    display: none;
+  }
+
+  .bb-btn-group > .bb-btn:active {
+    --brick-depth: 0px;
+  }
+
+  .bb-btn-group > .bb-btn:not(:first-child) {
+    margin-left: calc(-1 * var(--bb-border-width));
+  }
+
+  .bb-btn-group > .bb-btn:first-child {
+    border-top-left-radius: var(--bb-border-radius);
+    border-bottom-left-radius: var(--bb-border-radius);
+  }
+
+  .bb-btn-group > .bb-btn:last-child {
+    border-top-right-radius: var(--bb-border-radius);
+    border-bottom-right-radius: var(--bb-border-radius);
+  }
+
+  /* Badges ───────────────────────────────────────────────────────────────── */
+  .bb-badge {
+    --badge-color: var(--bb-text);
+    --badge-background: var(--bb-bg);
+    display: inline-block;
+    font-size: var(--bb-text-sm);
+    font-weight: var(--bb-label-font-weight);
+    letter-spacing: 0.04em;
+    color: var(--badge-color);
+    background: var(--badge-background);
+    border: var(--bb-border-width) solid var(--bb-line);
+    border-radius: var(--bb-border-radius);
+    padding: 0.125rem 1rem;
+  }
+
+  /* Card ─────────────────────────────────────────────────────────────────── */
+  .bb-card {
+    /* Same 3D brick as the buttons, but static: the block extrudes toward the
+     bottom-right at a fixed depth (see the shared .bb-card::before/::after). */
+    --brick-face-right: var(--bb-line);
+    --brick-face-bottom: var(--bb-line);
+    --brick-depth: 5px;
+    position: relative;
+    background: var(--bb-surface);
+    color: var(--bb-text);
+    padding: 1.5rem;
+    border: var(--bb-border-width) solid var(--bb-line);
+    border-radius: var(--bb-border-radius);
+  }
+
+  /* Callout: aside/tip with a thick left border. */
+  .bb-callout {
+    background: var(--bb-surface);
+    color: var(--bb-text);
+    padding: 1rem 1.5rem;
+    border: var(--bb-border-width) solid var(--bb-line);
+    border-left-width: 0.5rem;
+    border-radius: var(--bb-border-radius);
+  }
+
+  /* Patterns ─────────────────────────────────────────────────────────────── */
+  .bb-dots {
+    background-image: radial-gradient(
+      color-mix(in srgb, var(--bb-text) var(--bb-dot-opacity), transparent) var(--bb-dot-radius),
+      transparent var(--bb-dot-radius)
+    );
+    background-size: var(--bb-dot-spacing) var(--bb-dot-spacing);
+  }
+
+  .bb-stud {
+    --stud-background: var(--bb-text);
+    --stud-knob-background: var(--bb-bg);
+    display: inline-block;
+    width: var(--bb-stud-width-sm);
+    height: var(--bb-stud-width-sm);
+    background: var(--stud-background);
+    border-radius: var(--bb-border-radius);
+    position: relative;
+  }
+
+  .bb-stud::after {
+    content: "";
+    position: absolute;
+    inset: 25%;
+    border-radius: 50%;
+    background: var(--stud-knob-background);
+  }
+
+  .bb-studs {
+    display: inline-flex;
+    gap: var(--bb-stud-gap);
+  }
+
+  /* Colored component variants, one per semantic color */
+  .bb-btn-primary {
+    --btn-shadow: var(--bb-primary-deep);
+    --btn-color: var(--bb-ink-deep);
+    --btn-background: var(--bb-primary);
+  }
+  .bb-badge-primary {
+    --badge-color: var(--bb-ink-deep);
+    --badge-background: var(--bb-primary);
+  }
+  .bb-callout-primary {
+    border-left-color: var(--bb-primary);
+  }
+  .bb-stud-primary {
+    --stud-background: var(--bb-primary);
+    --stud-knob-background: var(--bb-primary-bright);
+  }
+  .bb-btn-secondary {
+    --btn-shadow: var(--bb-secondary-deep);
+    --btn-color: var(--bb-ink-deep);
+    --btn-background: var(--bb-secondary);
+  }
+  .bb-badge-secondary {
+    --badge-color: var(--bb-ink-deep);
+    --badge-background: var(--bb-secondary);
+  }
+  .bb-callout-secondary {
+    border-left-color: var(--bb-secondary);
+  }
+  .bb-stud-secondary {
+    --stud-background: var(--bb-secondary);
+    --stud-knob-background: var(--bb-secondary-bright);
+  }
+  .bb-btn-accent {
+    --btn-shadow: var(--bb-accent-deep);
+    --btn-color: var(--bb-ink-deep);
+    --btn-background: var(--bb-accent);
+  }
+  .bb-badge-accent {
+    --badge-color: var(--bb-ink-deep);
+    --badge-background: var(--bb-accent);
+  }
+  .bb-callout-accent {
+    border-left-color: var(--bb-accent);
+  }
+  .bb-stud-accent {
+    --stud-background: var(--bb-accent);
+    --stud-knob-background: var(--bb-accent-bright);
+  }
+  .bb-btn-success {
+    --btn-shadow: var(--bb-success-deep);
+    --btn-color: var(--bb-ink-deep);
+    --btn-background: var(--bb-success);
+  }
+  .bb-badge-success {
+    --badge-color: var(--bb-ink-deep);
+    --badge-background: var(--bb-success);
+  }
+  .bb-callout-success {
+    border-left-color: var(--bb-success);
+  }
+  .bb-stud-success {
+    --stud-background: var(--bb-success);
+    --stud-knob-background: var(--bb-success-bright);
+  }
+  .bb-btn-danger {
+    --btn-shadow: var(--bb-danger-deep);
+    --btn-color: var(--bb-paper);
+    --btn-background: var(--bb-danger);
+  }
+  .bb-badge-danger {
+    --badge-color: var(--bb-paper);
+    --badge-background: var(--bb-danger);
+  }
+  .bb-callout-danger {
+    border-left-color: var(--bb-danger);
+  }
+  .bb-stud-danger {
+    --stud-background: var(--bb-danger);
+    --stud-knob-background: var(--bb-danger-bright);
+  }
+  .bb-btn-warning {
+    --btn-shadow: var(--bb-warning-deep);
+    --btn-color: var(--bb-ink-deep);
+    --btn-background: var(--bb-warning);
+  }
+  .bb-badge-warning {
+    --badge-color: var(--bb-ink-deep);
+    --badge-background: var(--bb-warning);
+  }
+  .bb-callout-warning {
+    border-left-color: var(--bb-warning);
+  }
+  .bb-stud-warning {
+    --stud-background: var(--bb-warning);
+    --stud-knob-background: var(--bb-warning-bright);
+  }
+  .bb-btn-info {
+    --btn-shadow: var(--bb-info-deep);
+    --btn-color: var(--bb-paper);
+    --btn-background: var(--bb-info);
+  }
+  .bb-badge-info {
+    --badge-color: var(--bb-paper);
+    --badge-background: var(--bb-info);
+  }
+  .bb-callout-info {
+    border-left-color: var(--bb-info);
+  }
+  .bb-stud-info {
+    --stud-background: var(--bb-info);
+    --stud-knob-background: var(--bb-info-bright);
+  }
+}

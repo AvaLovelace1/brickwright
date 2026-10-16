@@ -1,0 +1,81 @@
+@import "tailwindcss";
+@import "./brickbrand.css";
+
+@plugin "@tailwindcss/typography";
+@plugin "@iconify/tailwind4" {
+  prefix: "iconify";
+  prefixes: tdesign;
+}
+
+@theme {
+  --color-ink: var(--bb-ink);
+
+  --color-primary: var(--bb-primary);
+  --color-primary-bright: var(--bb-primary-bright);
+  --color-primary-deep: var(--bb-primary-deep);
+
+  --color-secondary: var(--bb-secondary);
+  --color-secondary-bright: var(--bb-secondary-bright);
+  --color-secondary-deep: var(--bb-secondary-deep);
+
+  --color-accent: var(--bb-accent);
+  --color-accent-bright: var(--bb-accent-bright);
+  --color-accent-deep: var(--bb-accent-deep);
+
+  --color-success: var(--bb-success);
+  --color-success-bright: var(--bb-success-bright);
+  --color-success-deep: var(--bb-success-deep);
+
+  --color-danger: var(--bb-danger);
+  --color-danger-bright: var(--bb-danger-bright);
+  --color-danger-deep: var(--bb-danger-deep);
+
+  --color-warning: var(--bb-warning);
+  --color-warning-bright: var(--bb-warning-bright);
+  --color-warning-deep: var(--bb-warning-deep);
+
+  --color-info: var(--bb-info);
+  --color-info-bright: var(--bb-info-bright);
+  --color-info-deep: var(--bb-info-deep);
+
+  --color-bg: var(--bb-bg);
+  --color-text: var(--bb-text);
+  --color-surface: var(--bb-surface);
+  --color-line: var(--bb-line);
+  --color-link: var(--bb-link);
+  --color-link-hover: var(--bb-link-hover);
+
+  --font-display: var(--bb-display-font);
+  --font-body: var(--bb-body-font);
+  --font-mono: var(--bb-mono-font);
+
+  --default-border-width: var(--bb-border-width);
+}
+
+@utility prose-bb {
+  --tw-prose-body: var(--bb-line);
+  --tw-prose-headings: var(--bb-line);
+  --tw-prose-lead: var(--bb-line);
+  --tw-prose-links: var(--bb-link);
+  --tw-prose-bold: var(--bb-line);
+  --tw-prose-counters: var(--bb-line);
+  --tw-prose-bullets: var(--bb-primary);
+  --tw-prose-hr: var(--bb-line);
+  --tw-prose-quotes: var(--bb-line);
+  --tw-prose-quote-borders: var(--bb-primary);
+  --tw-prose-captions: var(--bb-line);
+  --tw-prose-code: var(--bb-line);
+  --tw-prose-pre-code: var(--bb-line);
+  --tw-prose-pre-bg: var(--bb-bg);
+  --tw-prose-th-borders: var(--bb-line);
+  --tw-prose-td-borders: var(--bb-line);
+}
+
+@utility bb-border {
+  border: var(--bb-border-width) solid var(--bb-line);
+  border-radius: var(--bb-border-radius);
+}
+
+body {
+  -webkit-font-smoothing: antialiased;
+}

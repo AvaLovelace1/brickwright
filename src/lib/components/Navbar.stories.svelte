@@ -1,0 +1,45 @@
+<script module lang="ts">
+  import { defineMeta } from "@storybook/addon-svelte-csf";
+  import Navbar from "./Navbar.svelte";
+  import { expect, within } from "storybook/test";
+
+  const { Story } = defineMeta({
+    title: "Components/Navbar",
+    component: Navbar,
+    tags: ["autodocs"],
+    args: {
+      current: "/",
+      items: [
+        { label: "Home", href: "/" },
+        { label: "Citation", href: "/citation" },
+      ],
+    },
+  });
+</script>
+
+<!-- Navbar with links. -->
+<Story
+  name="Default"
+  play={async ({ canvas, step }) => {
+    const nav = canvas.getByRole("navigation");
+    await step("Navbar renders", async () => {
+      await expect(nav).toBeVisible();
+    });
+    const items = within(nav).getAllByRole("link");
+    await step("Navbar has correct items", async () => {
+      await expect(items).toHaveLength(2);
+
+      await expect(items[0]).toHaveTextContent("01 Home");
+      await expect(items[0]).toHaveAttribute("href", "/");
+      await expect(items[0]).toHaveAttribute("aria-current", "page");
+
+      await expect(items[1]).toHaveTextContent("02 Citation");
+      await expect(items[1]).toHaveAttribute("href", "/citation");
+      await expect(items[1]).not.toHaveAttribute("aria-current");
+    });
+    await step("Navbar labels are only visible on larger screens", async () => {
+      await expect(within(items[0]).getByText("Home")).toHaveClass("sr-only md:not-sr-only");
+      await expect(within(items[1]).getByText("Citation")).toHaveClass("sr-only md:not-sr-only");
+    });
+  }}
+/>
