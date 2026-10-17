@@ -48,7 +48,7 @@
   const logo = $derived(logos[variant]);
 </script>
 
-<span class={["flex items-center font-display font-extrabold", logo.gap, className]}>
+<span class={["inline-flex items-center font-display font-extrabold", logo.gap, className]}>
   <img src={logo.mark} alt={logo.alt} class={["mb-[0.125em]", logo.height]} />
-  <span class={textClass}>{logo.text}</span>
+  <span class={["self-baseline", textClass]}>{logo.text}</span>
 </span>

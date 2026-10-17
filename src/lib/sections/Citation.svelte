@@ -3,6 +3,7 @@
   import copy from "copy-to-clipboard";
   import Container from "#lib/components/Container.svelte";
   import Button from "#lib/components/Button.svelte";
+  import Prose from "#lib/components/Prose.svelte";
 
   const CITATION_TEXT = `@misc{pun2026brickwright,
   title = {BrickWright: Agentic Creation of Physically Feasible Brick Builds},
@@ -30,14 +31,18 @@
 </script>
 
 <section id="citation" aria-labelledby="citation-heading" class="flex justify-center pt-12 pb-24">
-  <Container class="prose prose-bb">
-    <h2 id="citation-heading">Citation</h2>
-    <p>If you’ve used BrickWright in your work, please cite us!</p>
-    <div class="relative">
-      <pre class="not-prose bb-card text-sm text-wrap" data-testid="citation">{CITATION_TEXT}</pre>
-      <div class="absolute -top-2 -right-3 left-auto z-10 sm:-right-4" data-testid="copy-button">
-        <Button {...COPY_STATES[copyStatus]} action={handleCopy} />
+  <Container>
+    <Prose>
+      <h2 id="citation-heading">Citation</h2>
+      <p>If you’ve used BrickWright in your work, please cite us!</p>
+      <div class="relative">
+        <pre
+          class="not-prose bb-card text-sm text-wrap"
+          data-testid="citation">{CITATION_TEXT}</pre>
+        <div class="absolute -top-2 -right-3 left-auto z-10 sm:-right-4" data-testid="copy-button">
+          <Button {...COPY_STATES[copyStatus]} action={handleCopy} />
+        </div>
       </div>
-    </div>
+    </Prose>
   </Container>
 </section>

@@ -1,0 +1,16 @@
+<script lang="ts">
+  import type { Snippet } from "svelte";
+  import type { ClassValue } from "svelte/elements";
+
+  interface Props {
+    class?: ClassValue;
+    children: Snippet;
+  }
+  let { class: className = "", children }: Props = $props();
+</script>
+
+<div
+  class={["mx-auto prose max-w-none prose-bb prose-h2:text-3xl prose-ul:list-[square]", className]}
+>
+  {@render children?.()}
+</div>

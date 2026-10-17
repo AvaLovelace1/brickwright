@@ -2,6 +2,7 @@
   import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
   import Container from "#lib/components/Container.svelte";
   import Teaser from "#lib/components/Teaser.svelte";
+  import Prose from "#lib/components/Prose.svelte";
 
   const AUTHORS = [
     { name: "Ava\u00A0Pun", aff: 1 },
@@ -56,10 +57,26 @@
   </div>
   <div class="flex justify-center py-8 lg:py-12">
     <Container>
-      <div class="prose prose-bb prose-ul:list-[square]">
-        <p class="lead">placeholder text</p>
-        <p>placeholder text</p>
-      </div>
+      <Prose>
+        <p class="lead">
+          <strong>BrickWright</strong> enables pre-trained coding agents to generate high-fidelity,
+          <em>physically feasible</em> LEGO® builds from text or image prompts. Its key idea:
+        </p>
+        <blockquote class="bb-callout bb-callout-primary lead">
+          Give agents a <strong>programmatic toolkit</strong> for creating and validating brick builds.
+        </blockquote>
+        <p>
+          <BrickWrightLogo class="not-prose text-lg" /> guides agents to generate brick builds by writing
+          code with <BrickWrightLogo variant="layer" class="not-prose text-lg" />, a Python toolkit
+          for brick build creation and validation. Agents guided by BrickWright produce
+          higher-quality builds with fewer physical violations than agents with general tools.
+          Additionally, they outperform specialized models on the text-to-brick task. BrickWright is
+          especially useful for lightweight agents: on a sample of 512 prompts, it improves GPT-6
+          Luna's performance from 11% to 100% physically valid builds while boosting prompt
+          adherence, at 2% the price of frontier models. BrickWright works with any agent backend;
+          <a href="https://github.com/AvaLovelace1/brickwright">code is available on GitHub.</a>
+        </p>
+      </Prose>
     </Container>
   </div>
 </section>
