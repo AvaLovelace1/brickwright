@@ -89,6 +89,7 @@
   }
 
   function rewind() {
+    pause();
     model.bricksShown = 1;
   }
 
@@ -96,7 +97,7 @@
     paused = false;
     playInterval = setInterval(() => {
       if (!ended) model.bricksShown += 1;
-      else pause();
+      if (ended) pause();
     }, 10);
   }
 

@@ -1,44 +1,40 @@
-import { expect, type Page, test } from "@playwright/test";
+import { expect, type Locator, test as base } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { MainPage } from "./page-objects/MainPage";
-import { CitationPage } from "./page-objects/Citation.ts";
 
-const PAGES = [
-  {
-    label: "Overview",
-    href: "/",
-    title: "BrickWright: Agentic Creation of Physically Feasible Brick Builds",
+const test = base.extend<{ mainPage: MainPage }>({
+  mainPage: async ({ page }, use) => {
+    await use(new MainPage(page));
   },
-  { label: "Results", href: "/results/", title: "BrickWright ▪ Results" },
-  { label: "Acknowledgments", href: "/acknowledgments/", title: "BrickWright ▪ Acknowledgments" },
-  { label: "Citation", href: "/citation/", title: "BrickWright ▪ Citation" },
-];
-
-test("all pages have appropriate document titles", async ({ page }) => {
-  for (const currentPage of PAGES) {
-    await page.goto(currentPage.href);
-    await expect(page).toHaveTitle(currentPage.title);
-  }
 });
 
-test("all pages have no detectable accessibility violations", async ({ page }) => {
-  for (const currentPage of PAGES) {
-    await page.goto(currentPage.href);
-    const results = await new AxeBuilder({ page }).analyze();
-    expect(results.violations).toEqual([]);
-  }
-});
+const SECTIONS = ["overview", "results", "acknowledgments", "citation"];
 
-async function selectTheme(page: Page, theme: "Auto" | "Light" | "Dark") {
-  await page.getByRole("button", { name: /^Theme / }).click();
-  await page.getByRole("option", { name: theme, exact: true }).click();
+async function expectCurrentSection(mainPage: MainPage, section: string) {
+  await expect(mainPage.sectionLink(section)).toHaveAttribute("aria-current", "location");
+  await expect(mainPage.nav.locator("[aria-current]")).toHaveCount(1);
 }
 
-test("explicit themes persist across reloads and override the system", async ({ page }) => {
-  await page.goto("/");
+async function bottom(locator: Locator) {
+  return locator.evaluate((element) => element.getBoundingClientRect().bottom);
+}
+
+test("page has a title and no detectable accessibility violations", async ({ page, mainPage }) => {
+  await mainPage.goto();
+  await expect(page).toHaveTitle(
+    "BrickWright: Agentic Creation of Physically Feasible Brick Builds",
+  );
+  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+});
+
+test("explicit themes persist across reloads and override the system", async ({
+  page,
+  mainPage,
+}) => {
+  await mainPage.goto();
   for (const theme of ["Dark", "Light"] as const) {
     await page.emulateMedia({ colorScheme: theme === "Dark" ? "light" : "dark" });
-    await selectTheme(page, theme);
+    await mainPage.selectTheme(theme);
     await page.reload();
     await expect(page.getByRole("button", { name: `Theme ${theme}` })).toBeVisible();
     await expect(page.locator("html")).toHaveAttribute("data-theme", theme.toLowerCase());
@@ -46,10 +42,13 @@ test("explicit themes persist across reloads and override the system", async ({ 
   }
 });
 
-test("Auto follows live system changes and remains selected after reload", async ({ page }) => {
-  await page.goto("/");
-  await selectTheme(page, "Dark");
-  await selectTheme(page, "Auto");
+test("Auto follows live system changes and remains selected after reload", async ({
+  page,
+  mainPage,
+}) => {
+  await mainPage.goto();
+  await mainPage.selectTheme("Dark");
+  await mainPage.selectTheme("Auto");
   await page.reload();
   await expect(page.getByRole("button", { name: "Theme Auto" })).toBeVisible();
   await expect(page.locator("html")).not.toHaveAttribute("data-theme");
@@ -59,52 +58,53 @@ test("Auto follows live system changes and remains selected after reload", async
   await expect(page.locator("body")).not.toHaveCSS("background-color", light);
 });
 
-test("navbar stretches to bottom of viewport", async ({ page }) => {
-  const mainPage = new MainPage(page);
+test("navbar stretches to bottom of viewport", async ({ page, mainPage }) => {
   await mainPage.goto();
 
-  const viewportHeight = page.viewportSize()?.height ?? 0;
-  const navBox = await mainPage.nav.boundingBox();
-  expect(navBox).not.toBeNull();
-  expect(navBox!.y + navBox!.height).toBeGreaterThanOrEqual(viewportHeight);
+  await expect.poll(() => bottom(mainPage.nav)).toBeGreaterThanOrEqual(page.viewportSize()!.height);
 });
 
-test("navbar links navigate to their pages", async ({ page }) => {
-  for (const currentPage of PAGES) {
-    for (const target of PAGES) {
-      await page.goto(currentPage.href);
-      const link = page.getByRole("navigation").getByRole("link", { name: target.label });
-      await expect(link).toBeVisible();
-      await link.click();
-      await expect(page).toHaveURL(target.href);
-    }
-  }
-});
-
-test("navbar links work while the LEGO models are still loading", async ({ page }) => {
-  await page.goto("/", { waitUntil: "commit" });
-  const link = page.getByRole("navigation").getByRole("link", { name: "Results" });
-  await link.click({ timeout: 5000 });
-  await expect(page).toHaveURL("/results/");
-});
-
-test("navbar marks only the active page as current", async ({ page }) => {
-  for (const currentPage of PAGES) {
-    await page.goto(currentPage.href);
-
-    for (const item of PAGES) {
-      const link = page.getByRole("navigation").getByRole("link", { name: item.label });
-      if (item.href === currentPage.href) {
-        await expect(link).toHaveAttribute("aria-current", "page");
-      } else {
-        await expect(link).not.toHaveAttribute("aria-current");
+for (const width of [1280, 390]) {
+  test(`section navigation and scroll tracking work at ${width}px`, async ({ page, mainPage }) => {
+    await page.setViewportSize({ width, height: 800 });
+    await mainPage.goto();
+    await test.step("Links jump to visible sections and update the active item", async () => {
+      for (const section of SECTIONS) {
+        await mainPage.sectionLink(section).click();
+        await expect(page).toHaveURL(`/#${section}`);
+        await expectCurrentSection(mainPage, section);
+        const fixedChrome = width < 768 ? mainPage.nav : mainPage.header;
+        await expect
+          .poll(async () => {
+            const top = await mainPage
+              .section(section)
+              .evaluate((el) => el.getBoundingClientRect().top);
+            return top - (await bottom(fixedChrome));
+          })
+          .toBeGreaterThanOrEqual(-1);
       }
-    }
-  }
+    });
+    await test.step("Scrolling back updates the active item without changing the hash", async () => {
+      for (const section of [...SECTIONS].reverse()) {
+        await mainPage.section(section).evaluate((el) => el.scrollIntoView());
+        await expectCurrentSection(mainPage, section);
+      }
+      await expect(page).toHaveURL("/#citation");
+    });
+    await test.step("Direct section links initialize the active item", async () => {
+      await mainPage.goto("acknowledgments");
+      await expectCurrentSection(mainPage, "acknowledgments");
+    });
+  });
+}
+
+test("navbar links work while the LEGO models are still loading", async ({ page, mainPage }) => {
+  await page.goto("/", { waitUntil: "commit" });
+  await mainPage.sectionLink("results").click({ timeout: 5000 });
+  await expect(page).toHaveURL("/#results");
 });
 
-test("main page contains expected elements", async ({ page }) => {
-  const mainPage = new MainPage(page);
+test("main page contains expected elements", async ({ mainPage }) => {
   await mainPage.goto();
 
   await expect(mainPage.header).toBeVisible();
@@ -114,28 +114,29 @@ test("main page contains expected elements", async ({ page }) => {
   await expect(mainPage.footer).toBeVisible();
 });
 
-test("models on the main page start building themselves", async ({ page }) => {
-  await page.goto("/");
-  // When a model starts playing, the control turns from "Play" to "Pause", then "Rewind".
-  const firstViewer = page.getByRole("figure").first();
-  await expect(firstViewer.getByRole("button", { name: "Play" })).toHaveCount(0, {
+test("models on the main page start building themselves", async ({ mainPage }) => {
+  await mainPage.goto();
+  await expect(mainPage.firstModel.getByRole("button", { name: /^(Pause|Rewind)$/ })).toBeVisible({
     timeout: 60_000,
   });
 });
 
-test("models do not build themselves when the visitor prefers reduced motion", async ({ page }) => {
+test("models do not build themselves when the visitor prefers reduced motion", async ({
+  page,
+  mainPage,
+}) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
+  await mainPage.goto();
   await expect(page.getByText("Loading model…")).toHaveCount(0, { timeout: 60_000 });
-  const firstViewer = page.getByRole("figure").first();
-  await expect(firstViewer.getByRole("button", { name: "Play" })).toBeVisible();
+  await expect(mainPage.firstModel.getByRole("button", { name: "Play", exact: true })).toBeVisible({
+    timeout: 60_000,
+  });
 });
 
-test("citation copy button works", async ({ page }) => {
-  const citationPage = new CitationPage(page);
-  await citationPage.goto();
-  const citationText = await citationPage.citation.textContent();
-  const copyButton = citationPage.copyButton;
+test("citation copy button works", async ({ page, mainPage }) => {
+  await mainPage.goto("citation");
+  const citationText = await mainPage.citation.textContent();
+  const copyButton = mainPage.copyButton;
 
   await expect(copyButton).toHaveText("Copy");
   await copyButton.click();

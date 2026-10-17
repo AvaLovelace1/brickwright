@@ -1,11 +1,10 @@
 <script lang="ts">
-  import type { Path } from "$app/types";
   import { resolve } from "$app/paths";
   import HardShadow from "#lib/components/HardShadow.svelte";
 
   interface NavItem {
     label: string;
-    href: Path;
+    href: `#${string}`;
   }
   interface Props {
     items: NavItem[];
@@ -19,8 +18,7 @@
 <nav class="h-full bg-surface px-4 py-3 sm:px-8 md:px-4">
   <menu class="sticky top-20 flex gap-2 md:flex-col">
     {#each items as { label, href }, i (label)}
-      {@const hrefResolved = resolve(href)}
-      {@const isCurrent = hrefResolved === current}
+      {@const isCurrent = href === current}
       <li>
         <HardShadow bgClass={isCurrent ? "bg-primary-deep" : "bg-transparent"}>
           <a
@@ -29,8 +27,8 @@
               isCurrent && "bg-primary text-ink",
               !isCurrent && "border-transparent hover:border-line hover:bg-bg",
             ]}
-            href={hrefResolved}
-            aria-current={isCurrent ? "page" : undefined}
+            href={resolve(`/${href}`)}
+            aria-current={isCurrent ? "location" : undefined}
           >
             <span class="font-mono text-xs">{formatNum(i + 1)}</span>
             <span class="sr-only font-semibold md:not-sr-only">{label}</span>

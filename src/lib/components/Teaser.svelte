@@ -62,7 +62,7 @@
   <div class="flex flex-col items-stretch gap-1 text-base sm:flex-row sm:items-center sm:gap-2">
     <Select
       label="Help me design…"
-      labelClass="shrink-0 font-semibold italic"
+      labelClass="shrink-0 font-semibold italic text-lg"
       class="min-w-0 flex-1"
       {options}
       bind:value={selected}

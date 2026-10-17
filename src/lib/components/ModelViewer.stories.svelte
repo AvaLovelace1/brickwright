@@ -6,8 +6,9 @@
   import type { LegoModelView } from "#lib/components/ModelViewer.svelte";
   import ldr from "#lib/assets/ldr/cruise-ship.ldr?url";
   import ldrPacked from "#lib/assets/ldr/cruise-ship.ldr_Packed.mpd?url";
-  import { expect, screen, waitFor, waitForElementToBeRemoved, within } from "storybook/test";
+  import { expect, screen, waitFor, within } from "storybook/test";
   import { Tooltip as BitsTooltip } from "bits-ui";
+  import { flushSync } from "svelte";
 
   const { Story } = defineMeta({
     title: "Components/Model Viewer",
@@ -56,10 +57,18 @@
       } else if (method === "keyboard") {
         // Let tooltips close before pressing Escape
         await userEvent.hover(dialog);
-        await waitFor(() => expect(screen.queryByRole("tooltip")).toBeNull());
+        await waitFor(() => expect(screen.queryByRole("tooltip", { hidden: true })).toBeNull(), {
+          timeout: 5_000,
+        });
         await userEvent.keyboard("{Escape}");
       }
-      await waitForElementToBeRemoved(() => screen.queryByRole("dialog"));
+      await waitFor(
+        () => {
+          expect(screen.queryByRole("dialog")).toBeNull();
+          expect(screen.queryByRole("presentation")).toBeNull();
+        },
+        { timeout: 5_000 },
+      );
     }
 
     async function expectPaused() {
@@ -85,11 +94,14 @@
           { btn: viewBtn, name: /view/i },
         ]) {
           await userEvent.hover(btn);
-          const tooltipContent = await screen.findByRole("tooltip", { name });
-          await waitFor(() => expect(tooltipContent).toBeVisible());
+          await waitFor(() => expect(screen.getByRole("tooltip", { name })).toBeVisible(), {
+            timeout: 5_000,
+          });
           // Calling unhover() would target document.body and set pointer-events: none when the dialog is open
           await userEvent.hover(container);
-          await waitFor(() => expect(screen.queryByRole("tooltip")).toBeNull());
+          await waitFor(() => expect(screen.queryByRole("tooltip", { hidden: true })).toBeNull(), {
+            timeout: 5_000,
+          });
         }
       });
       await step("Next button steps forward", async () => {
@@ -135,12 +147,24 @@
         await expect(args.model.bricksShown).toBe(1);
         await expectPaused();
       });
+      await step("Rewind pauses even before the next playback tick", async () => {
+        flushSync(() => {
+          args.model.bricksShown = args.model.maxBricks - 1;
+        });
+        flushSync(() => playBtn.click());
+        flushSync(() => nextBtn.click());
+        flushSync(() => canvas.getByRole("button", { name: /rewind/i }).click());
+        await expect(canvas.getByRole("button", { name: /^play$/i })).toBeVisible();
+        await expect(args.model.bricksShown).toBe(1);
+        await expectPaused();
+      });
     }
 
     await step("Caption labels the figure", async () => {
       await expect(canvas.getByRole("figure", { name: /A detailed cruise ship/ })).toBeVisible();
     });
     await step("Buttons are functional", async () => {
+      await waitFor(() => expect(args.model.loaded).toBe(true), { timeout: 45_000 });
       await checkButtons(canvasElement);
     });
     await step("All open/close methods work", async () => {

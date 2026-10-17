@@ -8,10 +8,10 @@
     component: Navbar,
     tags: ["autodocs"],
     args: {
-      current: "/",
+      current: "#overview",
       items: [
-        { label: "Home", href: "/" },
-        { label: "Citation", href: "citation/" },
+        { label: "Home", href: "#overview" },
+        { label: "Citation", href: "#citation" },
       ],
     },
   });
@@ -30,11 +30,11 @@
       await expect(items).toHaveLength(2);
 
       await expect(items[0]).toHaveTextContent("01 Home");
-      await expect(items[0]).toHaveAttribute("href", "/");
-      await expect(items[0]).toHaveAttribute("aria-current", "page");
+      await expect(items[0]).toHaveAttribute("href", "/#overview");
+      await expect(items[0]).toHaveAttribute("aria-current", "location");
 
       await expect(items[1]).toHaveTextContent("02 Citation");
-      await expect(items[1]).toHaveAttribute("href", "/citation/");
+      await expect(items[1]).toHaveAttribute("href", "/#citation");
       await expect(items[1]).not.toHaveAttribute("aria-current");
     });
     await step("Navbar labels are only visible on larger screens", async () => {
