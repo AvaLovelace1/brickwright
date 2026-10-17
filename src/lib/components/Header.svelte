@@ -2,6 +2,7 @@
   import { resolve } from "$app/paths";
   import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
   import Button from "#lib/components/Button.svelte";
+  import ThemeSelect from "#lib/components/ThemeSelect.svelte";
 </script>
 
 <header
@@ -22,4 +23,5 @@
     action="https://github.com/AvaLovelace1/brickwright"
     icon="tdesign--logo-github"
   />
+  <ThemeSelect />
 </header>

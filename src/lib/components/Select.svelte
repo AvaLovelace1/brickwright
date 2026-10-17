@@ -8,6 +8,7 @@
     value: string;
     label: string;
     disabled?: boolean;
+    icon?: string;
   }
 
   export interface Props {
@@ -15,6 +16,8 @@
     options: SelectOption[];
     value?: string;
     hideLabel?: boolean;
+    /** Hide the selected label in the trigger; menu options still show their labels. */
+    iconOnly?: boolean;
     labelClass?: ClassValue;
     placeholder?: string;
     disabled?: boolean;
@@ -26,6 +29,7 @@
     options,
     value = $bindable(""),
     hideLabel = false,
+    iconOnly = false,
     labelClass = "mb-1 text-sm font-semibold",
     placeholder = "Select an option",
     disabled = false,
@@ -34,17 +38,18 @@
 
   let open = $state(false);
   const uid = $props.id();
-  const selectedLabel = $derived(
-    options.find((option) => option.value === value)?.label ?? placeholder,
-  );
+  const selectedOption = $derived(options.find((option) => option.value === value));
+  const selectedLabel = $derived(selectedOption?.label ?? placeholder);
 </script>
 
 <div id="{uid}-label" class={[labelClass, hideLabel && "sr-only"]}>{label}</div>
 <BitsSelect.Root type="single" bind:value bind:open allowDeselect={false} {disabled}>
   <BitsSelect.Trigger
+    title={iconOnly ? `${label}: ${selectedLabel}` : undefined}
     aria-labelledby="{uid}-label {uid}-value"
     class={[
-      "flex w-full cursor-pointer items-center justify-between gap-3 px-3 py-2",
+      "flex cursor-pointer items-center justify-between gap-2 px-3 py-2",
+      iconOnly ? "w-auto shrink-0" : "w-full",
       "bb-border bg-surface",
       "text-left text-text",
       "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-line",
@@ -52,7 +57,10 @@
       className,
     ]}
   >
-    <span id="{uid}-value">{selectedLabel}</span>
+    {#if selectedOption?.icon}
+      <span class="iconify {selectedOption.icon} shrink-0" aria-hidden="true"></span>
+    {/if}
+    <span id="{uid}-value" class:sr-only={iconOnly}>{selectedLabel}</span>
     <span
       class={["iconify shrink-0", open ? "tdesign--chevron-up" : "tdesign--chevron-down"]}
       aria-hidden="true"
@@ -62,7 +70,11 @@
     <BitsSelect.Content
       sideOffset={4}
       forceMount
-      class="z-50 w-[var(--bits-select-anchor-width)] text-text"
+      class={[
+        "z-50 text-text",
+        iconOnly ? "w-max min-w-32" : "w-[var(--bits-select-anchor-width)]",
+      ]}
+      align="end"
     >
       {#snippet child({ props, wrapperProps, open })}
         {#if open}
@@ -88,10 +100,15 @@
                         "data-highlighted:-outline-offset-2 data-highlighted:outline-line",
                       ]}
                     >
-                      {option.label}
-                      {#if value === option.value}
-                        <span class="iconify shrink-0 tdesign--check" aria-hidden="true"></span>
+                      {#if option.icon}
+                        <span class="iconify {option.icon} shrink-0" aria-hidden="true"></span>
                       {/if}
+                      <span class="flex-1">{option.label}</span>
+                      <span
+                        class="iconify shrink-0 tdesign--check"
+                        class:invisible={value !== option.value}
+                        aria-hidden="true"
+                      ></span>
                     </BitsSelect.Item>
                   {/each}
                 </BitsSelect.Viewport>

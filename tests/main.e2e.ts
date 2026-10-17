@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, type Page, test } from "@playwright/test";
 import AxeBuilder from "@axe-core/playwright";
 import { MainPage } from "./page-objects/MainPage";
 import { CitationPage } from "./page-objects/Citation.ts";
@@ -21,15 +21,42 @@ test("all pages have appropriate document titles", async ({ page }) => {
   }
 });
 
-test("main page contains expected elements", async ({ page }) => {
-  const mainPage = new MainPage(page);
-  await mainPage.goto();
+test("all pages have no detectable accessibility violations", async ({ page }) => {
+  for (const currentPage of PAGES) {
+    await page.goto(currentPage.href);
+    const results = await new AxeBuilder({ page }).analyze();
+    expect(results.violations).toEqual([]);
+  }
+});
 
-  await expect(mainPage.header).toBeVisible();
-  await expect(mainPage.nav).toBeVisible();
-  await expect(mainPage.main).toBeVisible();
-  await expect(mainPage.heading).toBeVisible();
-  await expect(mainPage.footer).toBeVisible();
+async function selectTheme(page: Page, theme: "Auto" | "Light" | "Dark") {
+  await page.getByRole("button", { name: /^Theme / }).click();
+  await page.getByRole("option", { name: theme, exact: true }).click();
+}
+
+test("explicit themes persist across reloads and override the system", async ({ page }) => {
+  await page.goto("/");
+  for (const theme of ["Dark", "Light"] as const) {
+    await page.emulateMedia({ colorScheme: theme === "Dark" ? "light" : "dark" });
+    await selectTheme(page, theme);
+    await page.reload();
+    await expect(page.getByRole("button", { name: `Theme ${theme}` })).toBeVisible();
+    await expect(page.locator("html")).toHaveAttribute("data-theme", theme.toLowerCase());
+    await expect(page.locator("html")).toHaveCSS("color-scheme", theme.toLowerCase());
+  }
+});
+
+test("Auto follows live system changes and remains selected after reload", async ({ page }) => {
+  await page.goto("/");
+  await selectTheme(page, "Dark");
+  await selectTheme(page, "Auto");
+  await page.reload();
+  await expect(page.getByRole("button", { name: "Theme Auto" })).toBeVisible();
+  await expect(page.locator("html")).not.toHaveAttribute("data-theme");
+  await page.emulateMedia({ colorScheme: "light" });
+  const light = await page.locator("body").evaluate((el) => getComputedStyle(el).backgroundColor);
+  await page.emulateMedia({ colorScheme: "dark" });
+  await expect(page.locator("body")).not.toHaveCSS("background-color", light);
 });
 
 test("navbar stretches to bottom of viewport", async ({ page }) => {
@@ -61,23 +88,6 @@ test("navbar links work while the LEGO models are still loading", async ({ page 
   await expect(page).toHaveURL("/results/");
 });
 
-test("models on the main page start building themselves", async ({ page }) => {
-  await page.goto("/");
-  // When a model starts playing, the control turns from "Play" to "Pause", then "Rewind".
-  const firstViewer = page.getByRole("figure").first();
-  await expect(firstViewer.getByRole("button", { name: "Play" })).toHaveCount(0, {
-    timeout: 60_000,
-  });
-});
-
-test("models do not build themselves when the visitor prefers reduced motion", async ({ page }) => {
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/");
-  await expect(page.getByText("Loading model…")).toHaveCount(0, { timeout: 60_000 });
-  const firstViewer = page.getByRole("figure").first();
-  await expect(firstViewer.getByRole("button", { name: "Play" })).toBeVisible();
-});
-
 test("navbar marks only the active page as current", async ({ page }) => {
   for (const currentPage of PAGES) {
     await page.goto(currentPage.href);
@@ -93,12 +103,32 @@ test("navbar marks only the active page as current", async ({ page }) => {
   }
 });
 
-test("all pages have no detectable accessibility violations", async ({ page }) => {
-  for (const currentPage of PAGES) {
-    await page.goto(currentPage.href);
-    const results = await new AxeBuilder({ page }).analyze();
-    expect(results.violations).toEqual([]);
-  }
+test("main page contains expected elements", async ({ page }) => {
+  const mainPage = new MainPage(page);
+  await mainPage.goto();
+
+  await expect(mainPage.header).toBeVisible();
+  await expect(mainPage.nav).toBeVisible();
+  await expect(mainPage.main).toBeVisible();
+  await expect(mainPage.heading).toBeVisible();
+  await expect(mainPage.footer).toBeVisible();
+});
+
+test("models on the main page start building themselves", async ({ page }) => {
+  await page.goto("/");
+  // When a model starts playing, the control turns from "Play" to "Pause", then "Rewind".
+  const firstViewer = page.getByRole("figure").first();
+  await expect(firstViewer.getByRole("button", { name: "Play" })).toHaveCount(0, {
+    timeout: 60_000,
+  });
+});
+
+test("models do not build themselves when the visitor prefers reduced motion", async ({ page }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await page.goto("/");
+  await expect(page.getByText("Loading model…")).toHaveCount(0, { timeout: 60_000 });
+  const firstViewer = page.getByRole("figure").first();
+  await expect(firstViewer.getByRole("button", { name: "Play" })).toBeVisible();
 });
 
 test("citation copy button works", async ({ page }) => {

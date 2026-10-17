@@ -79,3 +79,15 @@
 body {
   -webkit-font-smoothing: antialiased;
 }
+
+:root {
+  color-scheme: light dark;
+}
+
+:root[data-theme="light"] {
+  color-scheme: light;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+}

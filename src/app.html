@@ -4,6 +4,16 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="text-scale" content="scale" />
+    <script>
+      try {
+        const theme = localStorage.getItem("brickwright-theme");
+        if (theme === "light" || theme === "dark") {
+          document.documentElement.dataset.theme = theme;
+        }
+      } catch {
+        // Fall back to system theme
+      }
+    </script>
     %sveltekit.head%
   </head>
   <body class="bb-dots flex h-lvh flex-col" data-sveltekit-preload-data="hover">
