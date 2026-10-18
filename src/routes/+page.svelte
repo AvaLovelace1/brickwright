@@ -1,7 +1,9 @@
 <script lang="ts">
   import SectionDivider from "#lib/components/SectionDivider.svelte";
   import Overview from "#lib/sections/Overview.svelte";
-  import Results from "#lib/sections/Results.svelte";
+  import Motivation from "#lib/sections/Motivation.svelte";
+  import Method from "#lib/sections/Method.svelte";
+  import Experiments from "#lib/sections/Experiments.svelte";
   import Acknowledgments from "#lib/sections/Acknowledgments.svelte";
   import Citation from "#lib/sections/Citation.svelte";
 </script>
@@ -12,7 +14,11 @@
 
 <Overview />
 <SectionDivider />
-<Results />
+<Motivation />
+<SectionDivider />
+<Method />
+<SectionDivider />
+<Experiments />
 <SectionDivider />
 <Acknowledgments />
 <SectionDivider />

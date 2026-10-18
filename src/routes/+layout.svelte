@@ -54,7 +54,9 @@
       <Navbar
         items={[
           { label: "Overview", href: "#overview" },
-          { label: "Results", href: "#results" },
+          { label: "Motivation", href: "#motivation" },
+          { label: "Method", href: "#method" },
+          { label: "Experiments", href: "#experiments" },
           { label: "Acknowledgments", href: "#acknowledgments" },
           { label: "Citation", href: "#citation" },
         ]}

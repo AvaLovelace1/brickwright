@@ -8,7 +8,7 @@ const test = base.extend<{ mainPage: MainPage }>({
   },
 });
 
-const SECTIONS = ["overview", "results", "acknowledgments", "citation"];
+const SECTIONS = ["overview", "motivation", "method", "experiments", "acknowledgments", "citation"];
 
 async function expectCurrentSection(mainPage: MainPage, section: string) {
   await expect(mainPage.sectionLink(section)).toHaveAttribute("aria-current", "location");
@@ -100,8 +100,8 @@ for (const width of [1280, 390]) {
 
 test("navbar links work while the LEGO models are still loading", async ({ page, mainPage }) => {
   await page.goto("/", { waitUntil: "commit" });
-  await mainPage.sectionLink("results").click({ timeout: 5000 });
-  await expect(page).toHaveURL("/#results");
+  await mainPage.sectionLink("experiments").click({ timeout: 5000 });
+  await expect(page).toHaveURL("/#experiments");
 });
 
 test("main page contains expected elements", async ({ mainPage }) => {

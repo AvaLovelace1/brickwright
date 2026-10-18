@@ -3,11 +3,11 @@
   import Prose from "#lib/components/Prose.svelte";
 </script>
 
-<section id="results" aria-labelledby="results-heading" class="flex justify-center py-12">
+<section id="method" aria-labelledby="method-heading" class="flex justify-center py-12">
   <Container>
     <Prose>
-      <h2 id="results-heading">Results</h2>
-      <p>text</p>
+      <h2 id="method-heading">Method</h2>
+      <p>Placeholder text describing the BrickWright method.</p>
     </Prose>
   </Container>
 </section>
