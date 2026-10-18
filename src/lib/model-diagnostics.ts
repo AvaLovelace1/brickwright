@@ -27,6 +27,13 @@ export interface ModelDiagnostics {
   intersectionPositions: number[];
 }
 
+/** Separate grounded assemblies can be valid; connectivity is a separate property. */
+export function isPhysicallyValid(
+  data: Pick<ModelDiagnostics, "collisions" | "floating">,
+): boolean {
+  return data.collisions.length === 0 && data.floating.length === 0;
+}
+
 const downloads = new Map<string, Promise<ModelDiagnostics>>();
 
 export function loadDiagnostics(url: string): Promise<ModelDiagnostics> {
@@ -108,15 +115,15 @@ export function matchDiagnosticPlacements(
 }
 
 export interface DiagnosticDisplay {
-  highlightInvalid: boolean;
+  highlightCollisions: boolean;
   showIntersections: boolean;
 }
 
 /** Per-view materials keep highlighting isolated from cached models and other viewers. */
 export function createDiagnosticView(model: Object3D, data: ModelDiagnostics) {
   const placements = matchDiagnosticPlacements(model, data);
-  const invalid = new Set([...data.floating, ...data.collisions.flat()]);
-  const parts = new Map([...placements].map(([id, object]) => [object, invalid.has(id)]));
+  const colliding = new Set(data.collisions.flat());
+  const parts = new Map([...placements].map(([id, object]) => [object, colliding.has(id)]));
   const opaqueMaterials = new Map<Material, Material>();
   const translucentMaterials = new Map<Material, Material>();
   const targets: {
@@ -125,14 +132,14 @@ export function createDiagnosticView(model: Object3D, data: ModelDiagnostics) {
     highlighted: Material | Material[];
   }[] = [];
 
-  function highlight(material: Material, isInvalid: boolean) {
-    const materials = isInvalid ? opaqueMaterials : translucentMaterials;
+  function highlight(material: Material, isColliding: boolean) {
+    const materials = isColliding ? opaqueMaterials : translucentMaterials;
     let variant = materials.get(material);
     if (!variant) {
       variant = material.clone();
-      variant.opacity = isInvalid ? 1 : 0.05;
-      variant.transparent = !isInvalid;
-      variant.depthWrite = isInvalid ? material.depthWrite : false;
+      variant.opacity = isColliding ? 1 : 0.05;
+      variant.transparent = !isColliding;
+      variant.depthWrite = isColliding ? material.depthWrite : false;
       materials.set(material, variant);
     }
     return variant;
@@ -144,11 +151,11 @@ export function createDiagnosticView(model: Object3D, data: ModelDiagnostics) {
     while (part && !parts.has(part)) part = part.parent;
     // Leave unassessed geometry unchanged if a future report has partial coverage.
     if (!part) return;
-    const isInvalid = parts.get(part)!;
+    const isColliding = parts.get(part)!;
     const original = object.material;
     const highlighted = Array.isArray(original)
-      ? original.map((material) => highlight(material, isInvalid))
-      : highlight(original, isInvalid);
+      ? original.map((material) => highlight(material, isColliding))
+      : highlight(original, isColliding);
     targets.push({ object, original, highlighted });
   });
 
@@ -170,9 +177,9 @@ export function createDiagnosticView(model: Object3D, data: ModelDiagnostics) {
 
   return {
     intersections,
-    update({ highlightInvalid, showIntersections }: DiagnosticDisplay) {
+    update({ highlightCollisions, showIntersections }: DiagnosticDisplay) {
       for (const target of targets)
-        target.object.material = highlightInvalid ? target.highlighted : target.original;
+        target.object.material = highlightCollisions ? target.highlighted : target.original;
       intersections.visible = showIntersections && data.intersectionPositions.length > 0;
     },
     dispose() {

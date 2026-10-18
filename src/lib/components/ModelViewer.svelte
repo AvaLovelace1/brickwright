@@ -9,7 +9,12 @@
   import Slider from "#lib/components/Slider.svelte";
   import Tooltip from "#lib/components/Tooltip.svelte";
   import { prefersReducedMotion } from "svelte/motion";
-  import { loadDiagnostics, type ModelDiagnostics } from "#lib/model-diagnostics.js";
+  import {
+    loadDiagnostics,
+    isPhysicallyValid,
+    type DiagnosticDisplay,
+    type ModelDiagnostics,
+  } from "#lib/model-diagnostics.js";
 
   export interface LegoModelView {
     ldr: string;
@@ -31,24 +36,30 @@
     tone?: "success" | "danger";
   }
 
-  export interface Props {
+  export interface Props extends Partial<DiagnosticDisplay> {
     model: LegoModelView;
     autoplay?: boolean;
     showCaption?: boolean;
     badge?: ViewerBadge;
-    highlightInvalid?: boolean;
-    showIntersections?: boolean;
     class?: ClassValue;
   }
   let {
     model = $bindable(),
     autoplay = false,
     showCaption = true,
-    badge,
-    highlightInvalid = false,
+    badge: badgeOverride,
+    highlightCollisions = false,
     showIntersections = false,
     class: className = "",
   }: Props = $props();
+  const badge = $derived<ViewerBadge | undefined>(
+    badgeOverride ??
+      (model.diagnostics && !model.diagnosticsError
+        ? isPhysicallyValid(model.diagnostics)
+          ? { text: "Valid", tone: "success" }
+          : { text: "Invalid", tone: "danger" }
+        : undefined),
+  );
   const uid = $props.id();
   const hasCaption = $derived(showCaption && Boolean(model.caption));
   const hasIntersections = $derived(
@@ -199,31 +210,33 @@
 {/snippet}
 
 {#snippet statusBadge()}
-  {#if badge}
+  {#if badge || model.diagnosticsError}
     <div class="pointer-events-none flex flex-wrap items-center gap-x-3 gap-y-1 p-1 text-text">
-      <span
-        role="status"
-        class={[
-          "bb-badge inline-flex items-center gap-1",
-          badge.tone === "danger" ? "bb-badge-danger" : "bb-badge-success",
-        ]}
-      >
+      {#if badge}
         <span
+          role="status"
           class={[
-            "iconify shrink-0",
-            badge.tone === "danger" ? "tdesign--error-triangle" : "tdesign--check-circle",
+            "bb-badge inline-flex items-center gap-1",
+            badge.tone === "danger" ? "bb-badge-danger" : "bb-badge-success",
           ]}
-          aria-hidden="true"
-        ></span>
-        {badge.text}
-      </span>
+        >
+          <span
+            class={[
+              "iconify shrink-0",
+              badge.tone === "danger" ? "tdesign--error-triangle" : "tdesign--check-circle",
+            ]}
+            aria-hidden="true"
+          ></span>
+          {badge.text}
+        </span>
+      {/if}
       {#if hasIntersections}
         {@render badgeDetail("Intersections", true)}
       {/if}
       {#if model.diagnosticsError}
         {@render badgeDetail("Diagnostics unavailable")}
       {/if}
-      {#if badge.description}
+      {#if badge?.description}
         {@render badgeDetail(badge.description)}
       {/if}
     </div>
@@ -283,7 +296,7 @@
       </span>
       {@render statusBadge()}
     </figcaption>
-  {:else if badge}
+  {:else if badge || model.diagnosticsError}
     <div class={OVERLAY_CLASS}>{@render statusBadge()}</div>
   {/if}
   {@render viewerTools(false)}
@@ -328,7 +341,7 @@
                   <Canvas>
                     <LegoModel
                       {model}
-                      {highlightInvalid}
+                      {highlightCollisions}
                       {showIntersections}
                       onload={(maxSteps) => {
                         model.maxSteps = maxSteps;

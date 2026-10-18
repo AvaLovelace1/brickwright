@@ -53,22 +53,24 @@
   import { T, useThrelte } from "@threlte/core";
   import { Environment, OrbitControls, HTML } from "@threlte/extras";
   import { onMount } from "svelte";
-  import { createDiagnosticView, type DiagnosticView } from "#lib/model-diagnostics.js";
+  import {
+    createDiagnosticView,
+    type DiagnosticDisplay,
+    type DiagnosticView,
+  } from "#lib/model-diagnostics.js";
   import type { LegoModelView } from "./ModelViewer.svelte";
   const { invalidate } = useThrelte();
 
-  interface Props {
+  interface Props extends Partial<DiagnosticDisplay> {
     model: LegoModelView;
     onload: (maxSteps: number) => void;
     ondiagnosticerror: () => void;
-    highlightInvalid?: boolean;
-    showIntersections?: boolean;
   }
   let {
     model,
     onload,
     ondiagnosticerror,
-    highlightInvalid = false,
+    highlightCollisions = false,
     showIntersections = false,
   }: Props = $props();
   let prevStepsShown = 0;
@@ -112,7 +114,7 @@
   $effect(() => {
     if (!diagnosticView || !ldrawGroup) return;
     diagnosticView.update({
-      highlightInvalid,
+      highlightCollisions,
       // The exported lines describe the complete assembly, not individual build steps.
       showIntersections: showIntersections && model.stepsShown >= model.maxSteps,
     });

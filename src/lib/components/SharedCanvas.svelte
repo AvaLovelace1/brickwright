@@ -3,13 +3,12 @@
   import LegoModel from "#lib/components/LegoModel.svelte";
   import { View } from "@threlte/extras";
   import type { LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
 
-  interface Props {
+  interface Props extends Partial<DiagnosticDisplay> {
     models: LegoModelView[];
-    highlightInvalid?: boolean;
-    showIntersections?: boolean;
   }
-  let { models, highlightInvalid = false, showIntersections = false }: Props = $props();
+  let { models, highlightCollisions = false, showIntersections = false }: Props = $props();
 </script>
 
 <!-- Set pointer-events-none so the overlay doesn't capture camera drag controls -->
@@ -20,7 +19,7 @@
         <View dom={model.window}>
           <LegoModel
             {model}
-            {highlightInvalid}
+            {highlightCollisions}
             {showIntersections}
             onload={(maxSteps) => {
               model.maxSteps = maxSteps;

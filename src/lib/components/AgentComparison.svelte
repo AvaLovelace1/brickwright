@@ -1,6 +1,6 @@
 <script lang="ts">
   import { asset } from "$app/paths";
-  import Checkbox from "./Checkbox.svelte";
+  import ModelDiagnosticControls from "./ModelDiagnosticControls.svelte";
   import ModelViewer, { type LegoModelView } from "./ModelViewer.svelte";
   import SharedCanvas from "./SharedCanvas.svelte";
 
@@ -51,37 +51,37 @@
   const models = $derived(pairs.flatMap((pair) => pair.models));
 
   let showIntersections = $state(true);
-  let highlightInvalid = $state(false);
+  let highlightCollisions = $state(false);
 </script>
 
 <figure aria-labelledby="{uid}-caption" class="relative">
-  <div class="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
+  <div class="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
     <p class="font-display text-2xl font-extrabold">Better builds with BrickWright</p>
-    <div class="flex flex-wrap gap-x-4 gap-y-2">
-      <Checkbox label="Show intersections" bind:checked={showIntersections} />
-      <Checkbox label="Highlight colliding/floating bricks" bind:checked={highlightInvalid} />
-    </div>
+    <ModelDiagnosticControls bind:showIntersections bind:highlightCollisions />
   </div>
+  <p class="mb-6 text-sm text-pretty">
+    <span class="font-bold">Prompt:</span>
+    <span class="italic">
+      “This is a white and black LEGO spaceship with a blue tinted canopy, featuring a blue-suited
+      minifigure pilot, rear thrusters, and side-mounted weapons.”
+    </span>
+  </p>
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
     {#each pairs as pair (pair.name)}
       <div class="min-w-0">
-        <p class="text-center font-display text-lg font-extrabold">{pair.name}</p>
-        <div class="grid grid-cols-2 gap-2">
+        <p class="text-center font-display text-xl font-extrabold">{pair.name}</p>
+        <div class="grid grid-cols-2 gap-3">
           {#each pair.models as model, side (model.filename)}
             <div class="min-w-0">
-              <p class="mb-1 text-center text-sm font-semibold">
+              <p class="mb-1 text-center font-semibold">
                 {model.withBrickwright ? "With BrickWright" : "Vanilla agent"}
               </p>
               <ModelViewer
                 bind:model={pair.models[side]}
                 class="aspect-square"
                 showCaption={false}
-                {highlightInvalid}
+                {highlightCollisions}
                 {showIntersections}
-                badge={{
-                  text: model.withBrickwright ? "Valid" : "Invalid",
-                  tone: model.withBrickwright ? "success" : "danger",
-                }}
               />
             </div>
           {/each}
@@ -89,15 +89,14 @@
       </div>
     {/each}
   </div>
-  <SharedCanvas {models} {highlightInvalid} {showIntersections} />
+  <SharedCanvas {models} {highlightCollisions} {showIntersections} />
   <figcaption id="{uid}-caption" class="mt-6 text-sm text-pretty">
     <strong>
       Given the same prompt, BrickWright-equipped agents produce higher-quality builds with fewer
       physical violations than agents using general tools.
     </strong>
-    The improvement is especially striking for lightweight agents Luna and Haiku. Prompt: “This is a white
-    and black LEGO spaceship with a blue tinted canopy, featuring a blue-suited minifigure pilot, rear
-    thrusters, and side-mounted weapons.” All BrickWright builds use real LEGO® parts, with no colliding
-    (intersecting) or floating parts and one connected component. Drag a model to rotate it.
+    The improvement is especially striking for lightweight agents Luna and Haiku. All BrickWright builds
+    use real LEGO® parts, with no colliding (intersecting) or floating parts and one connected component.
+    Red lines indicate brick intersections. Drag a model to rotate it.
   </figcaption>
 </figure>

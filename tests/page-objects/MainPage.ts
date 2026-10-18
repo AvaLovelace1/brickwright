@@ -5,8 +5,6 @@ export class MainPage {
   readonly header: Locator;
   readonly nav: Locator;
   readonly main: Locator;
-  readonly heading: Locator;
-  readonly footer: Locator;
   readonly firstModel: Locator;
   readonly citation: Locator;
   readonly copyButton: Locator;
@@ -16,8 +14,6 @@ export class MainPage {
     this.header = page.getByRole("banner");
     this.nav = page.getByRole("navigation");
     this.main = page.getByRole("main");
-    this.heading = this.main.getByRole("heading", { level: 1 });
-    this.footer = page.getByRole("contentinfo");
     this.firstModel = this.main.getByRole("figure").first();
     this.citation = this.main.getByTestId("citation");
     this.copyButton = this.section("citation").getByRole("button", { name: /^(Copy|Copied!)$/ });

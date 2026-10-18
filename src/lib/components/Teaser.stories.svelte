@@ -45,6 +45,14 @@
     await step("Shows the physical validity guarantees", async () => {
       await expect(canvas.getByRole("status")).toHaveTextContent("Physically feasible");
     });
+    await step("The selected model starts building once it loads", async () => {
+      await waitFor(
+        () => expect(canvas.getByRole("button", { name: /^(Pause|Rewind)$/ })).toBeVisible(),
+        {
+          timeout: 45_000,
+        },
+      );
+    });
   }}
 />
 

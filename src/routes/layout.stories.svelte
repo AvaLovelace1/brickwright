@@ -2,7 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Layout from "./+layout.svelte";
   import { createRawSnippet } from "svelte";
-  import { expect, within } from "storybook/test";
+  import { expect, waitFor, within } from "storybook/test";
 
   const { Story } = defineMeta({
     title: "Layouts/Main Layout",
@@ -35,6 +35,11 @@
       const headerBottom = header.getBoundingClientRect().bottom;
       const mainTop = main.getBoundingClientRect().top;
       await expect(headerBottom).toBe(mainTop);
+    });
+    await step("Navbar stretches to the bottom of the viewport", async () => {
+      await waitFor(() =>
+        expect(nav.getBoundingClientRect().bottom).toBeGreaterThanOrEqual(window.innerHeight),
+      );
     });
     await step("Header stays sticky when scrolled", async () => {
       window.scrollTo({ top: 0, behavior: "instant" });

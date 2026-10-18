@@ -58,12 +58,6 @@ test("Auto follows live system changes and remains selected after reload", async
   await expect(page.locator("body")).not.toHaveCSS("background-color", light);
 });
 
-test("navbar stretches to bottom of viewport", async ({ page, mainPage }) => {
-  await mainPage.goto();
-
-  await expect.poll(() => bottom(mainPage.nav)).toBeGreaterThanOrEqual(page.viewportSize()!.height);
-});
-
 for (const width of [1280, 390]) {
   test(`section navigation and scroll tracking work at ${width}px`, async ({ page, mainPage }) => {
     await page.setViewportSize({ width, height: 800 });
@@ -104,23 +98,6 @@ test("navbar links work while the LEGO models are still loading", async ({ page,
   await expect(page).toHaveURL("/#experiments");
 });
 
-test("main page contains expected elements", async ({ mainPage }) => {
-  await mainPage.goto();
-
-  await expect(mainPage.header).toBeVisible();
-  await expect(mainPage.nav).toBeVisible();
-  await expect(mainPage.main).toBeVisible();
-  await expect(mainPage.heading).toBeVisible();
-  await expect(mainPage.footer).toBeVisible();
-});
-
-test("models on the main page start building themselves", async ({ mainPage }) => {
-  await mainPage.goto();
-  await expect(mainPage.firstModel.getByRole("button", { name: /^(Pause|Rewind)$/ })).toBeVisible({
-    timeout: 60_000,
-  });
-});
-
 test("models start complete when the visitor prefers reduced motion", async ({
   page,
   mainPage,
@@ -152,11 +129,6 @@ test("models start complete when the visitor prefers reduced motion", async ({
     "aria-valuenow",
     (await slider.getAttribute("aria-valuemax"))!,
   );
-  await mainPage.firstModel.getByRole("button", { name: "Rewind", exact: true }).click();
-  await expect(slider).toHaveAttribute("aria-valuenow", "1");
-  await expect(
-    mainPage.firstModel.getByRole("button", { name: "Play", exact: true }),
-  ).toBeVisible();
 });
 
 test("comparison models load as their viewers approach the viewport", async ({

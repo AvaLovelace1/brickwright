@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Page from "./+page.svelte";
-  import { expect } from "storybook/test";
+  import { expect, within } from "storybook/test";
   import { Tooltip as BitsTooltip } from "bits-ui";
 
   const { Story } = defineMeta({
@@ -19,7 +19,7 @@
 
 <Story
   name="Default"
-  play={async ({ canvas, step }) => {
+  play={async ({ canvas, step, userEvent }) => {
     await step("Page has a styled heading", async () => {
       const heading = canvas.getByRole("heading", { level: 1 });
       await expect(heading).toBeVisible();
@@ -31,6 +31,21 @@
       await expect(paragraph).toBeVisible();
       const paragraphStyle = window.getComputedStyle(paragraph);
       await expect(paragraphStyle.fontFamily).toContain("Source Sans");
+    });
+    await step("The comparison figures have independent diagnostic controls", async () => {
+      const overview = within(canvas.getByRole("region", { name: "Overview" }));
+      const motivation = within(canvas.getByRole("region", { name: "Motivation" }));
+      await userEvent.click(
+        motivation.getByRole("checkbox", { name: "Highlight colliding bricks" }),
+      );
+      await expect(
+        overview.getByRole("checkbox", { name: "Highlight colliding bricks" }),
+      ).not.toBeChecked();
+      await userEvent.click(overview.getByRole("checkbox", { name: "Show intersections" }));
+      await expect(motivation.getByRole("checkbox", { name: "Show intersections" })).toBeChecked();
+      await expect(
+        motivation.getByRole("checkbox", { name: "Highlight colliding bricks" }),
+      ).toBeChecked();
     });
   }}
 />

@@ -52,7 +52,6 @@
   const diagnosticArgs = {
     class: "size-80",
     showCaption: false,
-    badge: { text: "Collisions", tone: "danger" },
   } satisfies Partial<ModelViewerProps>;
 
   async function expectDiagnosticsLoaded(model: LegoModelView) {
@@ -60,7 +59,6 @@
       () => {
         expect(model.loaded).toBe(true);
         expect(model.diagnostics?.collisions.length).toBeGreaterThan(0);
-        expect(model.diagnostics?.floating.length).toBeGreaterThan(0);
       },
       { timeout: 45_000 },
     );
@@ -74,7 +72,7 @@
       <ModelViewer {...args} bind:model={args.model} />
       <SharedCanvas
         models={[args.model]}
-        highlightInvalid={args.highlightInvalid}
+        highlightCollisions={args.highlightCollisions}
         showIntersections={args.showIntersections}
       />
     </div>
@@ -320,8 +318,8 @@
 />
 
 <Story
-  name="Invalid Bricks"
-  args={{ ...diagnosticArgs, model: highlightedModel, highlightInvalid: true }}
+  name="Colliding Bricks"
+  args={{ ...diagnosticArgs, model: highlightedModel, highlightCollisions: true }}
   play={async ({ canvas, args }) => {
     await expectDiagnosticsLoaded(args.model);
     await expect(canvas.queryByText("Intersections", { exact: true })).toBeNull();
@@ -333,11 +331,12 @@
   args={{
     ...diagnosticArgs,
     model: combinedModel,
-    highlightInvalid: true,
+    highlightCollisions: true,
     showIntersections: true,
   }}
   play={async ({ canvas, args }) => {
     await expectDiagnosticsLoaded(args.model);
+    await expect(canvas.getByRole("status")).toHaveTextContent(/^Invalid$/);
     await expect(canvas.getByText("Intersections", { exact: true })).toBeVisible();
   }}
 />

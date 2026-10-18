@@ -1,4 +1,4 @@
-import { readFile } from "node:fs/promises";
+import { readdir, readFile } from "node:fs/promises";
 import { createHash } from "node:crypto";
 import { expect, test } from "vitest";
 import { BoxGeometry, Group, Mesh, MeshStandardMaterial, Vector3 } from "three";
@@ -7,6 +7,7 @@ import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawCondit
 import { parsePackedModel } from "./ldraw";
 import {
   createDiagnosticView,
+  isPhysicallyValid,
   matchDiagnosticPlacements,
   type ModelDiagnostics,
 } from "./model-diagnostics";
@@ -22,10 +23,25 @@ const diagnostics: ModelDiagnostics = {
     { id: "colliding", part: "brick.dat", position: [20, 0, 0], rotation: identity },
     { id: "colliding2", part: "brick.dat", position: [40, 0, 0], rotation: identity },
   ],
-  floating: ["floating"],
+  floating: ["floating", "colliding2"],
   collisions: [["colliding", "colliding2"]],
   intersectionPositions: [20, 0, 0, 21, 1, 0],
 };
+
+test.each([
+  { condition: "separate grounded components", collisions: [], floating: [], valid: true },
+  { condition: "collisions", collisions: diagnostics.collisions, floating: [], valid: false },
+  { condition: "floating parts", collisions: [], floating: diagnostics.floating, valid: false },
+  {
+    condition: "collisions and floating parts",
+    collisions: diagnostics.collisions,
+    floating: diagnostics.floating,
+    valid: false,
+  },
+])("physical validity with $condition", ({ collisions, floating, valid }) => {
+  const report = { collisions, floating, components: 2 };
+  expect(isPhysicallyValid(report)).toBe(valid);
+});
 
 function createModel() {
   const model = new Group();
@@ -56,20 +72,20 @@ test("matches nested part placements by identity and transform, not diagnostic o
   expect(parts.get("floating")).toBe(meshes[2].parent);
 });
 
-test("highlights colliding and floating bricks independently from intersection visibility", () => {
+test("highlights colliding bricks while fading floating-only and valid parts", () => {
   const { model, meshes, material } = createModel();
   const otherViewer = model.clone();
   const view = createDiagnosticView(model, diagnostics);
-  view.update({ highlightInvalid: true, showIntersections: false });
+  view.update({ highlightCollisions: true, showIntersections: false });
   expect(meshes[0].material.opacity).toBeLessThan(0.6);
   expect(meshes[1].material.opacity).toBe(1);
-  expect(meshes[2].material.opacity).toBe(1);
+  expect(meshes[2].material.opacity).toBeLessThan(0.6);
   expect(meshes[3].material.opacity).toBe(1);
   expect(material.opacity).toBe(0.6);
   expect((otherViewer.children[0].children[0].children[0] as Mesh).material).toBe(material);
   expect(view.intersections.visible).toBe(false);
 
-  view.update({ highlightInvalid: false, showIntersections: true });
+  view.update({ highlightCollisions: false, showIntersections: true });
   expect(meshes.map((mesh) => mesh.material)).toEqual([material, material, material, material]);
   expect(view.intersections.visible).toBe(true);
   view.dispose();
@@ -97,7 +113,7 @@ test("intersection lines use the same transform as the model without becoming bu
 test("restores original materials when a diagnostic view is disposed", () => {
   const { model, meshes, material } = createModel();
   const view = createDiagnosticView(model, diagnostics);
-  view.update({ highlightInvalid: true, showIntersections: true });
+  view.update({ highlightCollisions: true, showIntersections: true });
   view.dispose();
   expect(meshes.every((mesh) => mesh.material === material)).toBe(true);
 });
@@ -112,23 +128,21 @@ test("reports mismatched diagnostics instead of highlighting an unrelated part",
   ).toThrow(/floating/);
 });
 
-test("all shipped diagnostic files match their original LDraw and every rendered placement", async () => {
-  const directory = "static/models/spaceship-309/";
-  const source = JSON.parse(await readFile(`${directory}source.json`, "utf8"));
-  for (const model of Object.values(source.models) as {
-    local_ldraw_file: string;
-    local_packed_file: string;
-    local_diagnostics_file: string;
-  }[]) {
-    const data = JSON.parse(await readFile(directory + model.local_diagnostics_file, "utf8"));
-    const ldraw = await readFile(directory + model.local_ldraw_file);
+test("all shipped diagnostics match their original LDraw and every rendered placement", async () => {
+  const directory = "static/models/";
+  const suffix = ".diagnostics.json";
+  const files = (await readdir(directory, { recursive: true })).filter((file) =>
+    file.endsWith(suffix),
+  );
+  expect(files.length).toBeGreaterThan(0);
+  for (const file of files) {
+    const modelPath = directory + file.slice(0, -suffix.length);
+    const data = JSON.parse(await readFile(directory + file, "utf8"));
+    const ldraw = await readFile(`${modelPath}.ldr`);
     expect(createHash("sha256").update(ldraw).digest("hex")).toBe(data.modelSha256);
     const loader = new LDrawLoader();
     loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
-    const group = await parsePackedModel(
-      loader,
-      await readFile(directory + model.local_packed_file, "utf8"),
-    );
+    const group = await parsePackedModel(loader, await readFile(`${modelPath}.packed.mpd`, "utf8"));
     const placements = matchDiagnosticPlacements(group, data);
     expect(placements.size).toBe(data.placements.length);
   }
