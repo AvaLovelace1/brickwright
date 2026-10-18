@@ -26,7 +26,7 @@
       "parts": 85,
       "collision_pairs": 4,
       "colliding_parts": 6,
-      "floating_parts": 0,
+      "floating_parts": 8,
       "components": 2,
       "warnings": [],
       "budget_usd": 5.0,
@@ -37,7 +37,8 @@
       "output_tokens": 10950,
       "cached_input_tokens": 1069824,
       "local_ldraw_file": "spaceship-gpt-6-astra-without-brickwright.ldr",
-      "local_packed_file": "spaceship-gpt-6-astra-without-brickwright.packed.mpd"
+      "local_packed_file": "spaceship-gpt-6-astra-without-brickwright.packed.mpd",
+      "local_diagnostics_file": "spaceship-gpt-6-astra-without-brickwright.diagnostics.json"
     },
     "brickwright": {
       "model": "gpt-6-astra",
@@ -73,7 +74,8 @@
       "output_tokens": 12400,
       "cached_input_tokens": 641576,
       "local_ldraw_file": "spaceship-gpt-6-astra-with-brickwright.ldr",
-      "local_packed_file": "spaceship-gpt-6-astra-with-brickwright.packed.mpd"
+      "local_packed_file": "spaceship-gpt-6-astra-with-brickwright.packed.mpd",
+      "local_diagnostics_file": "spaceship-gpt-6-astra-with-brickwright.diagnostics.json"
     },
     "codex-sol-docs": {
       "model": "gpt-6.1-sol",
@@ -103,14 +105,15 @@
       "parts": 71,
       "collision_pairs": 3,
       "colliding_parts": 4,
-      "floating_parts": 0,
+      "floating_parts": 1,
       "components": 2,
       "warnings": [],
       "input_tokens": 1070478,
       "output_tokens": 15385,
       "cached_input_tokens": 977152,
       "local_ldraw_file": "spaceship-gpt-6-1-sol-without-brickwright.ldr",
-      "local_packed_file": "spaceship-gpt-6-1-sol-without-brickwright.packed.mpd"
+      "local_packed_file": "spaceship-gpt-6-1-sol-without-brickwright.packed.mpd",
+      "local_diagnostics_file": "spaceship-gpt-6-1-sol-without-brickwright.diagnostics.json"
     },
     "brickwright-sol": {
       "model": "gpt-6.1-sol",
@@ -146,7 +149,8 @@
       "output_tokens": 14985,
       "cached_input_tokens": 1051171,
       "local_ldraw_file": "spaceship-gpt-6-1-sol-with-brickwright.ldr",
-      "local_packed_file": "spaceship-gpt-6-1-sol-with-brickwright.packed.mpd"
+      "local_packed_file": "spaceship-gpt-6-1-sol-with-brickwright.packed.mpd",
+      "local_diagnostics_file": "spaceship-gpt-6-1-sol-with-brickwright.diagnostics.json"
     },
     "codex-luna-docs": {
       "model": "gpt-6-luna",
@@ -170,7 +174,7 @@
       "parts": 33,
       "collision_pairs": 77,
       "colliding_parts": 31,
-      "floating_parts": 1,
+      "floating_parts": 29,
       "components": 24,
       "warnings": [],
       "budget_usd": 5.0,
@@ -181,7 +185,8 @@
       "output_tokens": 19094,
       "cached_input_tokens": 893184,
       "local_ldraw_file": "spaceship-gpt-6-luna-without-brickwright.ldr",
-      "local_packed_file": "spaceship-gpt-6-luna-without-brickwright.packed.mpd"
+      "local_packed_file": "spaceship-gpt-6-luna-without-brickwright.packed.mpd",
+      "local_diagnostics_file": "spaceship-gpt-6-luna-without-brickwright.diagnostics.json"
     },
     "brickwright-luna": {
       "model": "gpt-6-luna",
@@ -217,7 +222,8 @@
       "output_tokens": 60565,
       "cached_input_tokens": 2324672,
       "local_ldraw_file": "spaceship-gpt-6-luna-with-brickwright.ldr",
-      "local_packed_file": "spaceship-gpt-6-luna-with-brickwright.packed.mpd"
+      "local_packed_file": "spaceship-gpt-6-luna-with-brickwright.packed.mpd",
+      "local_diagnostics_file": "spaceship-gpt-6-luna-with-brickwright.diagnostics.json"
     },
     "claude-haiku-5-5-docs": {
       "model": "claude-haiku-5-5",
@@ -251,14 +257,15 @@
       "parts": 21,
       "collision_pairs": 8,
       "colliding_parts": 8,
-      "floating_parts": 0,
+      "floating_parts": 6,
       "components": 13,
       "warnings": [],
       "input_tokens": 683277,
       "output_tokens": 69562,
       "cached_input_tokens": 621522,
       "local_ldraw_file": "spaceship-claude-haiku-5-5-without-brickwright.ldr",
-      "local_packed_file": "spaceship-claude-haiku-5-5-without-brickwright.packed.mpd"
+      "local_packed_file": "spaceship-claude-haiku-5-5-without-brickwright.packed.mpd",
+      "local_diagnostics_file": "spaceship-claude-haiku-5-5-without-brickwright.diagnostics.json"
     },
     "brickwright-haiku-5-5": {
       "model": "anthropic/claude-haiku-5-5",
@@ -300,7 +307,9 @@
       "output_tokens": 37551,
       "cached_input_tokens": 713112,
       "local_ldraw_file": "spaceship-claude-haiku-5-5-with-brickwright.ldr",
-      "local_packed_file": "spaceship-claude-haiku-5-5-with-brickwright.packed.mpd"
+      "local_packed_file": "spaceship-claude-haiku-5-5-with-brickwright.packed.mpd",
+      "local_diagnostics_file": "spaceship-claude-haiku-5-5-with-brickwright.diagnostics.json"
     }
-  }
+  },
+  "diagnostics_refreshed_at": "2026-10-18T17:20:36.104461+00:00"
 }

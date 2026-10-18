@@ -53,7 +53,8 @@ export default defineConfig({
           browser: {
             enabled: true,
             headless: true,
-            provider: playwright({}),
+            // Full Chromium's headless mode supports hardware WebGL rendering.
+            provider: playwright({ launchOptions: { channel: "chromium" } }),
             instances: [{ browser: "chromium" }],
           },
         },

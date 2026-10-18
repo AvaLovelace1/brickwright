@@ -53,20 +53,31 @@
   import { T, useThrelte } from "@threlte/core";
   import { Environment, OrbitControls, HTML } from "@threlte/extras";
   import { onMount } from "svelte";
+  import { createDiagnosticView, type DiagnosticView } from "#lib/model-diagnostics.js";
+  import type { LegoModelView } from "./ModelViewer.svelte";
   const { invalidate } = useThrelte();
 
   interface Props {
-    ldrPacked: string;
-    stepsShown?: number;
-    onload?: (maxSteps: number) => void;
+    model: LegoModelView;
+    onload: (maxSteps: number) => void;
+    ondiagnosticerror: () => void;
+    highlightInvalid?: boolean;
+    showIntersections?: boolean;
   }
-  let { ldrPacked, stepsShown = Infinity, onload }: Props = $props();
+  let {
+    model,
+    onload,
+    ondiagnosticerror,
+    highlightInvalid = false,
+    showIntersections = false,
+  }: Props = $props();
   let prevStepsShown = 0;
   let ldrawGroup = $state<Object3D>();
   let envMapTexture = $state<Texture>();
+  let diagnosticView = $state<DiagnosticView>();
 
   function showSteps(group: Object3D) {
-    const shown = Math.min(stepsShown, group.children.length);
+    const shown = Math.min(model.stepsShown, group.children.length);
     if (prevStepsShown < shown) {
       for (let i = prevStepsShown; i < shown; i++) {
         group.children[i].visible = true;
@@ -84,14 +95,37 @@
     if (ldrawGroup) showSteps(ldrawGroup);
   });
 
+  $effect(() => {
+    if (!ldrawGroup || !model.diagnostics) return;
+    try {
+      const view = createDiagnosticView(ldrawGroup, model.diagnostics);
+      diagnosticView = view;
+      return () => {
+        diagnosticView = undefined;
+        view.dispose();
+      };
+    } catch {
+      ondiagnosticerror();
+    }
+  });
+
+  $effect(() => {
+    if (!diagnosticView || !ldrawGroup) return;
+    diagnosticView.update({
+      highlightInvalid,
+      // The exported lines describe the complete assembly, not individual build steps.
+      showIntersections: showIntersections && model.stepsShown >= model.maxSteps,
+    });
+    invalidate();
+  });
+
   onMount(async () => {
     loadEnvMap().then((texture) => (envMapTexture = texture));
-    const group = await loadModel(ldrPacked);
+    const group = await loadModel(model.ldrPacked);
     // A step reveals one top-level object: a part or an entire submodel.
-    const maxSteps = group.children.length;
-    prevStepsShown = maxSteps;
+    prevStepsShown = group.children.length;
     ldrawGroup = group;
-    onload?.(maxSteps);
+    onload(group.children.length);
   });
 
   let autoRotate = $state(true);
@@ -105,3 +139,4 @@
   <HTML center><div class="text-sm text-text italic">Loading model…</div></HTML>
 {/if}
 <T is={ldrawGroup} />
+{#if diagnosticView}<T is={diagnosticView.intersections} />{/if}

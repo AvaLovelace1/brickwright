@@ -9,6 +9,7 @@
   import { expect, screen, waitFor, within } from "storybook/test";
   import { Tooltip as BitsTooltip } from "bits-ui";
   import { flushSync } from "svelte";
+  import { asset } from "$app/paths";
 
   const { Story } = defineMeta({
     title: "Components/Model Viewer",
@@ -32,13 +33,50 @@
     stepsShown: 1,
     maxSteps: 600,
   });
+
+  function createDiagnosticModel(): LegoModelView {
+    const filename = "models/spaceship-309/spaceship-gpt-6-astra-without-brickwright";
+    return {
+      ldr: asset(`${filename}.ldr`),
+      ldrPacked: asset(`${filename}.packed.mpd`),
+      diagnosticsUrl: asset(`${filename}.diagnostics.json`),
+      caption: "GPT-6 Astra build without BrickWright",
+      stepsShown: 1,
+      maxSteps: 1,
+    };
+  }
+
+  let intersectionModel = $state(createDiagnosticModel());
+  let highlightedModel = $state(createDiagnosticModel());
+  let combinedModel = $state(createDiagnosticModel());
+  const diagnosticArgs = {
+    class: "size-80",
+    showCaption: false,
+    badge: { text: "Collisions", tone: "danger" },
+  } satisfies Partial<ModelViewerProps>;
+
+  async function expectDiagnosticsLoaded(model: LegoModelView) {
+    await waitFor(
+      () => {
+        expect(model.loaded).toBe(true);
+        expect(model.diagnostics?.collisions.length).toBeGreaterThan(0);
+        expect(model.diagnostics?.floating.length).toBeGreaterThan(0);
+      },
+      { timeout: 45_000 },
+    );
+    await expect(model.diagnosticsError).not.toBe(true);
+  }
 </script>
 
 {#snippet template(args: ModelViewerProps)}
   <BitsTooltip.Provider>
     <div class="relative">
       <ModelViewer {...args} bind:model={args.model} />
-      <SharedCanvas models={[args.model]} />
+      <SharedCanvas
+        models={[args.model]}
+        highlightInvalid={args.highlightInvalid}
+        showIntersections={args.showIntersections}
+      />
     </div>
   </BitsTooltip.Provider>
 {/snippet}
@@ -260,5 +298,46 @@
       await expect(badge).toHaveTextContent("Collisions");
       await expect(canvas.getByRole("figure", { name: "A detailed cruise ship" })).toBeVisible();
     });
+  }}
+/>
+
+<Story
+  name="Intersections"
+  args={{ ...diagnosticArgs, model: intersectionModel, showIntersections: true }}
+  play={async ({ canvas, args, userEvent, step }) => {
+    await expectDiagnosticsLoaded(args.model);
+    await step("Intersections are labelled on the complete build", async () => {
+      await expect(canvas.getByText("Intersections", { exact: true })).toBeVisible();
+    });
+    await step("The legend follows the completed-build overlay", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: "Rewind" }));
+      await expect(canvas.queryByText("Intersections", { exact: true })).toBeNull();
+      canvas.getByRole("slider", { name: "Steps shown" }).focus();
+      await userEvent.keyboard("{End}");
+      await expect(canvas.getByText("Intersections", { exact: true })).toBeVisible();
+    });
+  }}
+/>
+
+<Story
+  name="Invalid Bricks"
+  args={{ ...diagnosticArgs, model: highlightedModel, highlightInvalid: true }}
+  play={async ({ canvas, args }) => {
+    await expectDiagnosticsLoaded(args.model);
+    await expect(canvas.queryByText("Intersections", { exact: true })).toBeNull();
+  }}
+/>
+
+<Story
+  name="Combined Diagnostics"
+  args={{
+    ...diagnosticArgs,
+    model: combinedModel,
+    highlightInvalid: true,
+    showIntersections: true,
+  }}
+  play={async ({ canvas, args }) => {
+    await expectDiagnosticsLoaded(args.model);
+    await expect(canvas.getByText("Intersections", { exact: true })).toBeVisible();
   }}
 />

@@ -6,8 +6,10 @@
 
   interface Props {
     models: LegoModelView[];
+    highlightInvalid?: boolean;
+    showIntersections?: boolean;
   }
-  let { models = $bindable() }: Props = $props();
+  let { models, highlightInvalid = false, showIntersections = false }: Props = $props();
 </script>
 
 <!-- Set pointer-events-none so the overlay doesn't capture camera drag controls -->
@@ -17,12 +19,14 @@
       {#if model.loadRequested}
         <View dom={model.window}>
           <LegoModel
-            ldrPacked={model.ldrPacked}
-            stepsShown={model.stepsShown}
+            {model}
+            {highlightInvalid}
+            {showIntersections}
             onload={(maxSteps) => {
               model.maxSteps = maxSteps;
               model.loaded = true;
             }}
+            ondiagnosticerror={() => (model.diagnosticsError = true)}
           />
         </View>
       {/if}

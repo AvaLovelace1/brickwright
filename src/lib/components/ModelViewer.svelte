@@ -9,6 +9,7 @@
   import Slider from "#lib/components/Slider.svelte";
   import Tooltip from "#lib/components/Tooltip.svelte";
   import { prefersReducedMotion } from "svelte/motion";
+  import { loadDiagnostics, type ModelDiagnostics } from "#lib/model-diagnostics.js";
 
   export interface LegoModelView {
     ldr: string;
@@ -19,6 +20,9 @@
     window?: HTMLElement;
     loaded?: boolean;
     loadRequested?: boolean;
+    diagnosticsUrl?: string;
+    diagnostics?: ModelDiagnostics;
+    diagnosticsError?: boolean;
   }
 
   export interface ViewerBadge {
@@ -32,6 +36,8 @@
     autoplay?: boolean;
     showCaption?: boolean;
     badge?: ViewerBadge;
+    highlightInvalid?: boolean;
+    showIntersections?: boolean;
     class?: ClassValue;
   }
   let {
@@ -39,10 +45,18 @@
     autoplay = false,
     showCaption = true,
     badge,
+    highlightInvalid = false,
+    showIntersections = false,
     class: className = "",
   }: Props = $props();
   const uid = $props.id();
   const hasCaption = $derived(showCaption && Boolean(model.caption));
+  const hasIntersections = $derived(
+    showIntersections &&
+      !model.diagnosticsError &&
+      model.stepsShown >= model.maxSteps &&
+      Boolean(model.diagnostics?.intersectionPositions.length),
+  );
   const slug = $derived(model.ldr.split("/").pop()?.split(".")[0] ?? "model");
 
   let tooltipAnchor = $state<HTMLElement | null>(null);
@@ -133,6 +147,22 @@
     }
   });
 
+  $effect(() => {
+    if (!model.loadRequested || !model.diagnosticsUrl || model.diagnostics) return;
+    let disposed = false;
+    loadDiagnostics(model.diagnosticsUrl).then(
+      (data) => {
+        if (!disposed) model.diagnostics = data;
+      },
+      () => {
+        if (!disposed) model.diagnosticsError = true;
+      },
+    );
+    return () => {
+      disposed = true;
+    };
+  });
+
   onMount(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -157,6 +187,17 @@
     "focus-visible:text-link focus-visible:outline-2 outline-link";
 </script>
 
+{#snippet badgeDetail(text: string, showIntersectionLine = false)}
+  <span
+    class="inline-flex items-center gap-1 rounded-(--bb-border-radius) bg-surface px-1 text-xs sm:text-sm"
+  >
+    {#if showIntersectionLine}
+      <span class="h-0.5 w-3 shrink-0 bg-[#f00]" aria-hidden="true"></span>
+    {/if}
+    {text}
+  </span>
+{/snippet}
+
 {#snippet statusBadge()}
   {#if badge}
     <div class="pointer-events-none flex flex-wrap items-center gap-x-3 gap-y-1 p-1 text-text">
@@ -176,10 +217,14 @@
         ></span>
         {badge.text}
       </span>
+      {#if hasIntersections}
+        {@render badgeDetail("Intersections", true)}
+      {/if}
+      {#if model.diagnosticsError}
+        {@render badgeDetail("Diagnostics unavailable")}
+      {/if}
       {#if badge.description}
-        <p class="rounded-(--bb-border-radius) bg-surface px-1 text-xs sm:text-sm">
-          {badge.description}
-        </p>
+        {@render badgeDetail(badge.description)}
       {/if}
     </div>
   {/if}
@@ -282,12 +327,14 @@
                 <div class={WINDOW_CLASS}>
                   <Canvas>
                     <LegoModel
-                      ldrPacked={model.ldrPacked}
-                      stepsShown={model.stepsShown}
+                      {model}
+                      {highlightInvalid}
+                      {showIntersections}
                       onload={(maxSteps) => {
                         model.maxSteps = maxSteps;
                         model.loaded = true;
                       }}
+                      ondiagnosticerror={() => (model.diagnosticsError = true)}
                     />
                   </Canvas>
                 </div>

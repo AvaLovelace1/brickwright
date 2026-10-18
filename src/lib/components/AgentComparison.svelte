@@ -1,6 +1,6 @@
 <script lang="ts">
   import { asset } from "$app/paths";
-  import RadioGroup from "./RadioGroup.svelte";
+  import Checkbox from "./Checkbox.svelte";
   import ModelViewer, { type LegoModelView } from "./ModelViewer.svelte";
   import SharedCanvas from "./SharedCanvas.svelte";
 
@@ -41,6 +41,7 @@
         withBrickwright: side === 1,
         ldr: asset(`${modelDirectory}/${filename}.ldr`),
         ldrPacked: asset(`${modelDirectory}/${filename}.packed.mpd`),
+        diagnosticsUrl: asset(`${modelDirectory}/${filename}.diagnostics.json`),
         caption: `${agent.name} build ${side === 1 ? "with" : "without"} BrickWright`,
         maxSteps: 1,
         stepsShown: 1,
@@ -49,18 +50,17 @@
   );
   const models = $derived(pairs.flatMap((pair) => pair.models));
 
-  let view = $state("intersections");
-  const views = [
-    { value: "normal", label: "Normal" },
-    { value: "intersections", label: "Intersections" },
-    { value: "invalid", label: "Invalid placements" },
-  ];
+  let showIntersections = $state(true);
+  let highlightInvalid = $state(false);
 </script>
 
 <figure aria-labelledby="{uid}-caption" class="relative">
   <div class="mb-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
     <p class="font-display text-2xl font-extrabold">Better builds with BrickWright</p>
-    <RadioGroup label="View" options={views} bind:value={view} />
+    <div class="flex flex-wrap gap-x-4 gap-y-2">
+      <Checkbox label="Show intersections" bind:checked={showIntersections} />
+      <Checkbox label="Highlight colliding/floating bricks" bind:checked={highlightInvalid} />
+    </div>
   </div>
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
     {#each pairs as pair (pair.name)}
@@ -76,8 +76,10 @@
                 bind:model={pair.models[side]}
                 class="aspect-square"
                 showCaption={false}
+                {highlightInvalid}
+                {showIntersections}
                 badge={{
-                  text: model.withBrickwright ? "Valid" : "Collisions",
+                  text: model.withBrickwright ? "Valid" : "Invalid",
                   tone: model.withBrickwright ? "success" : "danger",
                 }}
               />
@@ -87,7 +89,7 @@
       </div>
     {/each}
   </div>
-  <SharedCanvas {models} />
+  <SharedCanvas {models} {highlightInvalid} {showIntersections} />
   <figcaption id="{uid}-caption" class="mt-6 text-sm text-pretty">
     <strong>
       Given the same prompt, BrickWright-equipped agents produce higher-quality builds with fewer
