@@ -30,7 +30,7 @@
     value = $bindable(""),
     hideLabel = false,
     iconOnly = false,
-    labelClass = "mb-1 text-sm font-semibold",
+    labelClass = "mb-1 text-sm",
     placeholder = "Select an option",
     disabled = false,
     class: className = "",
@@ -70,10 +70,7 @@
     <BitsSelect.Content
       sideOffset={4}
       forceMount
-      class={[
-        "z-50 text-text",
-        iconOnly ? "w-max min-w-32" : "w-[var(--bits-select-anchor-width)]",
-      ]}
+      class={["z-50 text-text", iconOnly ? "w-max min-w-32" : "w-(--bits-select-anchor-width)"]}
       align="end"
     >
       {#snippet child({ props, wrapperProps, open })}
@@ -83,7 +80,7 @@
               <HardShadow>
                 <BitsSelect.Viewport
                   class={[
-                    "max-h-[var(--bits-select-content-available-height)] overflow-y-auto p-1",
+                    "max-h-(--bits-select-content-available-height) overflow-y-auto p-1",
                     "bb-border bg-surface",
                   ]}
                 >

@@ -48,7 +48,7 @@
       class={[
         "relative min-w-0 flex-1 p-3",
         "rounded-(--bb-border-radius) bg-bg text-text",
-        "before:absolute before:-left-[0.4rem] before:size-[0.8rem]",
+        "before:absolute before:left-[-0.4rem] before:size-[0.8rem]",
         "before:-translate-y-1/2 before:rotate-45 before:bg-bg before:content-['']",
         speaker === "user" ? "before:top-1/2" : "before:top-(--speaker-anchor)",
       ]}
@@ -72,28 +72,17 @@
 
 {#snippet resultContent()}
   <div class="relative">
-    <div
-      class={[
-        "pointer-events-none absolute top-1 right-2 left-1 z-10",
-        "flex flex-wrap items-center gap-x-3 gap-y-1",
-        "rounded-(--bb-border-radius) bg-surface p-1",
-      ]}
-    >
-      <span class="bb-badge bb-badge-success inline-flex items-center gap-1" role="status">
-        <span class="iconify shrink-0 tdesign--check-circle" aria-hidden="true"></span>
-        Physically feasible
-      </span>
-      <p class="text-xs sm:text-sm">
-        Real LEGO® parts &nbsp;▪&nbsp; No intersecting or floating parts &nbsp;▪&nbsp; One connected
-        component
-      </p>
-    </div>
     {#key selected}
       <ModelViewer
         bind:model={models[index]}
-        class="aspect-[4/3] sm:aspect-[3/2] lg:aspect-[16/9]"
+        class="aspect-4/3 sm:aspect-3/2 lg:aspect-video"
         autoplay
         showCaption={false}
+        badge={{
+          text: "Physically feasible",
+          description:
+            "Real LEGO® parts · No intersecting or floating parts · One connected component",
+        }}
       />
       <SharedCanvas models={[models[index]]} />
     {/key}

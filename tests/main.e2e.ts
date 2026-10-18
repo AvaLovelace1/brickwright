@@ -121,14 +121,56 @@ test("models on the main page start building themselves", async ({ mainPage }) =
   });
 });
 
-test("models do not build themselves when the visitor prefers reduced motion", async ({
+test("models start complete when the visitor prefers reduced motion", async ({
   page,
   mainPage,
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mainPage.goto();
-  await expect(page.getByText("Loading model…")).toHaveCount(0, { timeout: 60_000 });
-  await expect(mainPage.firstModel.getByRole("button", { name: "Play", exact: true })).toBeVisible({
+  await expect(
+    mainPage.firstModel.getByRole("button", { name: "Rewind", exact: true }),
+  ).toBeVisible({
+    timeout: 60_000,
+  });
+  const slider = mainPage.firstModel.getByRole("slider", { name: "Bricks shown" });
+  await expect(slider).toHaveAttribute(
+    "aria-valuenow",
+    (await slider.getAttribute("aria-valuemax"))!,
+  );
+  await mainPage.firstModel.getByRole("button", { name: "Rewind", exact: true }).click();
+  await expect(slider).toHaveAttribute("aria-valuenow", "1");
+  await expect(
+    mainPage.firstModel.getByRole("button", { name: "Play", exact: true }),
+  ).toBeVisible();
+});
+
+test("comparison models load as their viewers approach the viewport", async ({
+  page,
+  mainPage,
+}) => {
+  const requestedModels: string[] = [];
+  page.on("request", (request) => {
+    if (request.url().endsWith(".packed.mpd"))
+      requestedModels.push(new URL(request.url()).pathname);
+  });
+  await mainPage.goto();
+  await expect(mainPage.firstModel.getByRole("button", { name: /^(Pause|Rewind)$/ })).toBeVisible({
+    timeout: 60_000,
+  });
+  const viewer = page.getByRole("figure", {
+    name: "GPT-6 Astra build without BrickWright",
+    exact: true,
+  });
+  const ldr = await viewer.getByRole("link", { name: "Download LDraw" }).getAttribute("href");
+  const packedPath = ldr!.replace(/\.ldr$/, ".packed.mpd");
+  expect(requestedModels).not.toContain(packedPath);
+  await viewer.scrollIntoViewIfNeeded();
+  await expect.poll(() => requestedModels, { timeout: 60_000 }).toContain(packedPath);
+  const slider = viewer.getByRole("slider", { name: "Bricks shown" });
+  await expect
+    .poll(async () => Number(await slider.getAttribute("aria-valuemax")), { timeout: 60_000 })
+    .toBeGreaterThan(1);
+  await expect(viewer.getByRole("button", { name: "Rewind", exact: true })).toBeVisible({
     timeout: 60_000,
   });
 });

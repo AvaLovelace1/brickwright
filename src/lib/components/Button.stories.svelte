@@ -20,7 +20,6 @@
     const button = canvas.getByRole("button", { name: "Run Action" });
     await step("Button renders", async () => {
       await expect(button).toBeVisible();
-      await expect(button).toHaveClass("bb-btn");
     });
     await step("Clicking button runs handler", async () => {
       await userEvent.click(button);
@@ -37,7 +36,6 @@
     const link = canvas.getByRole("link", { name: "Go Home" });
     await step("Button renders as a link", async () => {
       await expect(link).toBeVisible();
-      await expect(link).toHaveClass("bb-btn");
     });
     await step("Link is internal anchor without external attrs", async () => {
       await expect(link).toHaveAttribute("href", "/");

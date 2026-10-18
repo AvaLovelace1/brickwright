@@ -1,11 +1,11 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import BrickrightLogo from "./BrickWrightLogo.svelte";
+  import BrickWrightLogo from "./BrickWrightLogo.svelte";
   import { expect } from "storybook/test";
 
   const { Story } = defineMeta({
     title: "Components/BrickWright Logo",
-    component: BrickrightLogo,
+    component: BrickWrightLogo,
     tags: ["autodocs"],
     args: { class: "text-4xl" },
   });
@@ -59,10 +59,7 @@
 <Story
   name="Custom Word Class"
   args={{ textClass: "sr-only" }}
-  play={async ({ canvas, step }) => {
-    await step("Custom class is applied to the words", async () => {
-      const words = canvas.getByText("BrickWright");
-      await expect(words).toHaveClass("sr-only");
-    });
+  play={async ({ canvas }) => {
+    await expect(canvas.getByText("BrickWright")).toHaveClass("sr-only");
   }}
 />

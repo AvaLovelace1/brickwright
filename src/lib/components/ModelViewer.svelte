@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy } from "svelte";
+  import { onDestroy, onMount } from "svelte";
   import { Canvas } from "@threlte/core";
   import LegoModel from "#lib/components/LegoModel.svelte";
   import HardShadow from "#lib/components/HardShadow.svelte";
@@ -18,18 +18,27 @@
     caption: string;
     window?: HTMLElement;
     loaded?: boolean;
+    loadRequested?: boolean;
+  }
+
+  export interface ViewerBadge {
+    text: string;
+    description?: string;
+    tone?: "success" | "danger";
   }
 
   export interface Props {
     model: LegoModelView;
     autoplay?: boolean;
     showCaption?: boolean;
+    badge?: ViewerBadge;
     class?: ClassValue;
   }
   let {
     model = $bindable(),
     autoplay = false,
     showCaption = true,
+    badge,
     class: className = "",
   }: Props = $props();
   const uid = $props.id();
@@ -37,13 +46,14 @@
   const slug = $derived(model.ldr.split("/").pop()?.split(".")[0] ?? "model");
 
   let tooltipAnchor = $state<HTMLElement | null>(null);
-  let currentTool = $state<number | null>(null);
+  let currentTool = $state<ToolName | null>(null);
   let popupContent: HTMLElement | null = $state(null);
 
   let paused = $state(true);
   let expanded = $state(false);
   const ended = $derived(model.bricksShown >= model.maxBricks);
-  let autoplayed = false;
+  let initialized = false;
+  let figure: HTMLElement;
   let playInterval: NodeJS.Timeout | undefined;
 
   const playLabel = $derived(ended ? "Rewind" : paused ? "Play" : "Pause");
@@ -52,7 +62,9 @@
   );
   const playAction = $derived(ended ? rewind : paused ? play : pause);
 
-  export interface ViewerTool {
+  type ToolName = "previous" | "playback" | "next" | "download" | "close" | "expand";
+
+  interface ViewerTool {
     label: string;
     icon: string;
     onclick?: () => void;
@@ -60,24 +72,28 @@
     download?: string;
   }
 
-  const toolsList = $derived([
-    { label: "Previous step", icon: "tdesign--previous", onclick: prevStep },
-    { label: playLabel, icon: playIcon, onclick: playAction },
-    { label: "Next step", icon: "tdesign--next", onclick: nextStep },
-    {
+  const tools: Record<ToolName, ViewerTool> = $derived({
+    previous: { label: "Previous step", icon: "tdesign--previous", onclick: prevStep },
+    playback: { label: playLabel, icon: playIcon, onclick: playAction },
+    next: { label: "Next step", icon: "tdesign--next", onclick: nextStep },
+    download: {
       label: "Download LDraw",
       icon: "tdesign--download",
       href: model.ldr,
       download: `${slug}.ldr`,
     },
-    { label: "Close view", icon: "tdesign--fullscreen-exit", onclick: () => (expanded = false) },
-    { label: "Expand view", icon: "tdesign--fullscreen", onclick: () => (expanded = true) },
-  ]);
-  const tooltipText = $derived(currentTool === null ? "" : toolsList[currentTool].label);
+    close: {
+      label: "Close view",
+      icon: "tdesign--fullscreen-exit",
+      onclick: () => (expanded = false),
+    },
+    expand: { label: "Expand view", icon: "tdesign--fullscreen", onclick: () => (expanded = true) },
+  });
+  const tooltipText = $derived(currentTool === null ? "" : tools[currentTool].label);
 
-  function setTooltip(elem: HTMLElement | null, idx: number | null) {
+  function setTooltip(elem: HTMLElement | null, tool: ToolName | null) {
     tooltipAnchor = elem;
-    currentTool = idx;
+    currentTool = tool;
   }
 
   function prevStep() {
@@ -107,30 +123,78 @@
   }
 
   $effect(() => {
-    if (autoplay && model.loaded && !prefersReducedMotion.current && !autoplayed) {
-      autoplayed = true;
+    if (!model.loaded || initialized) return;
+    initialized = true;
+    if (autoplay && !prefersReducedMotion.current) {
+      model.bricksShown = 1;
       play();
+    } else {
+      model.bricksShown = model.maxBricks;
     }
+  });
+
+  onMount(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          model.loadRequested = true;
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "200px" },
+    );
+    observer.observe(figure);
+    return () => observer.disconnect();
   });
 
   onDestroy(() => clearInterval(playInterval));
 
   // We use outline instead of border so the model doesn't cover the border when zoomed.
   const WINDOW_CLASS = "size-[calc(100%-2px)] rounded-xs bg-surface outline-2 outline-line";
+  const OVERLAY_CLASS = "pointer-events-none absolute top-1 right-2 left-1 z-10";
   const BTN_CLASS =
     "flex cursor-pointer items-center text-text hover:text-link " +
     "focus-visible:text-link focus-visible:outline-2 outline-link";
 </script>
 
-{#snippet viewerTool(idx: number, { label, icon, onclick, href, download }: ViewerTool)}
+{#snippet statusBadge()}
+  {#if badge}
+    <div class="pointer-events-none flex flex-wrap items-center gap-x-3 gap-y-1 p-1 text-text">
+      <span
+        role="status"
+        class={[
+          "bb-badge inline-flex items-center gap-1",
+          badge.tone === "danger" ? "bb-badge-danger" : "bb-badge-success",
+        ]}
+      >
+        <span
+          class={[
+            "iconify shrink-0",
+            badge.tone === "danger" ? "tdesign--error-triangle" : "tdesign--check-circle",
+          ]}
+          aria-hidden="true"
+        ></span>
+        {badge.text}
+      </span>
+      {#if badge.description}
+        <p class="rounded-(--bb-border-radius) bg-surface px-1 text-xs sm:text-sm">
+          {badge.description}
+        </p>
+      {/if}
+    </div>
+  {/if}
+{/snippet}
+
+{#snippet viewerTool(name: ToolName)}
+  {@const { label, icon, onclick, href, download } = tools[name]}
   <Button.Root
     class={BTN_CLASS}
     {onclick}
     {href}
     {download}
-    onpointerenter={(event: PointerEvent) => setTooltip(event.currentTarget as HTMLElement, idx)}
+    onpointerenter={(event: PointerEvent) => setTooltip(event.currentTarget as HTMLElement, name)}
     onpointerleave={() => setTooltip(null, null)}
-    onfocus={(event: FocusEvent) => setTooltip(event.currentTarget as HTMLElement, idx)}
+    onfocus={(event: FocusEvent) => setTooltip(event.currentTarget as HTMLElement, name)}
     onblur={() => setTooltip(null, null)}
   >
     <span class="iconify {icon}"></span>
@@ -140,9 +204,9 @@
 
 {#snippet viewerTools(isExpandedView: boolean)}
   <div class="absolute right-2 bottom-2 left-2 z-10 flex items-center gap-2 text-text">
-    {@render viewerTool(0, toolsList[0])}
-    {@render viewerTool(1, toolsList[1])}
-    {@render viewerTool(2, toolsList[2])}
+    {@render viewerTool("previous")}
+    {@render viewerTool("playback")}
+    {@render viewerTool("next")}
     <Slider
       label="Bricks shown"
       min={1}
@@ -151,25 +215,13 @@
       hideLabel
       fmtValue={(value) => `Brick ${value}`}
     />
-    {@render viewerTool(3, toolsList[3])}
-    {#if isExpandedView}
-      <Dialog.Close
-        class={BTN_CLASS}
-        onpointerenter={(event: PointerEvent) => setTooltip(event.currentTarget as HTMLElement, 4)}
-        onpointerleave={() => setTooltip(null, null)}
-        onfocus={(event: FocusEvent) => setTooltip(event.currentTarget as HTMLElement, 4)}
-        onblur={() => setTooltip(null, null)}
-      >
-        <span class="iconify tdesign--fullscreen-exit"></span>
-        <span class="sr-only">Close view</span>
-      </Dialog.Close>
-    {:else}
-      {@render viewerTool(5, toolsList[5])}
-    {/if}
+    {@render viewerTool("download")}
+    {@render viewerTool(isExpandedView ? "close" : "expand")}
   </div>
 {/snippet}
 
 <figure
+  bind:this={figure}
   class={["relative", className]}
   aria-labelledby={hasCaption ? `${uid}-figcaption` : undefined}
   aria-label={!hasCaption ? model.caption : undefined}
@@ -178,12 +230,14 @@
     <div class={WINDOW_CLASS} bind:this={model.window}></div>
   </HardShadow>
   {#if hasCaption}
-    <figcaption
-      id="{uid}-figcaption"
-      class="bb-badge absolute -top-2 -left-2 z-10 max-w-full bg-bg"
-    >
-      “{model.caption}”
+    <figcaption id="{uid}-figcaption" class={[OVERLAY_CLASS, "flex flex-col gap-2"]}>
+      <span class="bb-badge relative -top-3 -left-3 -mb-3 w-fit max-w-full bg-bg">
+        “{model.caption}”
+      </span>
+      {@render statusBadge()}
     </figcaption>
+  {:else if badge}
+    <div class={OVERLAY_CLASS}>{@render statusBadge()}</div>
   {/if}
   {@render viewerTools(false)}
 </figure>

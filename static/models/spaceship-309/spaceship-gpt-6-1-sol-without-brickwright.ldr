@@ -1,0 +1,96 @@
+0 Borealis - White and Black Space Interceptor
+0 Name: model.ldr
+0 Author: Codex
+0 !LDRAW_ORG Model
+0 // Forward is -Z. All distances are in LDraw units.
+0 // White armor, black frame, transparent light-blue glazing.
+0 STEP
+0 // Stud-connected keel, floor, and swept wings
+1 0 0 8 -100 0 0 1 0 1 0 -1 0 0 3035.dat
+1 0 0 8 60 0 0 1 0 1 0 -1 0 0 3036.dat
+1 0 0 16 -20 0 0 1 0 1 0 -1 0 0 3034.dat
+1 0 0 24 0 1 0 0 0 1 0 0 0 1 3031.dat
+1 15 100 0 20 1 0 0 0 1 0 0 0 1 30355.dat
+1 15 -100 0 20 1 0 0 0 1 0 0 0 1 30356.dat
+1 0 0 0 -40 0 0 1 0 1 0 -1 0 0 3032.dat
+1 0 0 0 80 0 0 1 0 1 0 -1 0 0 3032.dat
+1 0 0 0 -140 1 0 0 0 1 0 0 0 1 3031.dat
+0 STEP
+0 // White tapered nose with black central armor panel
+1 15 0 -24 -120 1 0 0 0 1 0 0 0 1 43712.dat
+1 0 0 -32 -120 1 0 0 0 1 0 0 0 1 3068b.dat
+0 STEP
+0 // Cockpit walls and front sill; canopy mounts on the side studs
+1 15 -50 -24 -10 0 0 1 0 1 0 -1 0 0 3622.dat
+1 15 -50 -48 -10 0 0 1 0 1 0 -1 0 0 3622.dat
+1 15 50 -24 -10 0 0 1 0 1 0 -1 0 0 3622.dat
+1 15 50 -48 -10 0 0 1 0 1 0 -1 0 0 3622.dat
+1 15 0 -24 30 1 0 0 0 1 0 0 0 1 3009.dat
+1 15 0 -48 30 1 0 0 0 1 0 0 0 1 3009.dat
+1 0 0 -8 -80 1 0 0 0 1 0 0 0 1 3020.dat
+1 0 0 -16 -80 1 0 0 0 1 0 0 0 1 3020.dat
+1 15 0 -40 -80 1 0 0 0 1 0 0 0 1 3001.dat
+1 0 0 -48 -80 1 0 0 0 1 0 0 0 1 87079.dat
+1 0 0 -24 -50 1 0 0 0 1 0 0 0 1 3004.dat
+1 0 0 -32 -50 1 0 0 0 1 0 0 0 1 3069bp25.dat
+0 STEP
+0 // Seated blue-suited space pilot; leg rear sockets grip the cockpit floor
+1 1 0 -20.75 8 1 0 0 0 1 0 0 0 1 73200b-f2.dat
+1 1 0 -52.75 8 1 0 0 0 1 0 0 0 1 76382p90.dat
+1 14 0 -76.75 8 1 0 0 0 1 0 0 0 1 3626bp01.dat
+1 1 0 -76.75 8 1 0 0 0 1 0 0 0 1 30124b.dat
+1 47 0 -68.75 8.7 1 0 0 0 1 0 0 0 1 2447b.dat
+0 STEP
+0 // Removable transparent blue cockpit canopy
+1 43 0 -96 10 1 0 0 0 1 0 0 0 1 87606.dat
+0 STEP
+0 // Wing-root armor, black stripes, and swept white aft fairings
+1 15 -80 -24 -50 1 0 0 0 1 0 0 0 1 3039.dat
+1 15 -100 -8 40 0 0 1 0 1 0 -1 0 0 3020.dat
+1 0 -90 -16 40 0 0 1 0 1 0 -1 0 0 2431.dat
+1 15 -140 -24 90 -1 0 0 0 1 0 0 0 -1 3298.dat
+1 0 -100 -8 120 1 0 0 0 1 0 0 0 1 3068b.dat
+1 15 80 -24 -50 1 0 0 0 1 0 0 0 1 3039.dat
+1 15 100 -8 40 0 0 1 0 1 0 -1 0 0 3020.dat
+1 0 90 -16 40 0 0 1 0 1 0 -1 0 0 2431.dat
+1 15 140 -24 90 -1 0 0 0 1 0 0 0 -1 3298.dat
+1 0 100 -8 120 1 0 0 0 1 0 0 0 1 3068b.dat
+0 STEP
+0 // Bridging aft deck and dorsal tail fin
+1 15 0 -8 60 1 0 0 0 1 0 0 0 1 3034.dat
+1 15 -20 -32 70 1 0 0 0 1 0 0 0 1 3039.dat
+1 15 20 -32 70 1 0 0 0 1 0 0 0 1 3039.dat
+1 0 0 -40 70 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 0 -24 110 1 0 0 0 1 0 0 0 1 3009.dat
+1 15 0 -32 110 1 0 0 0 1 0 0 0 1 44661.dat
+0 STEP
+0 // Twin rear thrusters, with stud-mounted cylinders and blue exhaust dishes
+1 0 -30 -24 130 -1 0 0 0 1 0 0 0 -1 87087.dat
+1 15 -30 -32 130 1 0 0 0 1 0 0 0 1 3070b.dat
+1 0 -30 -14 164 1 0 0 0 0 1 0 -1 0 3941.dat
+1 0 -30 -14 188 1 0 0 0 0 1 0 -1 0 3941.dat
+1 72 -30 -14 196 1 0 0 0 0 1 0 -1 0 18674.dat
+1 43 -30 -14 204 1 0 0 0 0 1 0 -1 0 4740.dat
+1 43 -30 -14 212 1 0 0 0 0 1 0 -1 0 98138.dat
+1 0 30 -24 130 -1 0 0 0 1 0 0 0 -1 87087.dat
+1 15 30 -32 130 1 0 0 0 1 0 0 0 1 3070b.dat
+1 0 30 -14 164 1 0 0 0 0 1 0 -1 0 3941.dat
+1 0 30 -14 188 1 0 0 0 0 1 0 -1 0 3941.dat
+1 72 30 -14 196 1 0 0 0 0 1 0 -1 0 18674.dat
+1 43 30 -14 204 1 0 0 0 0 1 0 -1 0 4740.dat
+1 43 30 -14 212 1 0 0 0 0 1 0 -1 0 98138.dat
+0 STEP
+0 // Twin wing-mounted cannons; every barrel segment uses a stud connection
+1 0 -130 -24 30 1 0 0 0 1 0 0 0 1 4733.dat
+1 15 -130 -32 30 1 0 0 0 1 0 0 0 1 3070b.dat
+1 72 -130 -14 -4 1 0 0 0 0 -1 0 1 0 3062b.dat
+1 0 -130 -14 -28 1 0 0 0 0 -1 0 1 0 3062b.dat
+1 0 -130 -14 -52 1 0 0 0 0 -1 0 1 0 4589.dat
+1 0 -130 -14 -60 1 0 0 0 0 -1 0 1 0 3957a.dat
+1 0 130 -24 30 1 0 0 0 1 0 0 0 1 4733.dat
+1 15 130 -32 30 1 0 0 0 1 0 0 0 1 3070b.dat
+1 72 130 -14 -4 1 0 0 0 0 -1 0 1 0 3062b.dat
+1 0 130 -14 -28 1 0 0 0 0 -1 0 1 0 3062b.dat
+1 0 130 -14 -52 1 0 0 0 0 -1 0 1 0 4589.dat
+1 0 130 -14 -60 1 0 0 0 0 -1 0 1 0 3957a.dat
+0 // End of connected interceptor assembly

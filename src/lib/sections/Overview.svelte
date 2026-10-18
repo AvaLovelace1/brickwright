@@ -3,6 +3,7 @@
   import Container from "#lib/components/Container.svelte";
   import Teaser from "#lib/components/Teaser.svelte";
   import Prose from "#lib/components/Prose.svelte";
+  import AgentComparison from "#lib/components/AgentComparison.svelte";
 
   const AUTHORS = [
     { name: "Ava\u00A0Pun", aff: 1 },
@@ -55,7 +56,7 @@
       </hgroup>
     </Container>
   </div>
-  <div class="flex justify-center py-8 lg:py-12">
+  <div class="flex flex-col items-center py-8 lg:py-12">
     <Container>
       <Prose>
         <p class="lead">
@@ -77,6 +78,9 @@
           <a href="https://github.com/AvaLovelace1/brickwright">code is available on GitHub.</a>
         </p>
       </Prose>
+    </Container>
+    <Container class="mt-12 max-w-7xl">
+      <AgentComparison />
     </Container>
   </div>
 </section>

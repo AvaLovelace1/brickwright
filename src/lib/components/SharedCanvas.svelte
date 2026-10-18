@@ -14,16 +14,18 @@
 <div class="pointer-events-none absolute inset-0">
   <Canvas>
     {#each models as model (model.caption)}
-      <View dom={model.window}>
-        <LegoModel
-          ldrPacked={model.ldrPacked}
-          bricksShown={model.bricksShown}
-          onload={(maxBricks) => {
-            model.maxBricks = maxBricks;
-            model.loaded = true;
-          }}
-        />
-      </View>
+      {#if model.loadRequested}
+        <View dom={model.window}>
+          <LegoModel
+            ldrPacked={model.ldrPacked}
+            bricksShown={model.bricksShown}
+            onload={(maxBricks) => {
+              model.maxBricks = maxBricks;
+              model.loaded = true;
+            }}
+          />
+        </View>
+      {/if}
     {/each}
   </Canvas>
 </div>

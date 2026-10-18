@@ -1,0 +1,46 @@
+0 White and Black Starfighter
+0 Name: model.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Unofficial_Model
+0 // Forward is -Z; the swept wings and nose sit above a black structural keel.
+0 STEP
+1 15 -60 0 0 1 0 0 0 1 0 0 0 1 3933.dat
+1 15 40 0 0 1 0 0 0 1 0 0 0 1 3934.dat
+1 0 0 -8 0 1 0 0 0 1 0 0 0 1 3036.dat
+1 15 0 -16 0 1 0 0 0 1 0 0 0 1 3036.dat
+0 // Armoured spine and tapered nose
+1 0 -20 -24 36 1 0 0 0 1 0 0 0 1 3020.dat
+1 15 -20 -32 36 1 0 0 0 1 0 0 0 1 3020.dat
+1 15 -20 -40 56 1 0 0 0 1 0 0 0 1 3020.dat
+1 15 -20 -48 76 1 0 0 0 1 0 0 0 1 3020.dat
+1 15 -20 -24 -4 1 0 0 0 1 0 0 0 1 3020.dat
+1 0 -28 -32 -4 1 0 0 0 1 0 0 0 1 3020.dat
+0 // Blue-tinted cockpit canopy
+1 41 0 -76 -10 1 0 0 0 1 0 0 0 1 4597.dat
+0 // Pilot: blue space suit, classic helmet, yellow face and hands
+1 1 -8 -66 -18 1 0 0 0 1 0 0 0 1 973p68.dat
+1 1 0 -66 -18 1 0 0 0 1 0 0 0 1 3815.dat
+1 1 0 -54 -18 1 0 0 0 1 0 0 0 1 3816c.dat
+1 1 0 -54 -18 1 0 0 0 1 0 0 0 1 3817c.dat
+1 14 0 -85 -18 1 0 0 0 1 0 0 0 1 3626c.dat
+1 1 0 -85 -18 1 0 0 0 1 0 0 0 1 3842a.dat
+1 1 -8 -80 -18 1 0 0 0 1 0 0 0 1 3818.dat
+1 1 8 -80 -18 1 0 0 0 1 0 0 0 1 3819.dat
+1 14 -8 -80 -18 1 0 0 0 1 0 0 0 1 3820.dat
+1 14 8 -80 -18 1 0 0 0 1 0 0 0 1 3820.dat
+0 // Twin rear engines mounted over the wing roots
+1 0 -58 -20 56 1 0 0 0 1 0 0 0 1 30358.dat
+1 0 34 -20 56 -1 0 0 0 1 0 0 0 -1 30358.dat
+1 71 -42 -25 108 1 0 0 0 0 -1 0 1 0 98100.dat
+1 71 42 -25 108 1 0 0 0 0 -1 0 1 0 98100.dat
+0 // Side-mounted forward weapons
+1 0 -98 -12 -24 1 0 0 0 1 0 0 0 1 3023b.dat
+1 0 78 -12 -24 1 0 0 0 1 0 0 0 1 3023b.dat
+1 71 -90 -16 -44 1 0 0 0 0 1 0 -1 0 98100.dat
+1 71 90 -16 -44 1 0 0 0 0 1 0 -1 0 98100.dat
+0 // Black vent and sensor details
+1 0 -10 -24 24 1 0 0 0 1 0 0 0 1 3004.dat
+1 0 -10 -24 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 71 -10 -32 4 1 0 0 0 1 0 0 0 1 3024.dat
+1 71 -10 -32 -4 1 0 0 0 1 0 0 0 1 3024.dat
+0 STEP

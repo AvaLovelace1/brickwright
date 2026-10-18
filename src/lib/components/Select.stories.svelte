@@ -102,7 +102,8 @@
     const trigger = canvas.getByRole("button", { name: "Model Cruise ship" });
     await expect(label).toBeVisible();
     await expect(label).toHaveClass("shrink-0", "text-base", "font-semibold");
-    await expect(trigger.getAttribute("aria-labelledby")?.split(" ")).toContain(label.id);
+    await expect(trigger).toHaveClass("min-w-0", "flex-1");
+    await expect(trigger).toHaveAccessibleName("Model Cruise ship");
   }}
 >
   {#snippet template(args)}

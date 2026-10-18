@@ -17,27 +17,35 @@
     tags: ["autodocs"],
   });
 
-  let models = $state<LegoModelView[]>([
-    { ldr, ldrPacked, caption: "A detailed cruise ship", bricksShown: 1, maxBricks: 600 },
-  ]);
+  let model = $state<LegoModelView>({
+    ldr,
+    ldrPacked,
+    caption: "A detailed cruise ship",
+    bricksShown: 1,
+    maxBricks: 600,
+  });
 
-  let autoplayModels = $state<LegoModelView[]>([
-    { ldr, ldrPacked, caption: "An autoplaying cruise ship", bricksShown: 1, maxBricks: 600 },
-  ]);
+  let autoplayModel = $state<LegoModelView>({
+    ldr,
+    ldrPacked,
+    caption: "An autoplaying cruise ship",
+    bricksShown: 1,
+    maxBricks: 600,
+  });
 </script>
 
 {#snippet template(args: ModelViewerProps)}
   <BitsTooltip.Provider>
     <div class="relative">
       <ModelViewer {...args} bind:model={args.model} />
-      <SharedCanvas bind:models />
+      <SharedCanvas models={[args.model]} />
     </div>
   </BitsTooltip.Provider>
 {/snippet}
 
 <Story
   name="Default"
-  args={{ model: models[0], class: "size-64" }}
+  args={{ model: model, class: "size-64" }}
   play={async ({ canvas, canvasElement, step, userEvent, args }) => {
     async function sleep(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms));
@@ -163,8 +171,13 @@
     await step("Caption labels the figure", async () => {
       await expect(canvas.getByRole("figure", { name: /A detailed cruise ship/ })).toBeVisible();
     });
-    await step("Buttons are functional", async () => {
+    await step("The viewer starts with a complete build and can be rewound", async () => {
       await waitFor(() => expect(args.model.loaded).toBe(true), { timeout: 45_000 });
+      await waitFor(() => expect(args.model.bricksShown).toBe(args.model.maxBricks));
+      await userEvent.click(canvas.getByRole("button", { name: "Rewind" }));
+      await expect(args.model.bricksShown).toBe(1);
+    });
+    await step("Buttons are functional", async () => {
       await checkButtons(canvasElement);
     });
     await step("All open/close methods work", async () => {
@@ -187,22 +200,12 @@
   }}
 />
 
-{#snippet autoplayTemplate(args: ModelViewerProps)}
-  <BitsTooltip.Provider>
-    <div class="relative">
-      <ModelViewer {...args} bind:model={args.model} />
-      <SharedCanvas bind:models={autoplayModels} />
-    </div>
-  </BitsTooltip.Provider>
-{/snippet}
-
 <Story
   name="Autoplay"
-  template={autoplayTemplate}
-  args={{ model: autoplayModels[0], class: "size-64", autoplay: true }}
+  args={{ model: autoplayModel, class: "size-64", autoplay: true }}
   play={async ({ canvas, step }) => {
     await step("Playback starts on its own once the model has loaded", async () => {
-      await waitFor(() => expect(autoplayModels[0].bricksShown).toBeGreaterThan(1), {
+      await waitFor(() => expect(autoplayModel.bricksShown).toBeGreaterThan(1), {
         timeout: 45_000,
       });
       await expect(canvas.getByRole("button", { name: /pause/i })).toBeVisible();
@@ -212,12 +215,50 @@
 
 <Story
   name="Hidden Caption"
-  args={{ model: models[0], class: "size-64", showCaption: false }}
+  args={{ model: model, class: "size-64", showCaption: false }}
   play={async ({ canvas, args, step }) => {
     await step("Figure retains its accessible name without a visible caption", async () => {
       const figure = canvas.getByRole("figure", { name: args.model.caption });
       await expect(figure).toBeVisible();
       await expect(figure.querySelector("figcaption")).toBeNull();
+    });
+  }}
+/>
+
+<Story
+  name="Status Badge"
+  args={{
+    model: model,
+    class: "h-80 w-full max-w-xl",
+    badge: {
+      text: "Physically feasible",
+      description: "Real LEGO® parts · No intersecting or floating parts · One connected component",
+    },
+  }}
+  play={async ({ canvas, args, step }) => {
+    const badge = args.badge!;
+    await step("Badge and description appear alongside the caption", async () => {
+      await expect(canvas.getByRole("status")).toHaveTextContent(badge.text);
+      await expect(canvas.getByText(badge.description!)).toBeVisible();
+      await expect(canvas.getByRole("figure", { name: /A detailed cruise ship/ })).toBeVisible();
+    });
+  }}
+/>
+
+<Story
+  name="Collisions Badge"
+  args={{
+    model: model,
+    class: "size-64",
+    showCaption: false,
+    badge: { text: "Collisions", tone: "danger" },
+  }}
+  play={async ({ canvas, step }) => {
+    await step("A warning badge works without a description or visible caption", async () => {
+      const badge = canvas.getByRole("status");
+      await expect(badge).toBeVisible();
+      await expect(badge).toHaveTextContent("Collisions");
+      await expect(canvas.getByRole("figure", { name: "A detailed cruise ship" })).toBeVisible();
     });
   }}
 />
