@@ -4,6 +4,7 @@
   import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
   import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
   import envMapUrl from "#lib/assets/studio_kontrast_02_1k.hdr?url";
+  import { parsePackedModel } from "#lib/ldraw.js";
 
   // One LDrawLoader shared across all LegoModel instances.
   const loader = new LDrawLoader();
@@ -25,7 +26,13 @@
   // Load an LDraw model, parsing each URL once. Clones share geometry and materials with the cached model.
   async function loadModel(url: string) {
     if (!models[url]) {
-      models[url] = queue.then(() => loader.loadAsync(url)).then(normalizeModel);
+      models[url] = queue
+        .then(async () => {
+          const response = await fetch(url);
+          if (!response.ok) throw new Error(`Unable to load model: ${response.status} ${url}`);
+          return parsePackedModel(loader, await response.text());
+        })
+        .then(normalizeModel);
       queue = models[url].then(yieldToBrowser, yieldToBrowser);
     }
     return (await models[url]).clone();
@@ -50,40 +57,41 @@
 
   interface Props {
     ldrPacked: string;
-    bricksShown?: number;
-    onload?: (maxBricks: number) => void;
+    stepsShown?: number;
+    onload?: (maxSteps: number) => void;
   }
-  let { ldrPacked, bricksShown = Infinity, onload }: Props = $props();
-  let prevBricksShown = 0;
+  let { ldrPacked, stepsShown = Infinity, onload }: Props = $props();
+  let prevStepsShown = 0;
   let ldrawGroup = $state<Object3D>();
   let envMapTexture = $state<Texture>();
 
-  function showBricks(group: Object3D) {
-    const shown = Math.min(bricksShown, group.children.length);
-    if (prevBricksShown < shown) {
-      for (let i = prevBricksShown; i < shown; i++) {
+  function showSteps(group: Object3D) {
+    const shown = Math.min(stepsShown, group.children.length);
+    if (prevStepsShown < shown) {
+      for (let i = prevStepsShown; i < shown; i++) {
         group.children[i].visible = true;
       }
     } else {
-      for (let i = shown; i < prevBricksShown; i++) {
+      for (let i = shown; i < prevStepsShown; i++) {
         group.children[i].visible = false;
       }
     }
-    prevBricksShown = shown;
+    prevStepsShown = shown;
     invalidate();
   }
 
   $effect(() => {
-    if (ldrawGroup) showBricks(ldrawGroup);
+    if (ldrawGroup) showSteps(ldrawGroup);
   });
 
   onMount(async () => {
     loadEnvMap().then((texture) => (envMapTexture = texture));
     const group = await loadModel(ldrPacked);
-    const maxBricks = group.children.length;
-    prevBricksShown = maxBricks;
+    // A step reveals one top-level object: a part or an entire submodel.
+    const maxSteps = group.children.length;
+    prevStepsShown = maxSteps;
     ldrawGroup = group;
-    onload?.(maxBricks);
+    onload?.(maxSteps);
   });
 
   let autoRotate = $state(true);

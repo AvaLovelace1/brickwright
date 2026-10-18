@@ -13,8 +13,8 @@
   export interface LegoModelView {
     ldr: string;
     ldrPacked: string;
-    bricksShown: number;
-    maxBricks: number;
+    stepsShown: number;
+    maxSteps: number;
     caption: string;
     window?: HTMLElement;
     loaded?: boolean;
@@ -51,7 +51,7 @@
 
   let paused = $state(true);
   let expanded = $state(false);
-  const ended = $derived(model.bricksShown >= model.maxBricks);
+  const ended = $derived(model.stepsShown >= model.maxSteps);
   let initialized = false;
   let figure: HTMLElement;
   let playInterval: NodeJS.Timeout | undefined;
@@ -97,22 +97,22 @@
   }
 
   function prevStep() {
-    model.bricksShown = Math.max(1, model.bricksShown - 1);
+    model.stepsShown = Math.max(1, model.stepsShown - 1);
   }
 
   function nextStep() {
-    model.bricksShown = Math.min(model.maxBricks, model.bricksShown + 1);
+    model.stepsShown = Math.min(model.maxSteps, model.stepsShown + 1);
   }
 
   function rewind() {
     pause();
-    model.bricksShown = 1;
+    model.stepsShown = 1;
   }
 
   function play() {
     paused = false;
     playInterval = setInterval(() => {
-      if (!ended) model.bricksShown += 1;
+      if (!ended) model.stepsShown += 1;
       if (ended) pause();
     }, 10);
   }
@@ -126,10 +126,10 @@
     if (!model.loaded || initialized) return;
     initialized = true;
     if (autoplay && !prefersReducedMotion.current) {
-      model.bricksShown = 1;
+      model.stepsShown = 1;
       play();
     } else {
-      model.bricksShown = model.maxBricks;
+      model.stepsShown = model.maxSteps;
     }
   });
 
@@ -203,18 +203,20 @@
 {/snippet}
 
 {#snippet viewerTools(isExpandedView: boolean)}
-  <div class="absolute right-2 bottom-2 left-2 z-10 flex items-center gap-2 text-text">
-    {@render viewerTool("previous")}
-    {@render viewerTool("playback")}
-    {@render viewerTool("next")}
-    <Slider
-      label="Bricks shown"
-      min={1}
-      max={model.maxBricks}
-      bind:value={model.bricksShown}
-      hideLabel
-      fmtValue={(value) => `Brick ${value}`}
-    />
+  <div class="absolute right-2 bottom-2 left-2 z-10 flex items-center justify-end gap-2 text-text">
+    {#if model.loaded}
+      {@render viewerTool("previous")}
+      {@render viewerTool("playback")}
+      {@render viewerTool("next")}
+      <Slider
+        label="Steps shown"
+        min={1}
+        max={model.maxSteps}
+        bind:value={model.stepsShown}
+        hideLabel
+        fmtValue={(value) => `Step ${value}`}
+      />
+    {/if}
     {@render viewerTool("download")}
     {@render viewerTool(isExpandedView ? "close" : "expand")}
   </div>
@@ -281,9 +283,9 @@
                   <Canvas>
                     <LegoModel
                       ldrPacked={model.ldrPacked}
-                      bricksShown={model.bricksShown}
-                      onload={(maxBricks) => {
-                        model.maxBricks = maxBricks;
+                      stepsShown={model.stepsShown}
+                      onload={(maxSteps) => {
+                        model.maxSteps = maxSteps;
                         model.loaded = true;
                       }}
                     />

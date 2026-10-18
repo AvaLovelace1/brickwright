@@ -21,16 +21,16 @@
     ldr,
     ldrPacked,
     caption: "A detailed cruise ship",
-    bricksShown: 1,
-    maxBricks: 600,
+    stepsShown: 1,
+    maxSteps: 600,
   });
 
   let autoplayModel = $state<LegoModelView>({
     ldr,
     ldrPacked,
     caption: "An autoplaying cruise ship",
-    bricksShown: 1,
-    maxBricks: 600,
+    stepsShown: 1,
+    maxSteps: 600,
   });
 </script>
 
@@ -80,9 +80,9 @@
     }
 
     async function expectPaused() {
-      const bricksShownAfterPause = args.model.bricksShown;
+      const stepsShownAfterPause = args.model.stepsShown;
       await sleep(200);
-      await expect(args.model.bricksShown).toBe(bricksShownAfterPause);
+      await expect(args.model.stepsShown).toBe(stepsShownAfterPause);
     }
 
     async function checkButtons(container: HTMLElement) {
@@ -113,18 +113,18 @@
         }
       });
       await step("Next button steps forward", async () => {
-        args.model.bricksShown = 1;
+        args.model.stepsShown = 1;
         await expect(nextBtn).toBeVisible();
         await userEvent.click(nextBtn);
-        await expect(args.model.bricksShown).toBe(2);
+        await expect(args.model.stepsShown).toBe(2);
       });
       await step("Previous button steps backward", async () => {
-        args.model.bricksShown = 1;
+        args.model.stepsShown = 1;
         await expect(prevBtn).toBeVisible();
         await userEvent.click(prevBtn);
-        await expect(args.model.bricksShown).toBe(1);
+        await expect(args.model.stepsShown).toBe(1);
         await userEvent.click(prevBtn);
-        await expect(args.model.bricksShown).toBe(1); // does not underflow
+        await expect(args.model.stepsShown).toBe(1); // does not underflow
       });
       await step("Download button has correct attributes", async () => {
         await expect(downloadBtn).toBeVisible();
@@ -132,11 +132,11 @@
         await expect(downloadBtn).toHaveAttribute("download", "cruise-ship.ldr");
       });
       await step("Play button plays", async () => {
-        args.model.bricksShown = 1;
-        const initialBricksShown = args.model.bricksShown;
+        args.model.stepsShown = 1;
+        const initialStepsShown = args.model.stepsShown;
         await expect(playBtn).toBeVisible();
         await userEvent.click(playBtn);
-        await waitFor(() => expect(args.model.bricksShown).toBeGreaterThan(initialBricksShown));
+        await waitFor(() => expect(args.model.stepsShown).toBeGreaterThan(initialStepsShown));
       });
       await step("Pause button pauses", async () => {
         const pauseBtn = canvas.getByRole("button", { name: /pause/i });
@@ -145,25 +145,25 @@
         await expectPaused();
       });
       await step("Rewind button rewinds to start and is paused afterward", async () => {
-        args.model.bricksShown = args.model.maxBricks - 2;
+        args.model.stepsShown = args.model.maxSteps - 2;
         await userEvent.click(playBtn); // Play the one remaining step
-        await waitFor(() => expect(args.model.bricksShown).toBe(args.model.maxBricks));
+        await waitFor(() => expect(args.model.stepsShown).toBe(args.model.maxSteps));
 
         const rewindBtn = canvas.getByRole("button", { name: /rewind/i });
         await expect(rewindBtn).toBeVisible();
         await userEvent.click(rewindBtn);
-        await expect(args.model.bricksShown).toBe(1);
+        await expect(args.model.stepsShown).toBe(1);
         await expectPaused();
       });
       await step("Rewind pauses even before the next playback tick", async () => {
         flushSync(() => {
-          args.model.bricksShown = args.model.maxBricks - 1;
+          args.model.stepsShown = args.model.maxSteps - 1;
         });
         flushSync(() => playBtn.click());
         flushSync(() => nextBtn.click());
         flushSync(() => canvas.getByRole("button", { name: /rewind/i }).click());
         await expect(canvas.getByRole("button", { name: /^play$/i })).toBeVisible();
-        await expect(args.model.bricksShown).toBe(1);
+        await expect(args.model.stepsShown).toBe(1);
         await expectPaused();
       });
     }
@@ -173,9 +173,9 @@
     });
     await step("The viewer starts with a complete build and can be rewound", async () => {
       await waitFor(() => expect(args.model.loaded).toBe(true), { timeout: 45_000 });
-      await waitFor(() => expect(args.model.bricksShown).toBe(args.model.maxBricks));
+      await waitFor(() => expect(args.model.stepsShown).toBe(args.model.maxSteps));
       await userEvent.click(canvas.getByRole("button", { name: "Rewind" }));
-      await expect(args.model.bricksShown).toBe(1);
+      await expect(args.model.stepsShown).toBe(1);
     });
     await step("Buttons are functional", async () => {
       await checkButtons(canvasElement);
@@ -205,7 +205,7 @@
   args={{ model: autoplayModel, class: "size-64", autoplay: true }}
   play={async ({ canvas, step }) => {
     await step("Playback starts on its own once the model has loaded", async () => {
-      await waitFor(() => expect(autoplayModel.bricksShown).toBeGreaterThan(1), {
+      await waitFor(() => expect(autoplayModel.stepsShown).toBeGreaterThan(1), {
         timeout: 45_000,
       });
       await expect(canvas.getByRole("button", { name: /pause/i })).toBeVisible();

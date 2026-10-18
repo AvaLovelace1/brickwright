@@ -125,14 +125,29 @@ test("models start complete when the visitor prefers reduced motion", async ({
   page,
   mainPage,
 }) => {
+  const modelDownload = Promise.withResolvers<void>();
+  await page.route("**/models/teaser/giant-mushroom-treehouse.packed.mpd", async (route) => {
+    await modelDownload.promise;
+    await route.continue();
+  });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await mainPage.goto();
+  try {
+    await mainPage.goto();
+    await expect(mainPage.firstModel.getByRole("link", { name: "Download LDraw" })).toBeVisible();
+    await expect(mainPage.firstModel.getByRole("slider", { name: "Steps shown" })).toHaveCount(0);
+    await expect(
+      mainPage.firstModel.getByRole("button", { name: /^(Play|Pause|Rewind)$/ }),
+    ).toHaveCount(0);
+  } finally {
+    modelDownload.resolve();
+  }
   await expect(
     mainPage.firstModel.getByRole("button", { name: "Rewind", exact: true }),
   ).toBeVisible({
     timeout: 60_000,
   });
-  const slider = mainPage.firstModel.getByRole("slider", { name: "Bricks shown" });
+  const slider = mainPage.firstModel.getByRole("slider", { name: "Steps shown" });
+  expect(Number(await slider.getAttribute("aria-valuemax"))).toBeGreaterThan(1);
   await expect(slider).toHaveAttribute(
     "aria-valuenow",
     (await slider.getAttribute("aria-valuemax"))!,
@@ -166,7 +181,7 @@ test("comparison models load as their viewers approach the viewport", async ({
   expect(requestedModels).not.toContain(packedPath);
   await viewer.scrollIntoViewIfNeeded();
   await expect.poll(() => requestedModels, { timeout: 60_000 }).toContain(packedPath);
-  const slider = viewer.getByRole("slider", { name: "Bricks shown" });
+  const slider = viewer.getByRole("slider", { name: "Steps shown" });
   await expect
     .poll(async () => Number(await slider.getAttribute("aria-valuemax")), { timeout: 60_000 })
     .toBeGreaterThan(1);

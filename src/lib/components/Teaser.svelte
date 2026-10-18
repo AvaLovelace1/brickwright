@@ -1,22 +1,46 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
+  import { asset } from "$app/paths";
   import Select from "./Select.svelte";
   import ModelViewer, { type LegoModelView } from "./ModelViewer.svelte";
   import SharedCanvas from "./SharedCanvas.svelte";
-  import ldr from "#lib/assets/ldr/cruise-ship.ldr?url";
-  import ldrPacked from "#lib/assets/ldr/cruise-ship.ldr_Packed.mpd?url";
 
   const prompts = [
-    "A detailed LEGO cruise ship",
-    "A detailed LEGO giraffe",
-    "A city scene with four buildings",
-    "model of my dog",
-  ];
-  const options = prompts.map((label, i) => ({ value: String(i), label }));
+    {
+      label: "A giant mushroom treehouse",
+      filename: "giant-mushroom-treehouse",
+      text: "A giant mushroom treehouse, with spiral stairs, tiny balconies, and a spotted red cap.",
+    },
+    {
+      label: "A combine harvester from an image",
+      filename: "combine-harvester",
+      text: "Match the image as closely as possible.",
+      image: "combine-harvester-reference.png",
+      imageAlt: "Green combine harvester with yellow wheels and a wide cutting header in a field",
+    },
+    {
+      label: "Hong Kong’s Victoria Harbour",
+      filename: "victoria-harbour",
+      text: "Hong Kong’s Victoria Harbour in 10,000+ parts, with dense skyscrapers and a red-sailed junk.",
+    },
+    {
+      label: "A poseable crab",
+      filename: "poseable-crab",
+      text: "A poseable crab with eight jointed legs, opening claws, and raised eyestalks.",
+    },
+  ] as const;
+  const options = prompts.map(({ label }, i) => ({ value: String(i), label }));
   let selected = $state("0");
   const index = $derived(Number(selected));
+  const prompt = $derived(prompts[index]);
   let models = $state<LegoModelView[]>(
-    prompts.map((caption) => ({ ldr, ldrPacked, caption, maxBricks: 100, bricksShown: 1 })),
+    prompts.map(({ label, filename }) => ({
+      ldr: asset(`models/teaser/${filename}.ldr`),
+      ldrPacked: asset(`models/teaser/${filename}.packed.mpd`),
+      caption: label,
+      maxSteps: 1,
+      stepsShown: 1,
+    })),
   );
 </script>
 
@@ -59,14 +83,34 @@
 {/snippet}
 
 {#snippet promptContent()}
-  <div class="flex flex-col items-stretch gap-1 text-base sm:flex-row sm:items-center sm:gap-2">
+  <div class="grid items-center gap-x-2 gap-y-1 text-base sm:grid-cols-[auto_minmax(0,1fr)]">
     <Select
       label="Help me design…"
-      labelClass="shrink-0 font-semibold italic text-lg"
-      class="min-w-0 flex-1"
+      labelClass="font-semibold italic text-lg"
+      class="min-w-0"
       {options}
       bind:value={selected}
     />
+    <div class="mt-1 min-w-0 sm:col-start-2">
+      <p class="text-sm italic">“{prompt.text}”</p>
+      {#if "image" in prompt}
+        <a
+          href={asset(`models/teaser/${prompt.image}`)}
+          target="_blank"
+          rel="noopener"
+          aria-label="View reference image"
+          class="mt-1 block w-48 max-w-full rounded-(--bb-border-radius) focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-line"
+        >
+          <img
+            src={asset(`models/teaser/${prompt.image}`)}
+            alt={prompt.imageAlt}
+            width="460"
+            height="269"
+            class="h-auto w-full bb-border"
+          />
+        </a>
+      {/if}
+    </div>
   </div>
 {/snippet}
 

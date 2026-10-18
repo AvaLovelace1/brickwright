@@ -42,8 +42,8 @@
         ldr: asset(`${modelDirectory}/${filename}.ldr`),
         ldrPacked: asset(`${modelDirectory}/${filename}.packed.mpd`),
         caption: `${agent.name} build ${side === 1 ? "with" : "without"} BrickWright`,
-        maxBricks: 1,
-        bricksShown: 1,
+        maxSteps: 1,
+        stepsShown: 1,
       })),
     })),
   );

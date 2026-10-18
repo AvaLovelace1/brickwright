@@ -36,10 +36,10 @@
     await step("Shows the prompt and its model viewer", async () => {
       await expect(canvas.getByRole("region", { name: "Prompt to brick build" })).toBeVisible();
       await expect(
-        canvas.getByRole("button", { name: "Help me design… A detailed LEGO cruise ship" }),
+        canvas.getByRole("button", { name: "Help me design… A giant mushroom treehouse" }),
       ).toBeVisible();
       await expect(
-        canvas.getByRole("figure", { name: "A detailed LEGO cruise ship" }),
+        canvas.getByRole("figure", { name: "A giant mushroom treehouse" }),
       ).toBeVisible();
     });
     await step("Shows the physical validity guarantees", async () => {
@@ -52,11 +52,11 @@
   name="Select a Prompt"
   play={async ({ canvas, userEvent, step }) => {
     const trigger = canvas.getByRole("button", { name: /^Help me design…/ });
-    for (const prompt of [
-      "A detailed LEGO giraffe",
-      "A city scene with four buildings",
-      "model of my dog",
-      "A detailed LEGO cruise ship",
+    for (const [prompt, filename] of [
+      ["A combine harvester from an image", "combine-harvester"],
+      ["Hong Kong’s Victoria Harbour", "victoria-harbour"],
+      ["A poseable crab", "poseable-crab"],
+      ["A giant mushroom treehouse", "giant-mushroom-treehouse"],
     ]) {
       await step(`Select ${prompt}`, async () => {
         await userEvent.click(trigger);
@@ -66,6 +66,22 @@
         await expect(trigger).toHaveFocus();
         await expect(canvas.getByRole("figure", { name: prompt })).toBeVisible();
         await expect(canvas.getAllByRole("figure")).toHaveLength(1);
+        await expect(canvas.getByRole("link", { name: "Download LDraw" })).toHaveAttribute(
+          "href",
+          expect.stringContaining(`/models/teaser/${filename}.ldr`),
+        );
+        const referenceImage = canvas.queryByRole("img", {
+          name: /combine harvester/,
+        });
+        if (filename === "combine-harvester") {
+          await expect(referenceImage).toBeVisible();
+          await expect(canvas.getByRole("link", { name: "View reference image" })).toHaveAttribute(
+            "href",
+            expect.stringContaining("/models/teaser/combine-harvester-reference.png"),
+          );
+        } else {
+          await expect(referenceImage).toBeNull();
+        }
       });
     }
   }}

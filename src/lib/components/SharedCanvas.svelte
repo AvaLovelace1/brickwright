@@ -18,9 +18,9 @@
         <View dom={model.window}>
           <LegoModel
             ldrPacked={model.ldrPacked}
-            bricksShown={model.bricksShown}
-            onload={(maxBricks) => {
-              model.maxBricks = maxBricks;
+            stepsShown={model.stepsShown}
+            onload={(maxSteps) => {
+              model.maxSteps = maxSteps;
               model.loaded = true;
             }}
           />
