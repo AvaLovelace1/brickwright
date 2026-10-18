@@ -7,7 +7,25 @@
   <Container>
     <Prose>
       <h2 id="method-heading">Method</h2>
-      <p>Placeholder text describing the BrickWright method.</p>
+      <p>
+        To help agents produce physically feasible builds, BrickWright equips them with a
+        programmatic toolkit for brick build creation and validation. Following the paradigm of
+        structure-as-code, BrickWright guides an agent to write Python code that produces a brick
+        build using a custom package called BrickLayer. BrickLayer provides a unified programmatic
+        representation for LEGO® build files, enabling them to be easily understood and edited by
+        humans and agents. It provides methods for three stages of brick build creation: catalog
+        discovery, assembly, and validation. Key BrickLayer API components include the following:
+        [cards here]
+      </p>
+      <p>
+        To create a brick build from a text or image prompt, BrickWright provides a pre-trained
+        agent with a set of tools—<code>validate</code>, <code>render</code>, and
+        <code>finalize</code>—and prompts the agent to create a build with BrickLayer by writing and
+        revising a single Python file in a plan-execute-validate loop. The <code>validate</code>
+        tool provides feedback on the build’s physical feasibility, and the <code>render</code> tool
+        allows the agent to inspect the build visually. When all feasibility tests pass and the
+        agent is satisfied with the render, it calls <code>finalize</code>, completing the process.
+      </p>
     </Prose>
   </Container>
 </section>
