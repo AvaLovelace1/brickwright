@@ -19,7 +19,7 @@
   ];
   const AFFILIATIONS = [
     "Carnegie\u00A0Mellon\u00A0University",
-    "Roblox",
+    "Independent researcher",
     "Stanford\u00A0University",
   ];
   const BULLET = " \u00A0▪\u00A0 ";
