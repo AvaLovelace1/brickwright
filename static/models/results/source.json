@@ -1,0 +1,586 @@
+{
+  "source": "Paper main qualitative figure, BrickNet-512",
+  "snapshotCreatedAt": "2026-10-18T17:13:32.724607+00:00",
+  "paperSourceSha256": {
+    "tab/main-quantitative.tex": "1cbdd4ea9680171a984bb9eb4cadb30c6f5f41d34f10ad813953d6002445243c",
+    "sec/X_suppl.tex": "9ccfa7a1cb0da343466eafdd5655317d21af75e8cc6ff334a1a18e0b408734eb"
+  },
+  "models": [
+    {
+      "prompt": "80",
+      "agent": "haiku",
+      "method": "baseline",
+      "run": "claude-haiku-5-5-docs",
+      "record": "80",
+      "modelSha256": "b90e9258730665596156a818859497a6563378225d41e9e2830b64a144df1eff",
+      "file": "atv-claude-haiku-5-5-baseline.ldr"
+    },
+    {
+      "prompt": "80",
+      "agent": "haiku",
+      "method": "brickwright",
+      "run": "brickwright-haiku-5-5",
+      "record": "20261009-202019-this-is-a-lego-94fcb852",
+      "modelSha256": "19a0e59973ba7b20aa492ee4f22af53589c3cbf44df8c646300bc21da198868c",
+      "file": "atv-claude-haiku-5-5-brickwright.ldr"
+    },
+    {
+      "prompt": "80",
+      "agent": "luna",
+      "method": "baseline",
+      "run": "codex-luna-docs",
+      "record": "80",
+      "modelSha256": "42b76c9230048f8156ff99101187e959de782980130cf3cf6355a4e818c91c28",
+      "file": "atv-gpt-6-luna-baseline.ldr"
+    },
+    {
+      "prompt": "80",
+      "agent": "luna",
+      "method": "brickwright",
+      "run": "brickwright-luna",
+      "record": "20261005-202027-this-is-a-lego-d6bdd0f9",
+      "modelSha256": "929f8010cac77834f2a5dcf001796ec993a05d002c8e40fd41b4ea1409a495a8",
+      "file": "atv-gpt-6-luna-brickwright.ldr"
+    },
+    {
+      "prompt": "80",
+      "agent": "sol",
+      "method": "baseline",
+      "run": "codex-sol-docs",
+      "record": "80",
+      "modelSha256": "97b2b12e220f8f3b68e5513eae6b6930a88ab50f529df7c04573dde20c42d0ff",
+      "file": "atv-gpt-6-1-sol-baseline.ldr"
+    },
+    {
+      "prompt": "80",
+      "agent": "sol",
+      "method": "brickwright",
+      "run": "brickwright-sol",
+      "record": "20261005-201516-this-is-a-lego-9a1e1af6",
+      "modelSha256": "5342b77efaeb4706cdeaff73f3ec38381729cc9e625af7f540dcc8216d67ed02",
+      "file": "atv-gpt-6-1-sol-brickwright.ldr"
+    },
+    {
+      "prompt": "80",
+      "agent": "astra",
+      "method": "baseline",
+      "run": "codex-astra-docs",
+      "record": "80",
+      "modelSha256": "b0bf0cebc3c38d7a465ee8bbd47571a4c3d70b64e61e7f0e9bad01e64ab96c29",
+      "file": "atv-gpt-6-astra-baseline.ldr"
+    },
+    {
+      "prompt": "80",
+      "agent": "astra",
+      "method": "brickwright",
+      "run": "brickwright",
+      "record": "20261004-120845-this-is-a-lego-17e87aa0",
+      "modelSha256": "6ca5555c6a304804c2595dd1d97806e9ba13734a1f3af94aa3229c0e74e2a8bc",
+      "file": "atv-gpt-6-astra-brickwright.ldr"
+    },
+    {
+      "prompt": "123",
+      "agent": "haiku",
+      "method": "baseline",
+      "run": "claude-haiku-5-5-docs",
+      "record": "123",
+      "modelSha256": "64b5176992c61ddd15b81adc0dc19c1ea7766358387741c76dadc62fdce09c4b",
+      "file": "utility-helicopter-claude-haiku-5-5-baseline.ldr"
+    },
+    {
+      "prompt": "123",
+      "agent": "haiku",
+      "method": "brickwright",
+      "run": "brickwright-haiku-5-5",
+      "record": "20261009-204724-this-is-a-lego-a9c570ad",
+      "modelSha256": "0f37f547a492c18ac2df3a1294f4a790b1739c93c448a7362f5e1a13fbf2b76b",
+      "file": "utility-helicopter-claude-haiku-5-5-brickwright.ldr"
+    },
+    {
+      "prompt": "123",
+      "agent": "luna",
+      "method": "baseline",
+      "run": "codex-luna-docs",
+      "record": "123",
+      "modelSha256": "44bce83f87984d6e7a7eb270db76e4bd80dba69fd006cc780c3e1ce7b5490fff",
+      "file": "utility-helicopter-gpt-6-luna-baseline.ldr"
+    },
+    {
+      "prompt": "123",
+      "agent": "luna",
+      "method": "brickwright",
+      "run": "brickwright-luna",
+      "record": "20261005-222925-this-is-a-lego-7b7f8952",
+      "modelSha256": "aed4d5b4d76510c7ec9651aac5fedd9d1ede950ae1d85a578daaf6d75f1e53a3",
+      "file": "utility-helicopter-gpt-6-luna-brickwright.ldr"
+    },
+    {
+      "prompt": "123",
+      "agent": "sol",
+      "method": "baseline",
+      "run": "codex-sol-docs",
+      "record": "123",
+      "modelSha256": "eca21d40caa8b4300e80bdbe2e2b13f2dd48a77a8cd2bcc1e6041f8012db9cf4",
+      "file": "utility-helicopter-gpt-6-1-sol-baseline.ldr"
+    },
+    {
+      "prompt": "123",
+      "agent": "sol",
+      "method": "brickwright",
+      "run": "brickwright-sol",
+      "record": "20261005-222740-this-is-a-lego-ceee1c0a",
+      "modelSha256": "dcec1c9d3392386148c947a762994d3a35327481456143623a5e68b9e44cc14a",
+      "file": "utility-helicopter-gpt-6-1-sol-brickwright.ldr"
+    },
+    {
+      "prompt": "123",
+      "agent": "astra",
+      "method": "baseline",
+      "run": "codex-astra-docs",
+      "record": "123",
+      "modelSha256": "6b45497aa96b1d826b81ce880b808af31ea7f2d859b44ade983b35cf4329eb9e",
+      "file": "utility-helicopter-gpt-6-astra-baseline.ldr"
+    },
+    {
+      "prompt": "123",
+      "agent": "astra",
+      "method": "brickwright",
+      "run": "brickwright",
+      "record": "20261004-125510-this-is-a-lego-d31c2a1f",
+      "modelSha256": "299002dd24f75ec3d73cddeb6bef5c33731503e71207d11bc5270a7a3cc010bf",
+      "file": "utility-helicopter-gpt-6-astra-brickwright.ldr"
+    },
+    {
+      "prompt": "217",
+      "agent": "haiku",
+      "method": "baseline",
+      "run": "claude-haiku-5-5-docs",
+      "record": "217",
+      "modelSha256": "162ef56ea01cdea6c7e5ecdba5f11a0edf38b3a06adc6ebcfb48b5ac99685023",
+      "file": "insectoid-creature-claude-haiku-5-5-baseline.ldr"
+    },
+    {
+      "prompt": "217",
+      "agent": "haiku",
+      "method": "brickwright",
+      "run": "brickwright-haiku-5-5",
+      "record": "20261009-214853-this-is-a-custom-b04c7c89",
+      "modelSha256": "abdb8671b811ab05068c28ec14ed06bd70ccad0f95554389a4e42dfaab8e2e1d",
+      "file": "insectoid-creature-claude-haiku-5-5-brickwright.ldr"
+    },
+    {
+      "prompt": "217",
+      "agent": "luna",
+      "method": "baseline",
+      "run": "codex-luna-docs",
+      "record": "217",
+      "modelSha256": "bb001de773f7dae3368ff40f0a8ef78a64d423d5c44a5815208cac9fe1e20e3e",
+      "file": "insectoid-creature-gpt-6-luna-baseline.ldr"
+    },
+    {
+      "prompt": "217",
+      "agent": "luna",
+      "method": "brickwright",
+      "run": "brickwright-luna",
+      "record": "20261006-034615-this-is-a-custom-07cb8b15",
+      "modelSha256": "ccca26282cc51a6c2cca6a73ccb1e581086d8903dba11fdaee4775649480d92f",
+      "file": "insectoid-creature-gpt-6-luna-brickwright.ldr"
+    },
+    {
+      "prompt": "217",
+      "agent": "sol",
+      "method": "baseline",
+      "run": "codex-sol-docs",
+      "record": "217",
+      "modelSha256": "cc104d135de426783ead6cc80bb9abea4cdec9ed7bcfb927d82c77b52d68ee75",
+      "file": "insectoid-creature-gpt-6-1-sol-baseline.ldr"
+    },
+    {
+      "prompt": "217",
+      "agent": "sol",
+      "method": "brickwright",
+      "run": "brickwright-sol",
+      "record": "20261006-034230-this-is-a-custom-4d732c04",
+      "modelSha256": "cb2f99975136d90720bad3ae3d5e3003956b342edfb8e6e22a351e5fb3fa3c13",
+      "file": "insectoid-creature-gpt-6-1-sol-brickwright.ldr"
+    },
+    {
+      "prompt": "217",
+      "agent": "astra",
+      "method": "baseline",
+      "run": "codex-astra-docs",
+      "record": "217",
+      "modelSha256": "c73b99b1c0a85db5bda0b488e55b9896520c39043fb9d8bab403d2717bbf4219",
+      "file": "insectoid-creature-gpt-6-astra-baseline.ldr"
+    },
+    {
+      "prompt": "217",
+      "agent": "astra",
+      "method": "brickwright",
+      "run": "brickwright",
+      "record": "20261004-152126-this-is-a-custom-683d448c",
+      "modelSha256": "cfda4c30717533730b728075a978deac8cac60f80a299cf76fe1de0c379dfd9a",
+      "file": "insectoid-creature-gpt-6-astra-brickwright.ldr"
+    },
+    {
+      "prompt": "114",
+      "agent": "haiku",
+      "method": "baseline",
+      "run": "claude-haiku-5-5-docs",
+      "record": "114",
+      "modelSha256": "0e7eb733156992994c6651d1dd997c3ab7f8ae671939b374c432b7deba85c16c",
+      "file": "sitting-fox-claude-haiku-5-5-baseline.ldr"
+    },
+    {
+      "prompt": "114",
+      "agent": "haiku",
+      "method": "brickwright",
+      "run": "brickwright-haiku-5-5",
+      "record": "20261009-204216-this-is-a-stylized-63c6fc3f",
+      "modelSha256": "a0eea2eec8a317c7df380fa70f553b589b3878ed3d0db0ce82e7591eea3aa0bb",
+      "file": "sitting-fox-claude-haiku-5-5-brickwright.ldr"
+    },
+    {
+      "prompt": "114",
+      "agent": "luna",
+      "method": "baseline",
+      "run": "codex-luna-docs",
+      "record": "114",
+      "modelSha256": "244a95d8f9b54690de40b4c0219e6c01f1f7c4b52a7838f8c907de026abc5488",
+      "file": "sitting-fox-gpt-6-luna-baseline.ldr"
+    },
+    {
+      "prompt": "114",
+      "agent": "luna",
+      "method": "brickwright",
+      "run": "brickwright-luna",
+      "record": "20261005-220353-this-is-a-stylized-07ced8f1",
+      "modelSha256": "70162614b7c60ed2074c5e30719c81b5cbeac88ba4372711b6cd553db55dab0e",
+      "file": "sitting-fox-gpt-6-luna-brickwright.ldr"
+    },
+    {
+      "prompt": "114",
+      "agent": "sol",
+      "method": "baseline",
+      "run": "codex-sol-docs",
+      "record": "114",
+      "modelSha256": "5556e951188b445435dbf691f929ae363673c91dac2274c418153348e24a52bc",
+      "file": "sitting-fox-gpt-6-1-sol-baseline.ldr"
+    },
+    {
+      "prompt": "114",
+      "agent": "sol",
+      "method": "brickwright",
+      "run": "brickwright-sol",
+      "record": "20261005-220258-this-is-a-stylized-8641ef3a",
+      "modelSha256": "5e874d3dca3f400594d2bfdecefcfbeaf150dc3c20c7c1bb229b92cc6dbcc86c",
+      "file": "sitting-fox-gpt-6-1-sol-brickwright.ldr"
+    },
+    {
+      "prompt": "114",
+      "agent": "astra",
+      "method": "baseline",
+      "run": "codex-astra-docs",
+      "record": "114",
+      "modelSha256": "0cc12a60b4b12a2606dd6812be39833a1ba9190a7488abdf4d5ae47401289d08",
+      "file": "sitting-fox-gpt-6-astra-baseline.ldr"
+    },
+    {
+      "prompt": "114",
+      "agent": "astra",
+      "method": "brickwright",
+      "run": "brickwright",
+      "record": "20261004-124342-this-is-a-stylized-46fb8d9d",
+      "modelSha256": "1beba453e3ad783d83fd3a7712313e7911226bd5bbab882efadeffa9c97e5658",
+      "file": "sitting-fox-gpt-6-astra-brickwright.ldr"
+    },
+    {
+      "prompt": "41",
+      "agent": "haiku",
+      "method": "baseline",
+      "run": "claude-haiku-5-5-docs",
+      "record": "41",
+      "modelSha256": "cb35dfd1004a9308866d47599008bc092220ba3cb54c156ce0ac5619841f4e8d",
+      "file": "ninja-claude-haiku-5-5-baseline.ldr"
+    },
+    {
+      "prompt": "41",
+      "agent": "haiku",
+      "method": "brickwright",
+      "run": "brickwright-haiku-5-5",
+      "record": "20261009-195650-this-is-a-blocky-0d70cfff",
+      "modelSha256": "0c7d38bec579011f0f246392d4135807cd3fe3f75c1541a4f1f9df1821291b05",
+      "file": "ninja-claude-haiku-5-5-brickwright.ldr"
+    },
+    {
+      "prompt": "41",
+      "agent": "luna",
+      "method": "baseline",
+      "run": "codex-luna-docs",
+      "record": "41",
+      "modelSha256": "55d8db0221531ce253f5d8e4ebb89a25b790349a5e10f09645013a4a0964647e",
+      "file": "ninja-gpt-6-luna-baseline.ldr"
+    },
+    {
+      "prompt": "41",
+      "agent": "luna",
+      "method": "brickwright",
+      "run": "brickwright-luna",
+      "record": "20261005-182156-this-is-a-blocky-407fbc24",
+      "modelSha256": "86b9778efa64995933314ec7fa2eb8df58ad5206ef0da4cf5692d5be1dff0088",
+      "file": "ninja-gpt-6-luna-brickwright.ldr"
+    },
+    {
+      "prompt": "41",
+      "agent": "sol",
+      "method": "baseline",
+      "run": "codex-sol-docs",
+      "record": "41",
+      "modelSha256": "4e2beeda5e6a49c78d8b23c7008a22027562a83bd9dd01c48cc31b70e8127bda",
+      "file": "ninja-gpt-6-1-sol-baseline.ldr"
+    },
+    {
+      "prompt": "41",
+      "agent": "sol",
+      "method": "brickwright",
+      "run": "brickwright-sol",
+      "record": "20261005-182034-this-is-a-blocky-65971e66",
+      "modelSha256": "8f710e75722b7d66d48ce13b6edbabf033f7f29203b778b2086258ba70e198db",
+      "file": "ninja-gpt-6-1-sol-brickwright.ldr"
+    },
+    {
+      "prompt": "41",
+      "agent": "astra",
+      "method": "baseline",
+      "run": "codex-astra-docs",
+      "record": "41",
+      "modelSha256": "375d94bb94bc63796923ade64e1c7eec0c4e12600f9eb419e6d867efc6a77285",
+      "file": "ninja-gpt-6-astra-baseline.ldr"
+    },
+    {
+      "prompt": "41",
+      "agent": "astra",
+      "method": "brickwright",
+      "run": "brickwright",
+      "record": "20261004-112200-this-is-a-blocky-cf784cb4",
+      "modelSha256": "591ea92afb6df665cbeffe13e3b53d8c67b950b5bff90336f7879608309e5ffc",
+      "file": "ninja-gpt-6-astra-brickwright.ldr"
+    },
+    {
+      "prompt": "283",
+      "agent": "haiku",
+      "method": "baseline",
+      "run": "claude-haiku-5-5-docs",
+      "record": "283",
+      "modelSha256": "90b6779ceae4ee20d49c5916594ce5158901cfd19f7b6f59871eb487e44068da",
+      "file": "white-flowers-claude-haiku-5-5-baseline.ldr"
+    },
+    {
+      "prompt": "283",
+      "agent": "haiku",
+      "method": "brickwright",
+      "run": "brickwright-haiku-5-5",
+      "record": "20261009-222406-this-lego-model-is-42a3cbf5",
+      "modelSha256": "0ae0b72a86c9c5e0a669f59c0c9e69fad737df342b826470c22c3cccabe35f39",
+      "file": "white-flowers-claude-haiku-5-5-brickwright.ldr"
+    },
+    {
+      "prompt": "283",
+      "agent": "luna",
+      "method": "baseline",
+      "run": "codex-luna-docs",
+      "record": "283",
+      "modelSha256": "30a5dd799825976480065a3a34963d490a85cd04f5d0244aa55129e9c6585c55",
+      "file": "white-flowers-gpt-6-luna-baseline.ldr"
+    },
+    {
+      "prompt": "283",
+      "agent": "luna",
+      "method": "brickwright",
+      "run": "brickwright-luna",
+      "record": "20261006-065006-this-lego-model-is-c9a07272",
+      "modelSha256": "873e67d37fb61b784c708b5dda7912834d9beb688ec76c77f62bcb9616fb34d9",
+      "file": "white-flowers-gpt-6-luna-brickwright.ldr"
+    },
+    {
+      "prompt": "283",
+      "agent": "sol",
+      "method": "baseline",
+      "run": "codex-sol-docs",
+      "record": "283",
+      "modelSha256": "f46a2f74329aa90c1ff1e3f63395b7efc06049687a56dc698fe933afa0bee5ae",
+      "file": "white-flowers-gpt-6-1-sol-baseline.ldr"
+    },
+    {
+      "prompt": "283",
+      "agent": "sol",
+      "method": "brickwright",
+      "run": "brickwright-sol",
+      "record": "20261006-064954-this-lego-model-is-2b9159de",
+      "modelSha256": "0376e723b9e67398e0dcf27cd51c10776520e709452e37c1198c1b23963c97c6",
+      "file": "white-flowers-gpt-6-1-sol-brickwright.ldr"
+    },
+    {
+      "prompt": "283",
+      "agent": "astra",
+      "method": "baseline",
+      "run": "codex-astra-docs",
+      "record": "283",
+      "modelSha256": "6d5e5d63c8326effb43bbde27064a73105784d9c8a16ef539a936df1f841d99d",
+      "file": "white-flowers-gpt-6-astra-baseline.ldr"
+    },
+    {
+      "prompt": "283",
+      "agent": "astra",
+      "method": "brickwright",
+      "run": "brickwright",
+      "record": "20261004-164044-this-lego-model-is-e72ee072",
+      "modelSha256": "6cfb98ac3fdca0b4ec663ced0427a532bed6d4e2030fa3f4d6a1b0877583bd7c",
+      "file": "white-flowers-gpt-6-astra-brickwright.ldr"
+    },
+    {
+      "prompt": "277",
+      "agent": "haiku",
+      "method": "baseline",
+      "run": "claude-haiku-5-5-docs",
+      "record": "277",
+      "modelSha256": "55cb62b159507b3d4aaecd7eb3ef8e9c1c63ec9f7f5b43162db293919d41c011",
+      "file": "backyard-scene-claude-haiku-5-5-baseline.ldr"
+    },
+    {
+      "prompt": "277",
+      "agent": "haiku",
+      "method": "brickwright",
+      "run": "brickwright-haiku-5-5",
+      "record": "20261009-222020-this-lego-model-depicts-1410c883",
+      "modelSha256": "e85363d75ba1dd6b58a785f486ecf1a265d771a76152c1e72b1b3b108642abd3",
+      "file": "backyard-scene-claude-haiku-5-5-brickwright.ldr"
+    },
+    {
+      "prompt": "277",
+      "agent": "luna",
+      "method": "baseline",
+      "run": "codex-luna-docs",
+      "record": "277",
+      "modelSha256": "8056fd37eff67e41ff2c2658f50e2ce21f69b17488a853c21b9b2ae68d3153c7",
+      "file": "backyard-scene-gpt-6-luna-baseline.ldr"
+    },
+    {
+      "prompt": "277",
+      "agent": "luna",
+      "method": "brickwright",
+      "run": "brickwright-luna",
+      "record": "20261006-063631-this-lego-model-depicts-e10e8593",
+      "modelSha256": "b5e7600de5dfcb67339032ca94885c68762395c37bb38a6d9d1b87c9acd0da82",
+      "file": "backyard-scene-gpt-6-luna-brickwright.ldr"
+    },
+    {
+      "prompt": "277",
+      "agent": "sol",
+      "method": "baseline",
+      "run": "codex-sol-docs",
+      "record": "277",
+      "modelSha256": "1c09b2a60f73d16e8de722c5e9cf7979fcc18696432da7b9dd7a987dbeb3fc47",
+      "file": "backyard-scene-gpt-6-1-sol-baseline.ldr"
+    },
+    {
+      "prompt": "277",
+      "agent": "sol",
+      "method": "brickwright",
+      "run": "brickwright-sol",
+      "record": "20261006-063437-this-lego-model-depicts-ccb89432",
+      "modelSha256": "01722b083c4dd0f3aea35bf0352c5754b289b1e4cced125fdd991ce32596fc3e",
+      "file": "backyard-scene-gpt-6-1-sol-brickwright.ldr"
+    },
+    {
+      "prompt": "277",
+      "agent": "astra",
+      "method": "baseline",
+      "run": "codex-astra-docs",
+      "record": "277",
+      "modelSha256": "b8d1869b757fbf74e0c0f9787aaeb866d1e6ee7c8de90fd4f37b0bfb4d263267",
+      "file": "backyard-scene-gpt-6-astra-baseline.ldr"
+    },
+    {
+      "prompt": "277",
+      "agent": "astra",
+      "method": "brickwright",
+      "run": "brickwright",
+      "record": "20261004-163217-this-lego-model-depicts-365fcbaf",
+      "modelSha256": "d20616bfd737d1a015d3cc3ca08bcf76c27e435666ccce8a13a4116ba1085304",
+      "file": "backyard-scene-gpt-6-astra-brickwright.ldr"
+    },
+    {
+      "prompt": "7",
+      "agent": "haiku",
+      "method": "baseline",
+      "run": "claude-haiku-5-5-docs",
+      "record": "7",
+      "modelSha256": "2e56347b266b52624723de5120a16f746e803c480065e11184d4c4ad6e089d7b",
+      "file": "espresso-machine-claude-haiku-5-5-baseline.ldr"
+    },
+    {
+      "prompt": "7",
+      "agent": "haiku",
+      "method": "brickwright",
+      "run": "brickwright-haiku-5-5",
+      "record": "20261009-175325-this-lego-model-is-bb0a9e74",
+      "modelSha256": "02f8fca8e3f289f95c83aa654dad3a535c3252c42c0093e6f68bafc11cc4fcf0",
+      "file": "espresso-machine-claude-haiku-5-5-brickwright.ldr"
+    },
+    {
+      "prompt": "7",
+      "agent": "luna",
+      "method": "baseline",
+      "run": "codex-luna-docs",
+      "record": "7",
+      "modelSha256": "333a690cdf43d31d3cf1ec27fe59c4eb7c7f7718f9a12525fe82ab9eb914c693",
+      "file": "espresso-machine-gpt-6-luna-baseline.ldr"
+    },
+    {
+      "prompt": "7",
+      "agent": "luna",
+      "method": "brickwright",
+      "run": "brickwright-luna",
+      "record": "20261005-165142-this-lego-model-is-c7807187",
+      "modelSha256": "640e4a768f53cf53102f1f9afb752c1b29baa3e2eff7855e16cb4417657d1415",
+      "file": "espresso-machine-gpt-6-luna-brickwright.ldr"
+    },
+    {
+      "prompt": "7",
+      "agent": "sol",
+      "method": "baseline",
+      "run": "codex-sol-docs",
+      "record": "7",
+      "modelSha256": "9b3fd9480a6708b8adb2791721484a663a0bd1b862daba8264bb681d6b0372d2",
+      "file": "espresso-machine-gpt-6-1-sol-baseline.ldr"
+    },
+    {
+      "prompt": "7",
+      "agent": "sol",
+      "method": "brickwright",
+      "run": "brickwright-sol",
+      "record": "20261005-164902-this-lego-model-is-acbd8776",
+      "modelSha256": "3114414f91dfba6ecf1989a4ad0aaf2f91711052ec65b49725addcea70a2cd3f",
+      "file": "espresso-machine-gpt-6-1-sol-brickwright.ldr"
+    },
+    {
+      "prompt": "7",
+      "agent": "astra",
+      "method": "baseline",
+      "run": "codex-astra-docs",
+      "record": "7",
+      "modelSha256": "f1a840d963bb09f49ae6980cdc1a089be8e015c5163fcbff2099e26b1ef73834",
+      "file": "espresso-machine-gpt-6-astra-baseline.ldr"
+    },
+    {
+      "prompt": "7",
+      "agent": "astra",
+      "method": "brickwright",
+      "run": "brickwright",
+      "record": "20261004-104407-this-lego-model-is-f1c530b8",
+      "modelSha256": "e3da500395b93146200488da09720c75b05a667fbe27f92edc28d0195a3b3737",
+      "file": "espresso-machine-gpt-6-astra-brickwright.ldr"
+    }
+  ]
+}

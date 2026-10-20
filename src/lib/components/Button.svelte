@@ -3,46 +3,74 @@
   import { resolve } from "$app/paths";
   import type { ClassValue } from "svelte/elements";
   import { Button } from "bits-ui";
+  import Tooltip from "./Tooltip.svelte";
 
   interface Props {
+    /** Visible label, retained for screen readers when iconOnly is set. */
     text: string;
     action: string | (() => void);
     icon?: string;
+    /** Keep the label accessible and show it in a tooltip. */
+    iconOnly?: boolean;
+    disabled?: boolean;
     class?: ClassValue;
   }
-  let { text, action, icon = "", class: className = "" }: Props = $props();
+  let {
+    text,
+    action,
+    icon = "",
+    iconOnly = false,
+    disabled = false,
+    class: className = "",
+  }: Props = $props();
 
   const isInternalLink = (
     href: string,
   ): href is PathnameWithSearchOrHash | RouteIdWithSearchOrHash => !/^https?:\/\//.test(href);
 
-  const BUTTON_CLASSES = "bb-btn";
+  const onclick = $derived(typeof action === "function" ? action : undefined);
+  const buttonProps = $derived({
+    class: ["bb-btn", iconOnly && "p-2", className],
+    disabled,
+  });
 </script>
 
 {#snippet content()}
   <div class="flex items-center gap-1">
-    {#if icon}<span class="iconify {icon}" aria-hidden="true"></span>{/if}
-    {text}
+    {#if icon}<span class={["iconify", icon, iconOnly && "text-lg"]} aria-hidden="true"></span>{/if}
+    <span class:sr-only={iconOnly}>{text}</span>
   </div>
 {/snippet}
 
-{#if typeof action === "string"}
-  {#if isInternalLink(action)}
-    <Button.Root class={[BUTTON_CLASSES, className]} href={resolve(action)}>
-      {@render content()}
-    </Button.Root>
+{#snippet button(triggerProps: Record<string, unknown>)}
+  {#if typeof action === "string"}
+    {#if isInternalLink(action)}
+      <Button.Root {...triggerProps} {...buttonProps} href={resolve(action)}>
+        {@render content()}
+      </Button.Root>
+    {:else}
+      <Button.Root
+        {...triggerProps}
+        {...buttonProps}
+        href={action}
+        target="_blank"
+        rel="external noopener"
+      >
+        {@render content()}
+      </Button.Root>
+    {/if}
   {:else}
-    <Button.Root
-      class={[BUTTON_CLASSES, className]}
-      href={action}
-      target="_blank"
-      rel="external noopener"
-    >
+    <Button.Root {...triggerProps} {...buttonProps} type="button">
       {@render content()}
     </Button.Root>
   {/if}
+{/snippet}
+
+{#if iconOnly}
+  <Tooltip {disabled} {onclick}>
+    {#snippet child({ props })}{@render button(props)}{/snippet}
+    {#snippet tooltipContent()}{text}{/snippet}
+  </Tooltip>
 {:else}
-  <Button.Root class={[BUTTON_CLASSES, className]} type="button" onclick={action}>
-    {@render content()}
-  </Button.Root>
+  {@render button({ onclick })}
 {/if}

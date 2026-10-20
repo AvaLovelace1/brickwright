@@ -1,0 +1,44 @@
+{
+  "ok": false,
+  "build_error": null,
+  "error_type": null,
+  "checks": [
+    {
+      "name": "no_floating",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no_collisions",
+      "passed": false,
+      "detail": "27 collisions: front_1 @ Position(1, 2, 0.667)  overlaps  eaves @ Position(1, 2, 2.667); front_1 @ Position(1, 2, 0.667)  overlaps  6x4 Plate @ Position(1, 2, 3); front_1 @ Position(1, 2, 0.667)  overlaps  3x2x1 Slope @ Position(1, 2, 3.333); front_2 @ Position(2, 2, 0.667)  overlaps  eaves @ Position(1, 2, 2.667); front_2 @ Position(2, 2, 0.667)  overlaps  6x4 Plate @ Position(1, 2, 3); front_2 @ Position(2, 2, 0.667)  overlaps  3x2x1 Slope @ Position(1, 2, 3.333); front_3 @ Position(3, 2, 0.667)  overlaps  eaves @ Position(1, 2, 2.667); front_3 @ Position(3, 2, 0.667)  overlaps  6x4 Plate @ Position(1, 2, 3); front_3 @ Position(3, 2, 0.667)  overlaps  3x2x1 Slope @ Position(1, 2, 3.333); front_6 @ Position(6, 2, 0.667)  overlaps  eaves @ Position(1, 2, 2.667); front_6 @ Position(6, 2, 0.667)  overlaps  6x4 Plate @ Position(1, 2, 3); front_6 @ Position(6, 2, 0.667)  overlaps  3x2x1 Slope @ Position(4, 2, 3.333); door @ Position(4, 2, 0.667)  overlaps  eaves @ Position(1, 2, 2.667); door @ Position(4, 2, 0.667)  overlaps  6x4 Plate @ Position(1, 2, 3); door @ Position(4, 2, 0.667)  overlaps  3x2x1 Slope @ Position(4, 2, 3.333); side_1 @ Position(1, 3, 0.667)  overlaps  eaves @ Position(1, 2, 2.667); side_1 @ Position(1, 3, 0.667)  overlaps  6x4 Plate @ Position(1, 2, 3); side_1 @ Position(1, 3, 0.667)  overlaps  3x2x1 Slope @ Position(1, 2, 3.333); side_1 @ Position(1, 3, 0.667)  overlaps  3x2x1 Slope @ Position(1, 4, 3.333); side_6 @ Position(6, 3, 0.667)  overlaps  eaves @ Position(1, 2, 2.667)"
+    },
+    {
+      "name": "connected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "red_walls_and_blue_roof",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "front_door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "twenty_parts",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "dimensions": {
+    "width": 8.0,
+    "depth": 8.0,
+    "height": 4.833333333333333
+  },
+  "brick_count": 20,
+  "stdout": ""
+}

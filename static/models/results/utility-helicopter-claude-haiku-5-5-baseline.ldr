@@ -1,0 +1,30 @@
+0 Blue and White Utility Helicopter
+0 Name: model.ldr
+0 Author: Claude
+0 BFC CERTIFY CCW
+
+0 Landing skids (black)
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 30248.dat
+
+0 Blue lower hull
+1 1 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat
+
+0 White cabin
+1 15 0 -48 0 1 0 0 0 1 0 0 0 1 3001.dat
+
+0 Tail boom plate and tail rotor hub
+1 1 60 -56 0 1 0 0 0 1 0 0 0 1 3020.dat
+1 1 90 -64 10 1 0 0 0 1 0 0 0 1 3024.dat
+1 0 90 -64 10 1 0 0 0 1 0 0 0 1 3480.dat
+
+0 Mast pillars
+1 15 -30 -72 -10 1 0 0 0 1 0 0 0 1 3005.dat
+1 15 30 -72 -10 1 0 0 0 1 0 0 0 1 3005.dat
+1 15 -30 -72 10 1 0 0 0 1 0 0 0 1 3005.dat
+1 15 30 -72 10 1 0 0 0 1 0 0 0 1 3005.dat
+
+0 Rotor mount plate
+1 1 0 -80 0 1 0 0 0 1 0 0 0 1 3020.dat
+
+0 Main rotor
+1 0 0 -72 0 1 0 0 0 1 0 0 0 1 4751a.dat

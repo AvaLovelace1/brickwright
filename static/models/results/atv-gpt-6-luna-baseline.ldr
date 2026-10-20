@@ -1,0 +1,33 @@
+0 Blue and Grey All-Terrain Quad Bike
+0 Name: model.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Model
+0 !LICENSE Licensed under CC BY 4.0 : see CAreadme.txt
+0 // Front of vehicle is toward negative Z; up is negative Y.
+
+0 // Four large off-road wheels, with shared cross axles through the wheel hubs.
+1 16 -35 -26 -48 1 0 0 0 1 0 0 0 1 56145c03.dat
+1 16 35 -26 -48 1 0 0 0 1 0 0 0 1 56145c03.dat
+1 16 -35 -26 48 1 0 0 0 1 0 0 0 1 56145c03.dat
+1 16 35 -26 48 1 0 0 0 1 0 0 0 1 56145c03.dat
+1 0 0 -26 -48 1 0 0 0 1 0 0 0 1 3705.dat
+1 0 0 -26 48 1 0 0 0 1 0 0 0 1 3705.dat
+
+0 // Blue central chassis, built in two brick courses.
+1 1 0 -8 0 1 0 0 0 1 0 0 0 1 3001.dat
+1 1 0 -36 0 1 0 0 0 1 0 0 0 1 3001.dat
+
+0 // Grey seat and instrument panel.
+1 72 0 -48 0 1 0 0 0 1 0 0 0 1 3022.dat
+1 0 0 -60 0 1 0 0 0 1 0 0 0 1 3069b.dat
+
+0 // Trans-yellow headlights at the front of the blue cowling.
+1 46 -10 -48 -30 1 0 0 0 1 0 0 0 1 4073.dat
+1 46 10 -48 -30 1 0 0 0 1 0 0 0 1 4073.dat
+
+0 // Black roll cage supports and roof.
+1 0 -10 -64 30 1 0 0 0 1 0 0 0 1 3062b.dat
+1 0 10 -64 30 1 0 0 0 1 0 0 0 1 3062b.dat
+1 0 0 -76 0 1 0 0 0 1 0 0 0 1 3020.dat
+
+0 STEP

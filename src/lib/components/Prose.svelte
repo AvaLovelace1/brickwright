@@ -10,7 +10,10 @@
 </script>
 
 <div
-  class={["mx-auto prose max-w-none prose-bb prose-h2:text-3xl prose-ul:list-[square]", className]}
+  class={[
+    "mx-auto prose max-w-none prose-bb prose-headings:font-extrabold prose-h2:text-3xl prose-ul:list-[square]",
+    className,
+  ]}
 >
   {@render children?.()}
 </div>

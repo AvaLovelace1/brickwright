@@ -1,0 +1,17 @@
+0 White Flower Cluster
+0 Name: model.ldr
+0 Author: OpenAI
+0 // A connected botanical arrangement built from official LDraw plant parts.
+1 2 0 0 0 1 0 0 0 1 0 0 0 1 3031.dat
+0 STEP
+0 // Four flowering stems, each carrying three white flower heads.
+1 15 -10 -4 -10 1 0 0 0 1 0 0 0 1 99249c03.dat
+1 15 10 -4 -10 0.866 0 -0.5 0 1 0 0.5 0 0.866 99249c03.dat
+1 15 -10 -4 10 0.5 0 0.866 0 1 0 -0.866 0 0.5 99249c03.dat
+1 15 10 -4 10 1 0 0 0 1 0 0 0 1 99249c03.dat
+0 STEP
+0 // Leafy stems and broad leaves fill the outer edge of the bouquet.
+1 2 -30 -4 10 1 0 0 0 1 0 0 0 1 1747.dat
+1 2 30 -4 -10 0 0 1 0 1 0 -1 0 0 1747.dat
+1 2 -30 -4 -30 0.866 0 -0.5 0 1 0 0.5 0 0.866 6255.dat
+1 2 30 -4 30 0.5 0 -0.866 0 1 0 0.866 0 0.5 6255.dat

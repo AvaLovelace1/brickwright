@@ -1,0 +1,13 @@
+0 Name: Ninja Minifigure
+0 Author: Claude
+0 !LDRAW_ORG Unofficial_Model
+0 Black ninja minifigure: black hips and legs, black torso with white belt,
+0 black arms and hands, and head with brown headband.
+0 Layout follows the standard minifigure assembly (see 979.dat).
+1 0 0 -40 0 1 0 0 0 1 0 0 0 1 970c00.dat
+1 0 0 -72 0 1 0 0 0 1 0 0 0 1 973pxf.dat
+1 0 0 -100 0 1 0 0 0 1 0 0 0 1 3626cpd64.dat
+1 0 -15.552 -63 0 0.9855 -0.1699 0 0.1699 0.9855 0 0 0 1 3818.dat
+1 0 15.552 -63 0 0.9855 0.1699 0 -0.1699 0.9855 0 0 0 1 3819.dat
+1 0 -23.552 -46 -10 0.942 0.335 0.0072 -0.2404 0.6906 -0.6821 -0.2336 0.6409 0.7312 3820.dat
+1 0 23.552 -46 -10 0.942 -0.335 0.0072 0.2404 0.6906 -0.6821 0.2336 0.6409 0.7312 3820.dat

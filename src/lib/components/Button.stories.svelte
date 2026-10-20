@@ -1,16 +1,27 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Button from "./Button.svelte";
-  import { expect, fn, userEvent } from "storybook/test";
+  import type { ComponentProps } from "svelte";
+  import { Tooltip as BitsTooltip } from "bits-ui";
+  import { expect, fn, screen, userEvent, waitFor } from "storybook/test";
 
   const { Story } = defineMeta({
     title: "Components/Button",
     component: Button,
     tags: ["autodocs"],
+    render: template,
   });
 
   const handleClick = fn();
+  const handleIconClick = fn();
+  const handleDisabledClick = fn();
 </script>
+
+{#snippet template(args: ComponentProps<typeof Button>)}
+  <BitsTooltip.Provider delayDuration={0}>
+    <Button {...args} />
+  </BitsTooltip.Provider>
+{/snippet}
 
 <!-- If `action` is a function, clicking the button runs it. -->
 <Story
@@ -25,6 +36,43 @@
       await userEvent.click(button);
       await expect(handleClick).toHaveBeenCalledTimes(1);
     });
+  }}
+/>
+
+<Story
+  name="Icon Only"
+  args={{
+    text: "Next step",
+    action: handleIconClick,
+    icon: "tdesign--chevron-right",
+    iconOnly: true,
+  }}
+  play={async ({ canvas, userEvent }) => {
+    const button = canvas.getByRole("button", { name: "Next step" });
+    await expect(button).toHaveAttribute("type", "button");
+    await userEvent.hover(button);
+    await waitFor(() => expect(screen.getByRole("tooltip")).toBeVisible());
+    await expect(screen.getByRole("tooltip")).toHaveTextContent("Next step");
+    await userEvent.unhover(button);
+    await waitFor(() => expect(screen.queryByRole("tooltip")).toBeNull());
+    button.focus();
+    await waitFor(() => expect(screen.getByRole("tooltip")).toBeVisible());
+    await expect(button).toHaveAccessibleDescription("Next step");
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("tooltip")).toBeNull());
+    await userEvent.keyboard("{Enter} ");
+    await expect(handleIconClick).toHaveBeenCalledTimes(2);
+  }}
+/>
+
+<Story
+  name="Disabled Action"
+  args={{ text: "Previous step", action: handleDisabledClick, disabled: true }}
+  play={async ({ canvas }) => {
+    const button = canvas.getByRole("button", { name: "Previous step" }) as HTMLButtonElement;
+    await expect(button).toBeDisabled();
+    button.click();
+    await expect(handleDisabledClick).not.toHaveBeenCalled();
   }}
 />
 
@@ -82,5 +130,26 @@
     await step("Button applies custom classes", async () => {
       await expect(button).toHaveClass("bb-btn", "bb-btn-primary");
     });
+  }}
+/>
+
+<Story
+  name="Icon Only Link"
+  args={{
+    text: "Source code",
+    action: "https://example.com/source",
+    icon: "tdesign--logo-github",
+    iconOnly: true,
+  }}
+  play={async ({ canvas, userEvent }) => {
+    const link = canvas.getByRole("link", { name: "Source code" });
+    await expect(link).toHaveAttribute("href", "https://example.com/source");
+    await expect(link).toHaveAttribute("target", "_blank");
+    await expect(link).toHaveAttribute("rel", "external noopener");
+    await userEvent.hover(link);
+    await waitFor(() => expect(screen.getByRole("tooltip")).toBeVisible());
+    await expect(screen.getByRole("tooltip")).toHaveTextContent("Source code");
+    await userEvent.unhover(link);
+    await waitFor(() => expect(screen.queryByRole("tooltip")).toBeNull());
   }}
 />

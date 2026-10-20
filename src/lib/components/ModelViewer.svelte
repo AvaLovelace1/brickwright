@@ -40,6 +40,7 @@
     model: LegoModelView;
     autoplay?: boolean;
     showCaption?: boolean;
+    showBuildControls?: boolean;
     badge?: ViewerBadge;
     class?: ClassValue;
   }
@@ -47,6 +48,7 @@
     model = $bindable(),
     autoplay = false,
     showCaption = true,
+    showBuildControls = true,
     badge: badgeOverride,
     highlightCollisions = false,
     showIntersections = false,
@@ -191,7 +193,8 @@
   onDestroy(() => clearInterval(playInterval));
 
   // We use outline instead of border so the model doesn't cover the border when zoomed.
-  const WINDOW_CLASS = "size-[calc(100%-2px)] rounded-xs bg-surface outline-2 outline-line";
+  const WINDOW_CLASS =
+    "size-[calc(100%-2px)] rounded-(--bb-border-radius) bg-surface outline-2 outline-line";
   const OVERLAY_CLASS = "pointer-events-none absolute top-1 right-2 left-1 z-10";
   const BTN_CLASS =
     "flex cursor-pointer items-center text-text hover:text-link " +
@@ -262,7 +265,7 @@
 
 {#snippet viewerTools(isExpandedView: boolean)}
   <div class="absolute right-2 bottom-2 left-2 z-10 flex items-center justify-end gap-2 text-text">
-    {#if model.loaded}
+    {#if model.loaded && showBuildControls}
       {@render viewerTool("previous")}
       {@render viewerTool("playback")}
       {@render viewerTool("next")}
@@ -282,6 +285,7 @@
 
 <figure
   bind:this={figure}
+  aria-busy={!model.loaded}
   class={["relative", className]}
   aria-labelledby={hasCaption ? `${uid}-figcaption` : undefined}
   aria-label={!hasCaption ? model.caption : undefined}

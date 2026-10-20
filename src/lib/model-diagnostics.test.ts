@@ -128,16 +128,17 @@ test("reports mismatched diagnostics instead of highlighting an unrelated part",
   ).toThrow(/floating/);
 });
 
-test("all shipped diagnostics match their original LDraw and every rendered placement", async () => {
-  const directory = "static/models/";
-  const suffix = ".diagnostics.json";
-  const files = (await readdir(directory, { recursive: true })).filter((file) =>
-    file.endsWith(suffix),
-  );
-  expect(files.length).toBeGreaterThan(0);
-  for (const file of files) {
-    const modelPath = directory + file.slice(0, -suffix.length);
-    const data = JSON.parse(await readFile(directory + file, "utf8"));
+const modelDirectory = "static/models/";
+const diagnosticSuffix = ".diagnostics.json";
+const diagnosticFiles = (await readdir(modelDirectory, { recursive: true })).filter((file) =>
+  file.endsWith(diagnosticSuffix),
+);
+
+test.each(diagnosticFiles)(
+  "shipped diagnostics match the original LDraw and rendered placements: %s",
+  async (file) => {
+    const modelPath = modelDirectory + file.slice(0, -diagnosticSuffix.length);
+    const data = JSON.parse(await readFile(modelDirectory + file, "utf8"));
     const ldraw = await readFile(`${modelPath}.ldr`);
     expect(createHash("sha256").update(ldraw).digest("hex")).toBe(data.modelSha256);
     const loader = new LDrawLoader();
@@ -145,5 +146,6 @@ test("all shipped diagnostics match their original LDraw and every rendered plac
     const group = await parsePackedModel(loader, await readFile(`${modelPath}.packed.mpd`, "utf8"));
     const placements = matchDiagnosticPlacements(group, data);
     expect(placements.size).toBe(data.placements.length);
-  }
-}, 60_000);
+  },
+  30_000,
+);

@@ -182,21 +182,23 @@
   --bb-link-hover-rgb: var(--bb-primary-bright-rgb);
 }
 
-body {
-  font-family: var(--bb-body-font);
-  font-weight: var(--bb-body-font-weight);
-  background-color: var(--bb-bg);
-  color: var(--bb-text);
-}
+@layer base {
+  body {
+    font-family: var(--bb-body-font);
+    font-weight: var(--bb-body-font-weight);
+    background-color: var(--bb-bg);
+    color: var(--bb-text);
+  }
 
-h1,
-h2,
-h3,
-h4,
-h5,
-h6 {
-  font-family: var(--bb-display-font);
-  font-weight: var(--bb-display-font-weight);
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--bb-display-font);
+    font-weight: var(--bb-display-font-weight);
+  }
 }
 
 @layer components {

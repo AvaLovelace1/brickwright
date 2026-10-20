@@ -1,0 +1,38 @@
+0 Name: model.ldr
+0 Author: Claude
+0 Description: Blue, grey and black quad bike (ATV) with large off-road wheels, roll hoop and translucent yellow headlights
+
+0 // Front and rear axles
+1 0 0 -51 70 1 0 0 0 1 0 0 0 1 3707.dat
+1 0 0 -51 -70 1 0 0 0 1 0 0 0 1 3707.dat
+
+0 // Technic axle beams carrying the axles
+1 0 0 -63 60 0 0 1 0 1 0 -1 0 0 3701.dat
+1 0 0 -63 -60 0 0 1 0 1 0 -1 0 0 3701.dat
+
+0 // Off-road wheels
+1 0 56 -51 70 0 0 1 0 1 0 -1 0 0 6580ac01.dat
+1 0 -56 -51 70 0 0 1 0 1 0 -1 0 0 6580ac01.dat
+1 0 56 -51 -70 0 0 1 0 1 0 -1 0 0 6580ac01.dat
+1 0 -56 -51 -70 0 0 1 0 1 0 -1 0 0 6580ac01.dat
+
+0 // Chassis deck
+1 1 0 -87 0 0 0 1 0 1 0 -1 0 0 3001.dat
+
+0 // Seat block
+1 1 0 -111 0 1 0 0 0 1 0 0 0 1 3003.dat
+
+0 // Translucent yellow headlights
+1 46 -10 -111 -30 1 0 0 0 1 0 0 0 1 4070.dat
+1 46 10 -111 -30 1 0 0 0 1 0 0 0 1 4070.dat
+
+0 // Roll hoop posts
+1 71 -10 -111 30 1 0 0 0 1 0 0 0 1 3005.dat
+1 71 10 -111 30 1 0 0 0 1 0 0 0 1 3005.dat
+1 71 -10 -135 30 1 0 0 0 1 0 0 0 1 3005.dat
+1 71 10 -135 30 1 0 0 0 1 0 0 0 1 3005.dat
+1 71 -10 -159 30 1 0 0 0 1 0 0 0 1 3005.dat
+1 71 10 -159 30 1 0 0 0 1 0 0 0 1 3005.dat
+
+0 // Roll hoop top bar
+1 71 0 -183 30 1 0 0 0 1 0 0 0 1 3010.dat

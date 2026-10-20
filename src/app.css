@@ -1,6 +1,18 @@
 @import "tailwindcss";
 @import "./brickbrand.css";
 
+/* Allow `dark:` Tailwind classes to also follow the set `data-theme`. */
+@custom-variant dark {
+  &:where(:root[data-theme="dark"], :root[data-theme="dark"] *) {
+    @slot;
+  }
+  @media (prefers-color-scheme: dark) {
+    &:where(:root:not([data-theme]), :root:not([data-theme]) *) {
+      @slot;
+    }
+  }
+}
+
 @plugin "@tailwindcss/typography";
 @plugin "@iconify/tailwind4" {
   prefix: "iconify";
@@ -29,6 +41,7 @@
   --color-danger: var(--bb-danger);
   --color-danger-bright: var(--bb-danger-bright);
   --color-danger-deep: var(--bb-danger-deep);
+  --color-danger-brighter: color-mix(in srgb, var(--bb-danger-bright) 60%, var(--bb-paper));
 
   --color-warning: var(--bb-warning);
   --color-warning-bright: var(--bb-warning-bright);

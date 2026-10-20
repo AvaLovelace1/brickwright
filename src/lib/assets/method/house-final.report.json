@@ -1,0 +1,44 @@
+{
+  "ok": true,
+  "build_error": null,
+  "error_type": null,
+  "checks": [
+    {
+      "name": "no_floating",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "no_collisions",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "connected",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "red_walls_and_blue_roof",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "front_door",
+      "passed": true,
+      "detail": null
+    },
+    {
+      "name": "twenty_parts",
+      "passed": true,
+      "detail": null
+    }
+  ],
+  "dimensions": {
+    "width": 8.0,
+    "depth": 8.0,
+    "height": 5.833333333333333
+  },
+  "brick_count": 20,
+  "stdout": ""
+}

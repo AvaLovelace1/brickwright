@@ -1,22 +1,29 @@
 <script lang="ts">
   import Container from "#lib/components/Container.svelte";
   import Prose from "#lib/components/Prose.svelte";
+  import BrickLayerCards from "#lib/components/BrickLayerCards.svelte";
+  import MethodDemo from "#lib/components/MethodDemo.svelte";
 </script>
 
-<section id="method" aria-labelledby="method-heading" class="flex justify-center py-12">
+<section id="method" aria-labelledby="method-heading" class="flex flex-col items-center py-12">
   <Container>
     <Prose>
       <h2 id="method-heading">Method</h2>
       <p>
         To help agents produce physically feasible builds, BrickWright equips them with a
         programmatic toolkit for brick build creation and validation. Following the paradigm of
-        structure-as-code, BrickWright guides an agent to write Python code that produces a brick
-        build using a custom package called BrickLayer. BrickLayer provides a unified programmatic
+        structure-as-code, it guides an agent to write Python code that produces a brick build using
+        a custom package called BrickLayer. BrickLayer provides a unified programmatic
         representation for LEGO® build files, enabling them to be easily understood and edited by
-        humans and agents. It provides methods for three stages of brick build creation: catalog
-        discovery, assembly, and validation. Key BrickLayer API components include the following:
-        [cards here]
+        humans and agents. Key BrickLayer API components include the following:
       </p>
+    </Prose>
+  </Container>
+  <Container class="my-12 max-w-7xl">
+    <BrickLayerCards />
+  </Container>
+  <Container>
+    <Prose>
       <p>
         To create a brick build from a text or image prompt, BrickWright provides a pre-trained
         agent with a set of tools—<code>validate</code>, <code>render</code>, and
@@ -27,5 +34,8 @@
         agent is satisfied with the render, it calls <code>finalize</code>, completing the process.
       </p>
     </Prose>
+  </Container>
+  <Container class="mt-12 max-w-7xl">
+    <MethodDemo />
   </Container>
 </section>

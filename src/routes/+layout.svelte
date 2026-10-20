@@ -65,7 +65,7 @@
     </div>
     <main
       use:trackSections
-      class="mt-15 flex-1 md:mt-0 [&>section]:scroll-mt-32 md:[&>section]:scroll-mt-17"
+      class="mt-15 min-w-0 flex-1 md:mt-0 [&>section]:scroll-mt-32 md:[&>section]:scroll-mt-17"
     >
       {@render children()}
     </main>

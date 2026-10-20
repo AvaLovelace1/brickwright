@@ -1,0 +1,29 @@
+0 Blue and White Utility Helicopter
+0 Name: model.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Unofficial_Model
+0 // Forward is +Z; black landing rails run beneath the fuselage.
+
+0 // Twin black landing skids and blue fuselage floor
+1 0 0 0 0 1 0 0 0 1 0 0 0 1 30248.dat
+1 1 0 20 0 0 0 1 0 1 0 -1 0 0 3009.dat
+
+0 // Blue cabin rails leave the cockpit open above the floor
+1 1 -50 -4 0 1 0 0 0 1 0 0 0 1 3009.dat
+1 1 50 -4 0 1 0 0 0 1 0 0 0 1 3009.dat
+0 // White rear crossbeam joins both cabin rails
+1 15 0 -28 -40 0 0 1 0 1 0 -1 0 0 3009.dat
+
+0 // Clear helicopter windscreen at the nose
+1 41 0 -4 50 1 0 0 0 1 0 0 0 1 2483.dat
+
+0 // Blue tail boom rests on the rear crossbeam
+1 1 10 -52 -90 1 0 0 0 1 0 0 0 1 3009.dat
+
+0 // Main rotor above the cabin
+1 1 0 -28 -40 1 0 0 0 1 0 0 0 1 3462.dat
+1 0 0 -36 -40 1 0 0 0 1 0 0 0 1 4751a.dat
+
+0 // Tail rotor on the rear end of the boom
+1 15 10 -52 -170 0 0 1 0 1 0 -1 0 0 3481.dat
+1 0 10 -52 -145 0 0 1 0 1 0 -1 0 0 3480.dat

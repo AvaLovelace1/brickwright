@@ -11,5 +11,13 @@ const config: StorybookConfig = {
     "@storybook/addon-vitest",
   ],
   framework: "@storybook/sveltekit",
+  viteFinal: (config, { configType }) => {
+    if (configType !== "PRODUCTION") return config;
+    // Standalone Storybook frames do not run the SvelteKit 3 bootstrap that supplies this payload.
+    return {
+      ...config,
+      define: { ...config.define, __SVELTEKIT_PAYLOAD__: "undefined" },
+    };
+  },
 };
 export default config;
