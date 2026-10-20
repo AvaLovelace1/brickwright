@@ -1,9 +1,9 @@
 <script lang="ts">
   import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
   import Container from "#lib/components/Container.svelte";
-  import Teaser from "#lib/components/Teaser.svelte";
+  import Teaser from "#lib/content/Teaser.svelte";
   import Prose from "#lib/components/Prose.svelte";
-  import AgentComparison from "#lib/components/AgentComparison.svelte";
+  import AgentComparison from "#lib/content/AgentComparison.svelte";
 
   const AUTHORS = [
     { name: "Ava\u00A0Pun", aff: 1 },

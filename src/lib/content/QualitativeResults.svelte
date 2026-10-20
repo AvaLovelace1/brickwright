@@ -5,9 +5,9 @@
   import { A11y } from "swiper/modules";
   import "swiper/css";
   import "swiper/css/a11y";
-  import Button from "./Button.svelte";
-  import Select from "./Select.svelte";
-  import ModelDiagnosticControls from "./ModelDiagnosticControls.svelte";
+  import Button from "#lib/components/Button.svelte";
+  import Select from "#lib/components/Select.svelte";
+  import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
   import ResultPair from "./ResultPair.svelte";
   import { agents, prompts } from "#lib/experiment-results.js";
 

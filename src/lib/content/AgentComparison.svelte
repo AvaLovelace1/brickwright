@@ -1,29 +1,33 @@
 <script lang="ts">
   import { asset } from "$app/paths";
-  import ModelDiagnosticControls from "./ModelDiagnosticControls.svelte";
-  import ModelViewer, { type LegoModelView } from "./ModelViewer.svelte";
-  import SharedCanvas from "./SharedCanvas.svelte";
+  import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
+  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   const uid = $props.id();
-  const modelDirectory = "models/spaceship-309";
+  const modelDirectory = "models/agent-comparison";
   const agents = [
     {
       name: "GPT-6 Astra",
+      baselineAgent: "Codex",
       baseline: "spaceship-gpt-6-astra-without-brickwright",
       brickwright: "spaceship-gpt-6-astra-with-brickwright",
     },
     {
       name: "GPT-6.1 Sol",
+      baselineAgent: "Codex",
       baseline: "spaceship-gpt-6-1-sol-without-brickwright",
       brickwright: "spaceship-gpt-6-1-sol-with-brickwright",
     },
     {
       name: "GPT-6 Luna",
+      baselineAgent: "Codex",
       baseline: "spaceship-gpt-6-luna-without-brickwright",
       brickwright: "spaceship-gpt-6-luna-with-brickwright",
     },
     {
       name: "Claude Haiku 5.5",
+      baselineAgent: "Claude Code",
       baseline: "spaceship-claude-haiku-5-5-without-brickwright",
       brickwright: "spaceship-claude-haiku-5-5-with-brickwright",
     },
@@ -36,6 +40,7 @@
   let pairs = $state(
     agents.map((agent) => ({
       name: agent.name,
+      baselineAgent: agent.baselineAgent,
       models: [agent.baseline, agent.brickwright].map((filename, side): ComparisonModel => ({
         filename,
         withBrickwright: side === 1,
@@ -74,7 +79,7 @@
           {#each pair.models as model, side (model.filename)}
             <div class="min-w-0">
               <p class="mb-1 text-center font-semibold">
-                {model.withBrickwright ? "With BrickWright" : "Vanilla agent"}
+                {model.withBrickwright ? "BrickWright" : pair.baselineAgent}
               </p>
               <ModelViewer
                 bind:model={pair.models[side]}

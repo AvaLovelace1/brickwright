@@ -5,7 +5,7 @@
   import { agents, results, metricColumns } from "#lib/experiment-results.js";
 
   const { Story } = defineMeta({
-    title: "Components/QuantitativeResults",
+    title: "Content/QuantitativeResults",
     component: QuantitativeResults,
     tags: ["autodocs"],
     render: template,

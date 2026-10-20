@@ -1,8 +1,8 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import { Button as BitsButton } from "bits-ui";
-  import Button from "./Button.svelte";
-  import Tooltip from "./Tooltip.svelte";
+  import Button from "#lib/components/Button.svelte";
+  import Tooltip from "#lib/components/Tooltip.svelte";
   import { demoSteps } from "#lib/method.js";
   import MethodFlowchart from "./MethodFlowchart.svelte";
   import MethodChat from "./MethodChat.svelte";

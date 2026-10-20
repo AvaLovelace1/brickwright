@@ -4,7 +4,7 @@
   import { prefersReducedMotion } from "svelte/motion";
   import { fly } from "svelte/transition";
   import { stageStyles, systemMessage, type DemoStep } from "#lib/method.js";
-  import HardShadow from "./HardShadow.svelte";
+  import HardShadow from "#lib/components/HardShadow.svelte";
 
   let { messages, playing }: { messages: readonly DemoStep[]; playing: boolean } = $props();
   let transcript: HTMLDivElement;

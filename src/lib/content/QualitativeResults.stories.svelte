@@ -7,7 +7,7 @@
   import { agents, prompts, resultModelName } from "#lib/experiment-results.js";
 
   const { Story } = defineMeta({
-    title: "Components/QualitativeResults",
+    title: "Content/QualitativeResults",
     component: QualitativeResults,
     tags: ["autodocs"],
     render: template,

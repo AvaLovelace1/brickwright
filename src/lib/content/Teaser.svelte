@@ -1,9 +1,9 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
   import { asset } from "$app/paths";
-  import Select from "./Select.svelte";
-  import ModelViewer, { type LegoModelView } from "./ModelViewer.svelte";
-  import SharedCanvas from "./SharedCanvas.svelte";
+  import Select from "#lib/components/Select.svelte";
+  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   const prompts = [
     {

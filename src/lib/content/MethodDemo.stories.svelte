@@ -7,7 +7,7 @@
   import MethodDemo from "./MethodDemo.svelte";
 
   const { Story } = defineMeta({
-    title: "Components/MethodDemo",
+    title: "Content/MethodDemo",
     component: MethodDemo,
     tags: ["autodocs"],
     render: template,

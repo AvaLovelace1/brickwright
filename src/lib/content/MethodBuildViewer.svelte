@@ -1,10 +1,10 @@
 <script lang="ts">
   import { asset } from "$app/paths";
-  import ModelViewer, { type LegoModelView } from "./ModelViewer.svelte";
-  import ModelDiagnosticControls from "./ModelDiagnosticControls.svelte";
-  import SharedCanvas from "./SharedCanvas.svelte";
-  import PythonCode from "./PythonCode.svelte";
-  import Tooltip from "./Tooltip.svelte";
+  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
+  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
+  import PythonCode from "#lib/components/PythonCode.svelte";
+  import Tooltip from "#lib/components/Tooltip.svelte";
   import { methodBuilds, type BuildRevision } from "#lib/method.js";
 
   let { revision }: { revision: BuildRevision | null } = $props();

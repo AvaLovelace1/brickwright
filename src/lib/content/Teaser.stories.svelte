@@ -5,7 +5,7 @@
   import Teaser from "./Teaser.svelte";
 
   const { Story } = defineMeta({
-    title: "Components/Teaser",
+    title: "Content/Teaser",
     component: Teaser,
     tags: ["autodocs"],
     render: template,

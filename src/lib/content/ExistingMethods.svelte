@@ -1,11 +1,11 @@
 <script lang="ts">
   import { asset } from "$app/paths";
-  import ModelDiagnosticControls from "./ModelDiagnosticControls.svelte";
-  import ModelViewer, { type LegoModelView } from "./ModelViewer.svelte";
-  import SharedCanvas from "./SharedCanvas.svelte";
+  import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
+  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   const uid = $props.id();
-  const modelPath = "models/truck-417/truck";
+  const modelPath = "models/existing-methods/truck";
   const methodGroups = [
     {
       name: "Specialized text-to-brick models",

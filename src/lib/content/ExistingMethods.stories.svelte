@@ -6,7 +6,7 @@
   import ExistingMethods from "./ExistingMethods.svelte";
 
   const { Story } = defineMeta({
-    title: "Components/ExistingMethods",
+    title: "Content/ExistingMethods",
     component: ExistingMethods,
     tags: ["autodocs"],
     render: template,

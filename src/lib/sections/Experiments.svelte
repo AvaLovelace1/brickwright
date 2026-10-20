@@ -1,8 +1,8 @@
 <script lang="ts">
   import Container from "#lib/components/Container.svelte";
   import Prose from "#lib/components/Prose.svelte";
-  import QualitativeResults from "#lib/components/QualitativeResults.svelte";
-  import QuantitativeResults from "#lib/components/QuantitativeResults.svelte";
+  import QualitativeResults from "#lib/content/QualitativeResults.svelte";
+  import QuantitativeResults from "#lib/content/QuantitativeResults.svelte";
 </script>
 
 <section

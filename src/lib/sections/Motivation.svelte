@@ -1,7 +1,7 @@
 <script lang="ts">
   import Container from "#lib/components/Container.svelte";
   import Prose from "#lib/components/Prose.svelte";
-  import ExistingMethods from "#lib/components/ExistingMethods.svelte";
+  import ExistingMethods from "#lib/content/ExistingMethods.svelte";
 </script>
 
 <section

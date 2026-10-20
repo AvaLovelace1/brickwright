@@ -1,7 +1,7 @@
 <script lang="ts">
   import { asset } from "$app/paths";
-  import ModelViewer, { type LegoModelView } from "./ModelViewer.svelte";
-  import SharedCanvas from "./SharedCanvas.svelte";
+  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import { resultModelName, type Agent, type ResultPrompt } from "#lib/experiment-results.js";
   import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
 

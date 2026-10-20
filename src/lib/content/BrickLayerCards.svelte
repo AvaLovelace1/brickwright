@@ -1,5 +1,5 @@
 <script lang="ts">
-  import PythonCode from "./PythonCode.svelte";
+  import PythonCode from "#lib/components/PythonCode.svelte";
   const cards = [
     {
       title: "Discover parts",

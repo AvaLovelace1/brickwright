@@ -1,8 +1,8 @@
 <script lang="ts">
   import Container from "#lib/components/Container.svelte";
   import Prose from "#lib/components/Prose.svelte";
-  import BrickLayerCards from "#lib/components/BrickLayerCards.svelte";
-  import MethodDemo from "#lib/components/MethodDemo.svelte";
+  import BrickLayerCards from "#lib/content/BrickLayerCards.svelte";
+  import MethodDemo from "#lib/content/MethodDemo.svelte";
 </script>
 
 <section id="method" aria-labelledby="method-heading" class="flex flex-col items-center py-12">

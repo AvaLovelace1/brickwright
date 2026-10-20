@@ -35,7 +35,7 @@
   });
 
   function createDiagnosticModel(): LegoModelView {
-    const filename = "models/spaceship-309/spaceship-gpt-6-astra-without-brickwright";
+    const filename = "models/agent-comparison/spaceship-gpt-6-astra-without-brickwright";
     return {
       ldr: asset(`${filename}.ldr`),
       ldrPacked: asset(`${filename}.packed.mpd`),

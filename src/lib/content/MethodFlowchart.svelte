@@ -1,7 +1,7 @@
 <script lang="ts">
   import { tick } from "svelte";
   import { stageStyles, type Flow, type Stage } from "#lib/method.js";
-  import PythonCode from "./PythonCode.svelte";
+  import PythonCode from "#lib/components/PythonCode.svelte";
 
   let { stage, flow }: { stage: Stage; flow?: Flow } = $props();
   const uid = $props.id();

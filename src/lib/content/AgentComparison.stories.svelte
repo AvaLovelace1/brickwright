@@ -5,7 +5,7 @@
   import AgentComparison from "./AgentComparison.svelte";
 
   const { Story } = defineMeta({
-    title: "Components/AgentComparison",
+    title: "Content/AgentComparison",
     component: AgentComparison,
     tags: ["autodocs"],
     render: template,

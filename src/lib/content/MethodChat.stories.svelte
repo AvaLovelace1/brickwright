@@ -5,7 +5,7 @@
   import MethodChat from "./MethodChat.svelte";
 
   const { Story } = defineMeta({
-    title: "Components/MethodChat",
+    title: "Content/MethodChat",
     component: MethodChat,
     tags: ["autodocs"],
   });
