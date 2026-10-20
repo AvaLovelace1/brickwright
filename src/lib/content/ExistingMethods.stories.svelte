@@ -3,6 +3,7 @@
   import { Tooltip } from "bits-ui";
   import { expect, waitFor, within } from "storybook/test";
   import { loadDiagnostics } from "#lib/model-diagnostics.js";
+  import { modelAssets } from "#lib/model-assets.js";
   import ExistingMethods from "./ExistingMethods.svelte";
 
   const { Story } = defineMeta({
@@ -29,7 +30,12 @@
     const intersections = figure.getByRole("checkbox", { name: "Show intersections" });
 
     await step("Each method loads its build and matching diagnostics", async () => {
-      for (const name of ["BrickGPT", "BrickNet", "Codex (GPT-6 Astra)", "Codex (GPT-6.1 Sol)"]) {
+      for (const [name, run] of [
+        ["BrickGPT", "brickgpt"],
+        ["BrickNet", "bricknet"],
+        ["Codex (GPT-6 Astra)", "codex-astra-docs"],
+        ["Codex (GPT-6.1 Sol)", "codex-sol-docs"],
+      ]) {
         const viewer = figure.getByRole("figure", { name: `${name} build` });
         const model = within(viewer);
         viewer.scrollIntoView({ block: "center" });
@@ -39,7 +45,7 @@
         const download = model.getByRole("link", { name: "Download LDraw" });
         await expect(download).toBeVisible();
         const diagnostics = await loadDiagnostics(
-          download.getAttribute("href")!.replace(/\.ldr$/, ".diagnostics.json"),
+          modelAssets(`existing-methods/truck-${run}`).diagnosticsUrl,
         );
         const valid = diagnostics.collisions.length === 0 && diagnostics.floating.length === 0;
         await waitFor(() =>

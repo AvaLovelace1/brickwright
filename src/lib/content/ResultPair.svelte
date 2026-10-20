@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { asset } from "$app/paths";
+  import { modelAssets } from "#lib/model-assets.js";
   import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import { resultModelName, type Agent, type ResultPrompt } from "#lib/experiment-results.js";
@@ -16,11 +16,9 @@
 
   function createModels(): LegoModelView[] {
     return (["baseline", "brickwright"] as const).map((method) => {
-      const path = `models/results/${resultModelName(prompt, agent, method)}` as const;
+      const path = `results/${resultModelName(prompt, agent, method)}` as const;
       return {
-        ldr: asset(`${path}.ldr`),
-        ldrPacked: asset(`${path}.packed.mpd`),
-        diagnosticsUrl: asset(`${path}.diagnostics.json`),
+        ...modelAssets(path),
         caption: `${prompt.title} — ${agent.label} — ${method === "baseline" ? agent.baseline : "BrickWright"}`,
         stepsShown: 1,
         maxSteps: 1,

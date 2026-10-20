@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { asset } from "$app/paths";
+  import { modelAssets } from "#lib/model-assets.js";
   import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
   import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   const uid = $props.id();
-  const modelDirectory = "models/agent-comparison";
   const agents = [
     {
       name: "GPT-6 Astra",
@@ -44,9 +43,7 @@
       models: [agent.baseline, agent.brickwright].map((filename, side): ComparisonModel => ({
         filename,
         withBrickwright: side === 1,
-        ldr: asset(`${modelDirectory}/${filename}.ldr`),
-        ldrPacked: asset(`${modelDirectory}/${filename}.packed.mpd`),
-        diagnosticsUrl: asset(`${modelDirectory}/${filename}.diagnostics.json`),
+        ...modelAssets(`agent-comparison/${filename}`),
         caption: `${agent.name} build ${side === 1 ? "with" : "without"} BrickWright`,
         maxSteps: 1,
         stepsShown: 1,

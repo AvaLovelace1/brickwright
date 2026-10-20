@@ -4,12 +4,12 @@
   import ModelViewer from "./ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import type { LegoModelView } from "#lib/components/ModelViewer.svelte";
-  import ldr from "#lib/assets/ldr/cruise-ship.ldr?url";
-  import ldrPacked from "#lib/assets/ldr/cruise-ship.ldr_Packed.mpd?url";
+  import ldr from "#lib/assets/models/test-examples/cruise-ship.ldr?url";
+  import ldrPacked from "#lib/assets/models/test-examples/cruise-ship.ldr_Packed.mpd?url";
   import { expect, screen, waitFor, within } from "storybook/test";
   import { Tooltip as BitsTooltip } from "bits-ui";
   import { flushSync } from "svelte";
-  import { asset } from "$app/paths";
+  import { modelAssets } from "#lib/model-assets.js";
 
   const { Story } = defineMeta({
     title: "Components/Model Viewer",
@@ -35,11 +35,8 @@
   });
 
   function createDiagnosticModel(): LegoModelView {
-    const filename = "models/agent-comparison/spaceship-gpt-6-astra-without-brickwright";
     return {
-      ldr: asset(`${filename}.ldr`),
-      ldrPacked: asset(`${filename}.packed.mpd`),
-      diagnosticsUrl: asset(`${filename}.diagnostics.json`),
+      ...modelAssets("agent-comparison/spaceship-gpt-6-astra-without-brickwright"),
       caption: "GPT-6 Astra build without BrickWright",
       stepsShown: 1,
       maxSteps: 1,

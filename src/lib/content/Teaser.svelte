@@ -1,9 +1,11 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import { asset } from "$app/paths";
+  import { modelAssets } from "#lib/model-assets.js";
   import Select from "#lib/components/Select.svelte";
   import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
+
+  import referenceImage from "#lib/assets/models/teaser/combine-harvester-reference.png";
 
   const prompts = [
     {
@@ -15,7 +17,7 @@
       label: "A combine harvester from an image",
       filename: "combine-harvester",
       text: "Match the image as closely as possible.",
-      image: "combine-harvester-reference.png",
+      image: referenceImage,
       imageAlt: "Green combine harvester with yellow wheels and a wide cutting header in a field",
     },
     {
@@ -35,8 +37,7 @@
   const prompt = $derived(prompts[index]);
   let models = $state<LegoModelView[]>(
     prompts.map(({ label, filename }) => ({
-      ldr: asset(`models/teaser/${filename}.ldr`),
-      ldrPacked: asset(`models/teaser/${filename}.packed.mpd`),
+      ...modelAssets(`teaser/${filename}`),
       caption: label,
       maxSteps: 1,
       stepsShown: 1,
@@ -95,14 +96,14 @@
       <p class="text-sm italic">“{prompt.text}”</p>
       {#if "image" in prompt}
         <a
-          href={asset(`models/teaser/${prompt.image}`)}
+          href={prompt.image}
           target="_blank"
-          rel="noopener"
+          rel="external noopener"
           aria-label="View reference image"
           class="mt-1 block w-48 max-w-full rounded-(--bb-border-radius) focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-line"
         >
           <img
-            src={asset(`models/teaser/${prompt.image}`)}
+            src={prompt.image}
             alt={prompt.imageAlt}
             width="460"
             height="269"

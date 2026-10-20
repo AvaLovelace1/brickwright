@@ -128,7 +128,7 @@ test("reports mismatched diagnostics instead of highlighting an unrelated part",
   ).toThrow(/floating/);
 });
 
-const modelDirectory = "static/models/";
+const modelDirectory = "src/lib/assets/models/";
 const diagnosticSuffix = ".diagnostics.json";
 const diagnosticFiles = (await readdir(modelDirectory, { recursive: true })).filter((file) =>
   file.endsWith(diagnosticSuffix),

@@ -3,6 +3,8 @@
   import { expect, screen, waitFor } from "storybook/test";
   import { Tooltip } from "bits-ui";
   import Teaser from "./Teaser.svelte";
+  import { modelAssets } from "#lib/model-assets.js";
+  import referenceImageUrl from "#lib/assets/models/teaser/combine-harvester-reference.png";
 
   const { Story } = defineMeta({
     title: "Content/Teaser",
@@ -76,7 +78,7 @@
         await expect(canvas.getAllByRole("figure")).toHaveLength(1);
         await expect(canvas.getByRole("link", { name: "Download LDraw" })).toHaveAttribute(
           "href",
-          expect.stringContaining(`/models/teaser/${filename}.ldr`),
+          modelAssets(`teaser/${filename}`).ldr,
         );
         const referenceImage = canvas.queryByRole("img", {
           name: /combine harvester/,
@@ -85,7 +87,7 @@
           await expect(referenceImage).toBeVisible();
           await expect(canvas.getByRole("link", { name: "View reference image" })).toHaveAttribute(
             "href",
-            expect.stringContaining("/models/teaser/combine-harvester-reference.png"),
+            referenceImageUrl,
           );
         } else {
           await expect(referenceImage).toBeNull();

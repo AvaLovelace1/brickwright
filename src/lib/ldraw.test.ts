@@ -108,7 +108,7 @@ test("preserves nested submodel placements, transforms, and colors", async () =>
 });
 
 test("loads the full Victoria Harbour model with its tower submodels", async () => {
-  const text = await readFile("static/models/teaser/victoria-harbour.packed.mpd", "utf8");
+  const text = await readFile("src/lib/assets/models/teaser/victoria-harbour.packed.mpd", "utf8");
   const model = await parsePackedModel(createLoader(), text);
 
   // Root placements include individual parts and entire tower submodels.

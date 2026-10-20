@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { expect, test } from "vitest";
-import provenance from "../../static/models/results/source.json";
+import provenance from "./assets/models/results/source.json";
 import {
   agents,
   prompts,
@@ -11,7 +11,7 @@ import {
   resultModelName,
 } from "./experiment-results";
 
-const resultDirectory = "static/models/results";
+const resultDirectory = "src/lib/assets/models/results";
 
 test("catalog identifiers and slugs are non-empty and unique", () => {
   const identifiers = {

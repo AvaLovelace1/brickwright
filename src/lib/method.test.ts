@@ -59,7 +59,7 @@ test("build revisions change when the agent writes or edits the file", () => {
 
 test("the method example repairs a low roof while retaining twenty connected, grounded parts", async () => {
   for (const [revision, build] of Object.entries(methodBuilds)) {
-    const path = `static/models/method/house-${revision}`;
+    const path = `src/lib/assets/models/method/house-${revision}`;
     const data = JSON.parse(await readFile(`${path}.diagnostics.json`, "utf8"));
     const report = JSON.parse(
       await readFile(`src/lib/assets/method/house-${revision}.report.json`, "utf8"),
@@ -80,7 +80,9 @@ test("the method example repairs a low roof while retaining twenty connected, gr
 
 test("the collision repair raises the eaves and roof by one brick", async () => {
   const readDiagnostics = async (revision: string) =>
-    JSON.parse(await readFile(`static/models/method/house-${revision}.diagnostics.json`, "utf8"));
+    JSON.parse(
+      await readFile(`src/lib/assets/models/method/house-${revision}.diagnostics.json`, "utf8"),
+    );
   const draft = await readDiagnostics("draft1");
   const repaired = await readDiagnostics("draft2");
   const movedParts: string[] = [];

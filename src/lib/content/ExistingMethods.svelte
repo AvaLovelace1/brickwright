@@ -1,11 +1,10 @@
 <script lang="ts">
-  import { asset } from "$app/paths";
+  import { modelAssets } from "#lib/model-assets.js";
   import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
   import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   const uid = $props.id();
-  const modelPath = "models/existing-methods/truck";
   const methodGroups = [
     {
       name: "Specialized text-to-brick models",
@@ -32,9 +31,7 @@
       name: group.name,
       models: group.methods.map(({ run, ...method }): MethodModel => ({
         ...method,
-        ldr: asset(`${modelPath}-${run}.ldr`),
-        ldrPacked: asset(`${modelPath}-${run}.packed.mpd`),
-        diagnosticsUrl: asset(`${modelPath}-${run}.diagnostics.json`),
+        ...modelAssets(`existing-methods/truck-${run}`),
         caption: `${method.name} build`,
         maxSteps: 1,
         stepsShown: 1,

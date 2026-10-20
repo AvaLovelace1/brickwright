@@ -1,10 +1,13 @@
 <script lang="ts">
   import { tick } from "svelte";
-  import { asset } from "$app/paths";
   import { prefersReducedMotion } from "svelte/motion";
   import { fly } from "svelte/transition";
   import { stageStyles, systemMessage, type DemoStep } from "#lib/method.js";
   import HardShadow from "#lib/components/HardShadow.svelte";
+  import draft2Render from "#lib/assets/models/method/house-draft2.webp";
+  import finalRender from "#lib/assets/models/method/house-final.webp";
+
+  const renders = { draft2: draft2Render, final: finalRender };
 
   let { messages, playing }: { messages: readonly DemoStep[]; playing: boolean } = $props();
   let transcript: HTMLDivElement;
@@ -118,7 +121,7 @@
             {:else if message.result.kind === "render"}
               <figure class="mt-3 w-fit max-w-full bb-border bg-bg">
                 <img
-                  src={asset(`models/method/house-${message.result.revision}.webp`)}
+                  src={renders[message.result.revision]}
                   alt={message.result.revision === "final"
                     ? "BrickWright render of the twenty-part house with a centered brown door"
                     : "BrickWright render of the twenty-part house with an off-center brown door"}

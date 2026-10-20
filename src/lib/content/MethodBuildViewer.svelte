@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { asset } from "$app/paths";
+  import { modelAssets } from "#lib/model-assets.js";
   import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
   import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
@@ -11,9 +11,7 @@
 
   function createModel(revision: BuildRevision): LegoModelView {
     return {
-      ldr: asset(`models/method/house-${revision}.ldr`),
-      ldrPacked: asset(`models/method/house-${revision}.packed.mpd`),
-      diagnosticsUrl: asset(`models/method/house-${revision}.diagnostics.json`),
+      ...modelAssets(`method/house-${revision}`),
       caption: "Current house build",
       stepsShown: 1,
       maxSteps: 1,

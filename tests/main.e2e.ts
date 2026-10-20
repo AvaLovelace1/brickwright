@@ -196,7 +196,7 @@ test("models start complete when the visitor prefers reduced motion", async ({
   mainPage,
 }) => {
   const modelDownload = Promise.withResolvers<void>();
-  await page.route("**/models/teaser/giant-mushroom-treehouse.packed.mpd", async (route) => {
+  await page.route(/\/giant-mushroom-treehouse\.packed\.[\w-]+\.mpd$/, async (route) => {
     await modelDownload.promise;
     await route.continue();
   });
@@ -230,7 +230,7 @@ test("comparison models load as their viewers approach the viewport", async ({
 }) => {
   const requestedModels: string[] = [];
   page.on("request", (request) => {
-    if (request.url().endsWith(".packed.mpd"))
+    if (/\.packed\.[\w-]+\.mpd$/.test(request.url()))
       requestedModels.push(new URL(request.url()).pathname);
   });
   await mainPage.goto();
@@ -241,11 +241,12 @@ test("comparison models load as their viewers approach the viewport", async ({
     name: "GPT-6 Astra build without BrickWright",
     exact: true,
   });
-  const ldr = await viewer.getByRole("link", { name: "Download LDraw" }).getAttribute("href");
-  const packedPath = ldr!.replace(/\.ldr$/, ".packed.mpd");
-  expect(requestedModels).not.toContain(packedPath);
+  const packedPath = /\/spaceship-gpt-6-astra-without-brickwright\.packed\.[\w-]+\.mpd$/;
+  expect(requestedModels.some((path) => packedPath.test(path))).toBe(false);
   await viewer.scrollIntoViewIfNeeded();
-  await expect.poll(() => requestedModels, { timeout: 60_000 }).toContain(packedPath);
+  await expect
+    .poll(() => requestedModels.some((path) => packedPath.test(path)), { timeout: 60_000 })
+    .toBe(true);
   const slider = viewer.getByRole("slider", { name: "Steps shown" });
   await expect
     .poll(async () => Number(await slider.getAttribute("aria-valuemax")), { timeout: 60_000 })
