@@ -38,7 +38,7 @@
         in overall validity, connectivity, and prompt adherence. The
         <ExternalLink href="https://articraft3d.github.io/">Articraft</ExternalLink> baseline, which is
         intended for digital 3D assets and does not handle brick build-specific constraints, yields better
-        prompt adherence but worse physical validity.
+        prompt adherence but worse physical validity at more than twice the cost of BrickWright.
       </p>
     </Prose>
   </Container>
