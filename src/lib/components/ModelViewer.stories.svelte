@@ -3,13 +3,12 @@
   import type { Props as ModelViewerProps } from "./ModelViewer.svelte";
   import ModelViewer from "./ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
-  import type { LegoModelView } from "#lib/components/ModelViewer.svelte";
   import ldr from "#lib/assets/models/test-examples/cruise-ship.ldr?url";
   import ldrPacked from "#lib/assets/models/test-examples/cruise-ship.ldr_Packed.mpd?url";
   import { expect, screen, waitFor, within } from "storybook/test";
   import { Tooltip as BitsTooltip } from "bits-ui";
   import { flushSync } from "svelte";
-  import { modelAssets } from "#lib/model-assets.js";
+  import { createModel, type ModelView } from "#lib/models.js";
 
   const { Story } = defineMeta({
     title: "Components/Model Viewer",
@@ -18,7 +17,7 @@
     tags: ["autodocs"],
   });
 
-  let model = $state<LegoModelView>({
+  let model = $state<ModelView>({
     ldr,
     ldrPacked,
     caption: "A detailed cruise ship",
@@ -26,7 +25,7 @@
     maxSteps: 600,
   });
 
-  let autoplayModel = $state<LegoModelView>({
+  let autoplayModel = $state<ModelView>({
     ldr,
     ldrPacked,
     caption: "An autoplaying cruise ship",
@@ -34,13 +33,11 @@
     maxSteps: 600,
   });
 
-  function createDiagnosticModel(): LegoModelView {
-    return {
-      ...modelAssets("agent-comparison/spaceship-gpt-6-astra-without-brickwright"),
-      caption: "GPT-6 Astra build without BrickWright",
-      stepsShown: 1,
-      maxSteps: 1,
-    };
+  function createDiagnosticModel() {
+    return createModel(
+      "agent-comparison/spaceship-gpt-6-astra-without-brickwright",
+      "GPT-6 Astra build without BrickWright",
+    );
   }
 
   let intersectionModel = $state(createDiagnosticModel());
@@ -51,7 +48,7 @@
     showCaption: false,
   } satisfies Partial<ModelViewerProps>;
 
-  async function expectDiagnosticsLoaded(model: LegoModelView) {
+  async function expectDiagnosticsLoaded(model: ModelView) {
     await waitFor(
       () => {
         expect(model.loaded).toBe(true);
@@ -157,7 +154,7 @@
         await userEvent.click(prevBtn);
         await expect(args.model.stepsShown).toBe(1);
         await userEvent.click(prevBtn);
-        await expect(args.model.stepsShown).toBe(1); // does not underflow
+        await expect(args.model.stepsShown).toBe(1);
       });
       await step("Download button has correct attributes", async () => {
         await expect(downloadBtn).toBeVisible();
@@ -179,7 +176,7 @@
       });
       await step("Rewind button rewinds to start and is paused afterward", async () => {
         args.model.stepsShown = args.model.maxSteps - 2;
-        await userEvent.click(playBtn); // Play the one remaining step
+        await userEvent.click(playBtn);
         await waitFor(() => expect(args.model.stepsShown).toBe(args.model.maxSteps));
 
         const rewindBtn = canvas.getByRole("button", { name: /rewind/i });

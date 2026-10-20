@@ -1,7 +1,7 @@
 <script lang="ts">
-  import { modelAssets } from "#lib/model-assets.js";
+  import { createModel } from "#lib/models.js";
   import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
-  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import ModelViewer from "#lib/components/ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   const uid = $props.id();
@@ -22,19 +22,12 @@
     },
   ] as const;
 
-  interface MethodModel extends LegoModelView {
-    name: string;
-  }
-
   let groups = $state(
     methodGroups.map((group) => ({
       name: group.name,
-      models: group.methods.map(({ run, ...method }): MethodModel => ({
-        ...method,
-        ...modelAssets(`existing-methods/truck-${run}`),
-        caption: `${method.name} build`,
-        maxSteps: 1,
-        stepsShown: 1,
+      models: group.methods.map(({ run, name }) => ({
+        name,
+        ...createModel(`existing-methods/truck-${run}`, `${name} build`),
       })),
     })),
   );

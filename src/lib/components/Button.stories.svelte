@@ -23,7 +23,6 @@
   </BitsTooltip.Provider>
 {/snippet}
 
-<!-- If `action` is a function, clicking the button runs it. -->
 <Story
   name="Action Button"
   args={{ text: "Run Action", action: handleClick }}
@@ -76,7 +75,6 @@
   }}
 />
 
-<!-- If `action` is a string, the button becomes a link. -->
 <Story
   name="Link Button"
   args={{ text: "Go Home", action: "/" }}
@@ -93,7 +91,6 @@
   }}
 />
 
-<!-- An external link sets `target` and `rel`. -->
 <Story
   name="External Link"
   args={{ text: "External Docs", action: "https://example.com/docs" }}
@@ -107,7 +104,6 @@
   }}
 />
 
-<!-- Buttons can render with an icon included before the label. -->
 <Story
   name="Icon Button"
   args={{ text: "Download Report", action: handleClick, icon: "tdesign--download" }}
@@ -121,7 +117,6 @@
   }}
 />
 
-<!-- Custom classes are merged onto the base button class. -->
 <Story
   name="Custom Class Button"
   args={{ text: "Primary Action", action: handleClick, class: "bb-btn-primary" }}

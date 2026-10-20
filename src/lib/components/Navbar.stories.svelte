@@ -17,7 +17,6 @@
   });
 </script>
 
-<!-- Navbar with links. -->
 <Story
   name="Default"
   play={async ({ canvas, step }) => {

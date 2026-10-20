@@ -1,19 +1,9 @@
 <script lang="ts" module>
-  import { Box3, EquirectangularReflectionMapping, Object3D, type Texture, Vector3 } from "three";
-  import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
+  import { EquirectangularReflectionMapping, type Object3D, type Texture } from "three";
   import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
-  import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
   import envMapUrl from "#lib/assets/studio_kontrast_02_1k.hdr?url";
-  import { parsePackedModel } from "#lib/ldraw.js";
-
-  // One LDrawLoader shared across all LegoModel instances.
-  const loader = new LDrawLoader();
-  loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
+  import { loadModel } from "#lib/ldraw.js";
   let envMap: Promise<Texture> | undefined;
-  const models: Record<string, Promise<Object3D>> = {};
-  // Parse models one at a time with a gap in between, so the browser can handle other events in between
-  let queue: Promise<unknown> = Promise.resolve();
-  const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve));
 
   function loadEnvMap() {
     envMap ??= new HDRLoader().loadAsync(envMapUrl).then((texture) => {
@@ -21,31 +11,6 @@
       return texture;
     });
     return envMap;
-  }
-
-  // Load an LDraw model, parsing each URL once. Clones share geometry and materials with the cached model.
-  async function loadModel(url: string) {
-    if (!models[url]) {
-      models[url] = queue
-        .then(async () => {
-          const response = await fetch(url);
-          if (!response.ok) throw new Error(`Unable to load model: ${response.status} ${url}`);
-          return parsePackedModel(loader, await response.text());
-        })
-        .then(normalizeModel);
-      queue = models[url].then(yieldToBrowser, yieldToBrowser);
-    }
-    return (await models[url]).clone();
-  }
-
-  // Normalize a model to the unit cube
-  function normalizeModel(group: Object3D) {
-    group.rotation.x = Math.PI;
-    const box = new Box3().setFromObject(group);
-    const scale = 2 / Math.max(...box.getSize(new Vector3()).toArray());
-    group.scale.setScalar(scale);
-    group.position.copy(box.getCenter(new Vector3())).multiplyScalar(-scale);
-    return group;
   }
 </script>
 
@@ -58,18 +23,14 @@
     type DiagnosticDisplay,
     type DiagnosticView,
   } from "#lib/model-diagnostics.js";
-  import type { LegoModelView } from "./ModelViewer.svelte";
+  import type { ModelView } from "#lib/models.js";
   const { invalidate } = useThrelte();
 
   interface Props extends Partial<DiagnosticDisplay> {
-    model: LegoModelView;
-    onload: (maxSteps: number) => void;
-    ondiagnosticerror: () => void;
+    model: ModelView;
   }
   let {
-    model,
-    onload,
-    ondiagnosticerror,
+    model = $bindable(),
     highlightCollisions = false,
     showIntersections = false,
   }: Props = $props();
@@ -107,7 +68,7 @@
         view.dispose();
       };
     } catch {
-      ondiagnosticerror();
+      model.diagnosticsError = true;
     }
   });
 
@@ -127,7 +88,8 @@
     // A step reveals one top-level object: a part or an entire submodel.
     prevStepsShown = group.children.length;
     ldrawGroup = group;
-    onload(group.children.length);
+    model.maxSteps = group.children.length;
+    model.loaded = true;
   });
 
   let autoRotate = $state(true);

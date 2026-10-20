@@ -1,3 +1,9 @@
+@import "@fontsource-variable/source-sans-3/wght.css";
+@import "@fontsource-variable/source-sans-3/wght-italic.css";
+@import "@fontsource-variable/rokkitt/wght.css";
+@import "@fontsource-variable/rokkitt/wght-italic.css";
+@import "@fontsource-variable/source-code-pro/wght.css";
+@import "@fontsource-variable/source-code-pro/wght-italic.css";
 @import "tailwindcss";
 @import "./brickbrand.css";
 

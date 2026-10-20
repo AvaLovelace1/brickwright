@@ -6,11 +6,9 @@
   import Tooltip from "./Tooltip.svelte";
 
   interface Props {
-    /** Visible label, retained for screen readers when iconOnly is set. */
     text: string;
     action: string | (() => void);
     icon?: string;
-    /** Keep the label accessible and show it in a tooltip. */
     iconOnly?: boolean;
     disabled?: boolean;
     class?: ClassValue;
@@ -29,10 +27,13 @@
   ): href is PathnameWithSearchOrHash | RouteIdWithSearchOrHash => !/^https?:\/\//.test(href);
 
   const onclick = $derived(typeof action === "function" ? action : undefined);
-  const buttonProps = $derived({
-    class: ["bb-btn", iconOnly && "p-2", className],
-    disabled,
-  });
+  const actionProps = $derived(
+    typeof action === "function"
+      ? { type: "button" as const }
+      : isInternalLink(action)
+        ? { href: resolve(action) }
+        : { href: action, target: "_blank", rel: "external noopener" },
+  );
 </script>
 
 {#snippet content()}
@@ -43,27 +44,14 @@
 {/snippet}
 
 {#snippet button(triggerProps: Record<string, unknown>)}
-  {#if typeof action === "string"}
-    {#if isInternalLink(action)}
-      <Button.Root {...triggerProps} {...buttonProps} href={resolve(action)}>
-        {@render content()}
-      </Button.Root>
-    {:else}
-      <Button.Root
-        {...triggerProps}
-        {...buttonProps}
-        href={action}
-        target="_blank"
-        rel="external noopener"
-      >
-        {@render content()}
-      </Button.Root>
-    {/if}
-  {:else}
-    <Button.Root {...triggerProps} {...buttonProps} type="button">
-      {@render content()}
-    </Button.Root>
-  {/if}
+  <Button.Root
+    {...triggerProps}
+    {...actionProps}
+    class={["bb-btn", iconOnly && "p-2", className]}
+    {disabled}
+  >
+    {@render content()}
+  </Button.Root>
 {/snippet}
 
 {#if iconOnly}

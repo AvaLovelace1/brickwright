@@ -26,7 +26,6 @@
   </BitsTooltip.Provider>
 {/snippet}
 
-<!-- Tooltip appears on hover. -->
 <Story
   name="Default"
   play={async ({ canvas, userEvent, step }) => {

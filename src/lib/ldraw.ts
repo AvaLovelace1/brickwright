@@ -1,5 +1,33 @@
-import type { Group } from "three";
-import type { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
+import { Box3, Vector3, type Group } from "three";
+import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
+import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
+
+const loader = new LDrawLoader();
+loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
+const models = new Map<string, Promise<Group>>();
+let queue: Promise<unknown> = Promise.resolve();
+const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve));
+
+export async function loadModel(url: string): Promise<Group> {
+  let model = models.get(url);
+  if (!model) {
+    model = queue.then(async () => {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Unable to load model: ${response.status} ${url}`);
+      const group = await parsePackedModel(loader, await response.text());
+      group.rotation.x = Math.PI;
+      const box = new Box3().setFromObject(group);
+      const scale = 2 / Math.max(...box.getSize(new Vector3()).toArray());
+      group.scale.setScalar(scale);
+      group.position.copy(box.getCenter(new Vector3())).multiplyScalar(-scale);
+      return group;
+    });
+    models.set(url, model);
+    // Serialize parsing and let the browser handle input between models.
+    queue = model.then(yieldToBrowser, yieldToBrowser);
+  }
+  return (await model).clone();
+}
 
 function referencedFilenames(text: string): string[] {
   return text.split("\n").flatMap((line) => {
@@ -11,11 +39,7 @@ function referencedFilenames(text: string): string[] {
   });
 }
 
-/**
- * Create a flat warm-up model with one placement of each reachable part.
- * Follow submodels and geometry dependencies, using LDraw metadata to distinguish
- * cacheable parts from assemblies, subparts, and primitives.
- */
+/** One placement per reachable part, including parts used by nested assemblies. */
 export function createPartWarmup(text: string): string | undefined {
   // The first block is the root, with or without its optional initial FILE header.
   const [root, ...definitionTexts] = text.split(/(?=^0 FILE )/m);
@@ -41,7 +65,6 @@ export function createPartWarmup(text: string): string | undefined {
 
   if (!partFilenames.length) return undefined;
   const colors = root.split("\n").filter((line) => line.trim().startsWith("0 !COLOUR "));
-  // The root places parts only; embedded definitions supply their geometry dependencies.
   return [
     "0 !LDRAW_ORG Model",
     ...colors,

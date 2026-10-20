@@ -1,18 +1,12 @@
-export type AgentId = "haiku" | "luna" | "sol" | "astra";
-
-export interface Agent {
-  value: AgentId;
-  label: string;
-  baseline: string;
-  slug: "claude-haiku-5-5" | "gpt-6-luna" | "gpt-6-1-sol" | "gpt-6-astra";
-}
-
-export const agents: Agent[] = [
+export const agents = [
   { value: "haiku", slug: "claude-haiku-5-5", label: "Claude Haiku 5.5", baseline: "Claude Code" },
   { value: "luna", slug: "gpt-6-luna", label: "GPT-6 Luna", baseline: "Codex" },
   { value: "sol", slug: "gpt-6-1-sol", label: "GPT-6.1 Sol", baseline: "Codex" },
   { value: "astra", slug: "gpt-6-astra", label: "GPT-6 Astra", baseline: "Codex" },
-];
+] as const;
+
+export type Agent = (typeof agents)[number];
+export type AgentId = Agent["value"];
 
 export const prompts = [
   {
@@ -284,7 +278,6 @@ export const results: QuantitativeResult[] = [
   },
 ];
 
-/** Improvements follow the metric's direction; unchanged values stay neutral. */
 export function changeOutcome(change: string | undefined, direction: MetricDirection | null) {
   const difference = Number(change ?? 0);
   if (difference === 0 || direction === null) return null;
@@ -296,7 +289,6 @@ export function fullAgentName(agentId: AgentId | null) {
   return agents.find((agent) => agent.value === agentId)?.label ?? "—";
 }
 
-/** Shared basename for a downloadable build, its packed geometry, and diagnostics. */
 export function resultModelName(
   prompt: ResultPrompt,
   agent: Agent,

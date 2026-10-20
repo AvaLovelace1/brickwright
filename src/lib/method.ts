@@ -42,7 +42,6 @@ function validationChecks(revision: BuildRevision): ValidationCheck[] {
   ];
 }
 
-// Conversation
 // Blank lines separate paragraphs; backticks mark inline code.
 
 export type Stage = "input" | "explore" | "write" | "validate" | "render" | "finalize";
@@ -202,8 +201,6 @@ export const demoSteps: readonly DemoStep[] = [
   },
 ];
 
-// Stage colors
-
 const secondaryStageStyle = {
   border: "border-secondary",
   topBorder: "border-t-secondary",
@@ -211,7 +208,6 @@ const secondaryStageStyle = {
   badge: "bg-secondary text-(--bb-ink-deep)",
 };
 
-// Chat results and flowchart highlights share the same stage colors.
 export const stageStyles: Record<Stage, typeof secondaryStageStyle> = {
   input: {
     border: "border-line",

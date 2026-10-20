@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onDestroy, onMount } from "svelte";
+  import { onMount } from "svelte";
   import { Canvas } from "@threlte/core";
   import LegoModel from "#lib/components/LegoModel.svelte";
   import HardShadow from "#lib/components/HardShadow.svelte";
@@ -13,22 +13,8 @@
     loadDiagnostics,
     isPhysicallyValid,
     type DiagnosticDisplay,
-    type ModelDiagnostics,
   } from "#lib/model-diagnostics.js";
-
-  export interface LegoModelView {
-    ldr: string;
-    ldrPacked: string;
-    stepsShown: number;
-    maxSteps: number;
-    caption: string;
-    window?: HTMLElement;
-    loaded?: boolean;
-    loadRequested?: boolean;
-    diagnosticsUrl?: string;
-    diagnostics?: ModelDiagnostics;
-    diagnosticsError?: boolean;
-  }
+  import type { ModelView } from "#lib/models.js";
 
   export interface ViewerBadge {
     text: string;
@@ -37,7 +23,7 @@
   }
 
   export interface Props extends Partial<DiagnosticDisplay> {
-    model: LegoModelView;
+    model: ModelView;
     autoplay?: boolean;
     showCaption?: boolean;
     showBuildControls?: boolean;
@@ -72,8 +58,6 @@
   );
   const slug = $derived(model.ldr.split("/").pop()?.split(".")[0] ?? "model");
 
-  let tooltipAnchor = $state<HTMLElement | null>(null);
-  let currentTool = $state<ToolName | null>(null);
   let popupContent: HTMLElement | null = $state(null);
 
   let paused = $state(true);
@@ -81,13 +65,11 @@
   const ended = $derived(model.stepsShown >= model.maxSteps);
   let initialized = false;
   let figure: HTMLElement;
-  let playInterval: NodeJS.Timeout | undefined;
 
   const playLabel = $derived(ended ? "Rewind" : paused ? "Play" : "Pause");
   const playIcon = $derived(
     ended ? "tdesign--rollback" : paused ? "tdesign--play" : "tdesign--pause",
   );
-  const playAction = $derived(ended ? rewind : paused ? play : pause);
 
   type ToolName = "previous" | "playback" | "next" | "download" | "close" | "expand";
 
@@ -100,9 +82,17 @@
   }
 
   const tools: Record<ToolName, ViewerTool> = $derived({
-    previous: { label: "Previous step", icon: "tdesign--previous", onclick: prevStep },
-    playback: { label: playLabel, icon: playIcon, onclick: playAction },
-    next: { label: "Next step", icon: "tdesign--next", onclick: nextStep },
+    previous: {
+      label: "Previous step",
+      icon: "tdesign--previous",
+      onclick: () => (model.stepsShown = Math.max(1, model.stepsShown - 1)),
+    },
+    playback: { label: playLabel, icon: playIcon, onclick: togglePlayback },
+    next: {
+      label: "Next step",
+      icon: "tdesign--next",
+      onclick: () => (model.stepsShown = Math.min(model.maxSteps, model.stepsShown + 1)),
+    },
     download: {
       label: "Download LDraw",
       icon: "tdesign--download",
@@ -116,45 +106,30 @@
     },
     expand: { label: "Expand view", icon: "tdesign--fullscreen", onclick: () => (expanded = true) },
   });
-  const tooltipText = $derived(currentTool === null ? "" : tools[currentTool].label);
-
-  function setTooltip(elem: HTMLElement | null, tool: ToolName | null) {
-    tooltipAnchor = elem;
-    currentTool = tool;
+  function togglePlayback() {
+    if (ended) {
+      paused = true;
+      model.stepsShown = 1;
+    } else {
+      paused = !paused;
+    }
   }
 
-  function prevStep() {
-    model.stepsShown = Math.max(1, model.stepsShown - 1);
-  }
-
-  function nextStep() {
-    model.stepsShown = Math.min(model.maxSteps, model.stepsShown + 1);
-  }
-
-  function rewind() {
-    pause();
-    model.stepsShown = 1;
-  }
-
-  function play() {
-    paused = false;
-    playInterval = setInterval(() => {
-      if (!ended) model.stepsShown += 1;
-      if (ended) pause();
+  $effect(() => {
+    if (paused) return;
+    const timer = setInterval(() => {
+      if (model.stepsShown < model.maxSteps) model.stepsShown += 1;
+      if (model.stepsShown >= model.maxSteps) paused = true;
     }, 10);
-  }
-
-  function pause() {
-    paused = true;
-    clearInterval(playInterval);
-  }
+    return () => clearInterval(timer);
+  });
 
   $effect(() => {
     if (!model.loaded || initialized) return;
     initialized = true;
     if (autoplay && !prefersReducedMotion.current) {
       model.stepsShown = 1;
-      play();
+      paused = false;
     } else {
       model.stepsShown = model.maxSteps;
     }
@@ -189,8 +164,6 @@
     observer.observe(figure);
     return () => observer.disconnect();
   });
-
-  onDestroy(() => clearInterval(playInterval));
 
   // We use outline instead of border so the model doesn't cover the border when zoomed.
   const WINDOW_CLASS =
@@ -248,19 +221,15 @@
 
 {#snippet viewerTool(name: ToolName)}
   {@const { label, icon, onclick, href, download } = tools[name]}
-  <Button.Root
-    class={BTN_CLASS}
-    {onclick}
-    {href}
-    {download}
-    onpointerenter={(event: PointerEvent) => setTooltip(event.currentTarget as HTMLElement, name)}
-    onpointerleave={() => setTooltip(null, null)}
-    onfocus={(event: FocusEvent) => setTooltip(event.currentTarget as HTMLElement, name)}
-    onblur={() => setTooltip(null, null)}
-  >
-    <span class="iconify {icon}"></span>
-    <span class="sr-only">{label}</span>
-  </Button.Root>
+  <Tooltip {onclick} type={href ? undefined : "button"} interactOutsideBehavior="ignore">
+    {#snippet child({ props })}
+      <Button.Root {...props} class={BTN_CLASS} {href} {download}>
+        <span class="iconify {icon}" aria-hidden="true"></span>
+        <span class="sr-only">{label}</span>
+      </Button.Root>
+    {/snippet}
+    {#snippet tooltipContent()}{label}{/snippet}
+  </Tooltip>
 {/snippet}
 
 {#snippet viewerTools(isExpandedView: boolean)}
@@ -343,16 +312,7 @@
               <HardShadow class="size-full">
                 <div class={WINDOW_CLASS}>
                   <Canvas>
-                    <LegoModel
-                      {model}
-                      {highlightCollisions}
-                      {showIntersections}
-                      onload={(maxSteps) => {
-                        model.maxSteps = maxSteps;
-                        model.loaded = true;
-                      }}
-                      ondiagnosticerror={() => (model.diagnosticsError = true)}
-                    />
+                    <LegoModel bind:model {highlightCollisions} {showIntersections} />
                   </Canvas>
                 </div>
                 {@render viewerTools(true)}
@@ -364,7 +324,3 @@
     </Dialog.Content>
   </Dialog.Portal>
 </Dialog.Root>
-
-<Tooltip side="top" anchor={tooltipAnchor} interactOutsideBehavior="ignore">
-  {#snippet tooltipContent()}{tooltipText}{/snippet}
-</Tooltip>

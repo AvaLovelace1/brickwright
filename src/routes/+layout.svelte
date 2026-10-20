@@ -1,11 +1,5 @@
 <script lang="ts">
   import ScrollSpy, { type ScrollSpyEvent } from "@fsegurai/scrollspy";
-  import "@fontsource-variable/source-sans-3/wght.css";
-  import "@fontsource-variable/source-sans-3/wght-italic.css";
-  import "@fontsource-variable/rokkitt/wght.css";
-  import "@fontsource-variable/rokkitt/wght-italic.css";
-  import "@fontsource-variable/source-code-pro/wght.css";
-  import "@fontsource-variable/source-code-pro/wght-italic.css";
   import "../app.css";
   import favicon from "#lib/assets/logos/favicon.svg";
   import { Tooltip } from "bits-ui";

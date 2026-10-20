@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { modelAssets } from "#lib/model-assets.js";
-  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import { createModel } from "#lib/models.js";
+  import ModelViewer from "#lib/components/ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import { resultModelName, type Agent, type ResultPrompt } from "#lib/experiment-results.js";
   import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
@@ -14,26 +14,21 @@
   let { agent, prompt, showModels, showIntersections, highlightCollisions }: Props = $props();
   const uid = $props.id();
 
-  function createModels(): LegoModelView[] {
-    return (["baseline", "brickwright"] as const).map((method) => {
-      const path = `results/${resultModelName(prompt, agent, method)}` as const;
-      return {
-        ...modelAssets(path),
-        caption: `${prompt.title} — ${agent.label} — ${method === "baseline" ? agent.baseline : "BrickWright"}`,
-        stepsShown: 1,
-        maxSteps: 1,
-      };
-    });
-  }
   // The parent remounts when the agent or showModels changes, resetting the viewer state.
-  let models = $state(createModels());
+  let models = $state(
+    (["baseline", "brickwright"] as const).map((method) =>
+      createModel(
+        `results/${resultModelName(prompt, agent, method)}`,
+        `${prompt.title} — ${agent.label} — ${method === "baseline" ? agent.baseline : "BrickWright"}`,
+      ),
+    ),
+  );
 </script>
 
 <div
   class="swiper-no-swiping relative grid grid-cols-2 grid-rows-[auto_1fr] gap-x-3 gap-y-2 sm:gap-x-6"
 >
   {#each models as model, side (model.ldr)}
-    <!-- Share the heading row so wrapped titles keep both viewers aligned. -->
     <div
       role="group"
       aria-labelledby="{uid}-title-{side}"

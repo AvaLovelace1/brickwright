@@ -1,9 +1,9 @@
 import { readFile } from "node:fs/promises";
 import { expect, test } from "vitest";
-import { Vector3, type Group, type Object3D } from "three";
+import { Box3, Mesh, Vector3, type Group, type Object3D } from "three";
 import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
 import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
-import { createPartWarmup, parsePackedModel } from "./ldraw";
+import { createPartWarmup, loadModel, parsePackedModel } from "./ldraw";
 
 function createLoader() {
   const loader = new LDrawLoader();
@@ -72,6 +72,32 @@ const NESTED_MODEL = `0 FILE main.ldr
 0 !LDRAW_ORG Part
 3 16 0 0 0 1 0 0 0 1 0
 `;
+
+test("loads normalized clones with shared geometry and independent placement visibility", async () => {
+  const url = `data:text/plain,${encodeURIComponent(NESTED_MODEL)}`;
+  const [first, second] = await Promise.all([loadModel(url), loadModel(url)]);
+  const bounds = new Box3().setFromObject(first);
+  expect(bounds.getCenter(new Vector3()).length()).toBeLessThan(1e-6);
+  expect(Math.max(...bounds.getSize(new Vector3()).toArray())).toBeCloseTo(2);
+  expect(first.children).toHaveLength(3);
+  expect(second).not.toBe(first);
+  first.children[0].visible = false;
+  expect(second.children[0].visible).toBe(true);
+  const meshes = (model: Object3D) => {
+    const result: Mesh[] = [];
+    model.traverse((object) => {
+      if (object instanceof Mesh) result.push(object);
+    });
+    return result;
+  };
+  const firstMeshes = meshes(first);
+  const secondMeshes = meshes(second);
+  expect(firstMeshes.length).toBeGreaterThan(0);
+  for (const [index, mesh] of firstMeshes.entries()) {
+    expect(secondMeshes[index].geometry).toBe(mesh.geometry);
+    expect(secondMeshes[index].material).toBe(mesh.material);
+  }
+});
 
 test("warm-up contains one instance of each part reachable through nested submodels", async () => {
   const warmupText = createPartWarmup(NESTED_MODEL)!;

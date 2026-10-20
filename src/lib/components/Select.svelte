@@ -13,7 +13,7 @@
 
   export interface Props {
     label: string;
-    options: SelectOption[];
+    options: readonly SelectOption[];
     value?: string;
     hideLabel?: boolean;
     /** Hide the selected label in the trigger; menu options still show their labels. */

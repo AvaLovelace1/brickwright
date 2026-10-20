@@ -6,7 +6,6 @@ import tailwindcss from "@tailwindcss/vite";
 import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "@vitest/browser-playwright";
 
-// More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
   plugins: [
     tailwindcss(),
@@ -21,7 +20,6 @@ export default defineConfig({
         base: (process.env.BASE_PATH ?? "") as "" | `/${string}`,
         relative: false,
       },
-      extensions: [".svelte", ".svx", ".md"],
     }),
   ],
   test: {
@@ -41,8 +39,6 @@ export default defineConfig({
       {
         extends: true,
         plugins: [
-          // The plugin will run tests for the stories defined in your Storybook config
-          // See options at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon#storybooktest
           storybookTest({
             configDir: path.join(import.meta.dirname, ".storybook"),
           }),

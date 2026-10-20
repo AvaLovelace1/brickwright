@@ -16,5 +16,5 @@
     className,
   ]}
 >
-  {@render children?.()}
+  {@render children()}
 </div>

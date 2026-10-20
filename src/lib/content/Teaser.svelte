@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import { modelAssets } from "#lib/model-assets.js";
+  import { createModel } from "#lib/models.js";
   import Select from "#lib/components/Select.svelte";
-  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import ModelViewer from "#lib/components/ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   import referenceImage from "#lib/assets/models/teaser/combine-harvester-reference.png";
@@ -35,13 +35,8 @@
   let selected = $state("0");
   const index = $derived(Number(selected));
   const prompt = $derived(prompts[index]);
-  let models = $state<LegoModelView[]>(
-    prompts.map(({ label, filename }) => ({
-      ...modelAssets(`teaser/${filename}`),
-      caption: label,
-      maxSteps: 1,
-      stepsShown: 1,
-    })),
+  let models = $state(
+    prompts.map(({ label, filename }) => createModel(`teaser/${filename}`, label)),
   );
 </script>
 

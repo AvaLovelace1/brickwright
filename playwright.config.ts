@@ -1,34 +1,24 @@
 import { defineConfig, devices } from "@playwright/test";
 
+const port = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
+const browsers = [
+  { name: "chromium", device: "Desktop Chrome", permissions: ["clipboard-read"] },
+  { name: "safari", device: "Desktop Safari", permissions: ["clipboard-read"] },
+  { name: "firefox", device: "Desktop Firefox", permissions: [] },
+];
+
 export default defineConfig({
-  webServer: { command: "npm run build && npm run preview", port: 4173 },
+  webServer: {
+    command: `npm run build && npm run preview -- --port ${port} --strictPort`,
+    port,
+  },
   testMatch: "**/*.e2e.{ts,js}",
-  use: { baseURL: "http://localhost:4173" },
+  use: { baseURL: `http://localhost:${port}` },
   reporter: "html",
-  projects: [
-    {
-      name: "chromium-light",
-      use: { ...devices["Desktop Chrome"], colorScheme: "light", permissions: ["clipboard-read"] },
-    },
-    {
-      name: "safari-light",
-      use: { ...devices["Desktop Safari"], colorScheme: "light", permissions: ["clipboard-read"] },
-    },
-    {
-      name: "firefox-light",
-      use: { ...devices["Desktop Firefox"], colorScheme: "light" },
-    },
-    {
-      name: "chromium-dark",
-      use: { ...devices["Desktop Chrome"], colorScheme: "dark", permissions: ["clipboard-read"] },
-    },
-    {
-      name: "safari-dark",
-      use: { ...devices["Desktop Safari"], colorScheme: "dark", permissions: ["clipboard-read"] },
-    },
-    {
-      name: "firefox-dark",
-      use: { ...devices["Desktop Firefox"], colorScheme: "dark" },
-    },
-  ],
+  projects: (["light", "dark"] as const).flatMap((colorScheme) =>
+    browsers.map(({ name, device, permissions }) => ({
+      name: `${name}-${colorScheme}`,
+      use: { ...devices[device], colorScheme, permissions },
+    })),
+  ),
 });

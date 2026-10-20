@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { modelAssets } from "#lib/model-assets.js";
-  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import { createModel } from "#lib/models.js";
+  import ModelViewer from "#lib/components/ModelViewer.svelte";
   import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import PythonCode from "#lib/components/PythonCode.svelte";
@@ -9,20 +9,10 @@
 
   let { revision }: { revision: BuildRevision | null } = $props();
 
-  function createModel(revision: BuildRevision): LegoModelView {
-    return {
-      ...modelAssets(`method/house-${revision}`),
-      caption: "Current house build",
-      stepsShown: 1,
-      maxSteps: 1,
-    };
-  }
-
-  // Retain each viewer's loaded state when moving between revisions.
   let models = $state({
-    draft1: createModel("draft1"),
-    draft2: createModel("draft2"),
-    final: createModel("final"),
+    draft1: createModel("method/house-draft1", "Current house build"),
+    draft2: createModel("method/house-draft2", "Current house build"),
+    final: createModel("method/house-final", "Current house build"),
   });
   let highlightCollisions = $state(false);
   let showIntersections = $state(true);

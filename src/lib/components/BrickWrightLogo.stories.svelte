@@ -11,7 +11,6 @@
   });
 </script>
 
-<!-- The BrickWright wordmark. -->
 <Story
   name="Default"
   play={async ({ canvas, step }) => {
@@ -25,7 +24,6 @@
   }}
 />
 
-<!-- Layer variant uses the BrickLayer mark and wordmark. -->
 <Story
   name="Layer"
   args={{ variant: "layer" }}
@@ -40,7 +38,6 @@
   }}
 />
 
-<!-- Agent variant uses the BrickAgent mark and wordmark. -->
 <Story
   name="Agent"
   args={{ variant: "agent" }}
@@ -55,7 +52,6 @@
   }}
 />
 
-<!-- You can apply a custom class to the words. -->
 <Story
   name="Custom Word Class"
   args={{ textClass: "sr-only" }}

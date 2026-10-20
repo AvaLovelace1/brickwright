@@ -1,53 +1,20 @@
 <script lang="ts">
-  import { modelAssets } from "#lib/model-assets.js";
+  import { createModel } from "#lib/models.js";
+  import { agents } from "#lib/experiment-results.js";
   import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
-  import ModelViewer, { type LegoModelView } from "#lib/components/ModelViewer.svelte";
+  import ModelViewer from "#lib/components/ModelViewer.svelte";
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   const uid = $props.id();
-  const agents = [
-    {
-      name: "GPT-6 Astra",
-      baselineAgent: "Codex",
-      baseline: "spaceship-gpt-6-astra-without-brickwright",
-      brickwright: "spaceship-gpt-6-astra-with-brickwright",
-    },
-    {
-      name: "GPT-6.1 Sol",
-      baselineAgent: "Codex",
-      baseline: "spaceship-gpt-6-1-sol-without-brickwright",
-      brickwright: "spaceship-gpt-6-1-sol-with-brickwright",
-    },
-    {
-      name: "GPT-6 Luna",
-      baselineAgent: "Codex",
-      baseline: "spaceship-gpt-6-luna-without-brickwright",
-      brickwright: "spaceship-gpt-6-luna-with-brickwright",
-    },
-    {
-      name: "Claude Haiku 5.5",
-      baselineAgent: "Claude Code",
-      baseline: "spaceship-claude-haiku-5-5-without-brickwright",
-      brickwright: "spaceship-claude-haiku-5-5-with-brickwright",
-    },
-  ] as const;
-  interface ComparisonModel extends LegoModelView {
-    filename: string;
-    withBrickwright: boolean;
-  }
-
   let pairs = $state(
-    agents.map((agent) => ({
-      name: agent.name,
-      baselineAgent: agent.baselineAgent,
-      models: [agent.baseline, agent.brickwright].map((filename, side): ComparisonModel => ({
-        filename,
-        withBrickwright: side === 1,
-        ...modelAssets(`agent-comparison/${filename}`),
-        caption: `${agent.name} build ${side === 1 ? "with" : "without"} BrickWright`,
-        maxSteps: 1,
-        stepsShown: 1,
-      })),
+    agents.toReversed().map((agent) => ({
+      ...agent,
+      models: ["without", "with"].map((variant) =>
+        createModel(
+          `agent-comparison/spaceship-${agent.slug}-${variant}-brickwright`,
+          `${agent.label} build ${variant} BrickWright`,
+        ),
+      ),
     })),
   );
   const models = $derived(pairs.flatMap((pair) => pair.models));
@@ -69,14 +36,14 @@
     </span>
   </p>
   <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-    {#each pairs as pair (pair.name)}
+    {#each pairs as pair (pair.value)}
       <div class="min-w-0">
-        <p class="text-center font-display text-xl font-extrabold">{pair.name}</p>
+        <p class="text-center font-display text-xl font-extrabold">{pair.label}</p>
         <div class="grid grid-cols-2 gap-3">
-          {#each pair.models as model, side (model.filename)}
+          {#each pair.models as model, side (model.ldr)}
             <div class="min-w-0">
               <p class="mb-1 text-center font-semibold">
-                {model.withBrickwright ? "BrickWright" : pair.baselineAgent}
+                {side === 1 ? "BrickWright" : pair.baseline}
               </p>
               <ModelViewer
                 bind:model={pair.models[side]}

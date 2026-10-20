@@ -3,7 +3,7 @@
   import { Tooltip } from "bits-ui";
   import { expect, waitFor, within } from "storybook/test";
   import { loadDiagnostics } from "#lib/model-diagnostics.js";
-  import { modelAssets } from "#lib/model-assets.js";
+  import { createModel } from "#lib/models.js";
   import ExistingMethods from "./ExistingMethods.svelte";
 
   const { Story } = defineMeta({
@@ -45,7 +45,7 @@
         const download = model.getByRole("link", { name: "Download LDraw" });
         await expect(download).toBeVisible();
         const diagnostics = await loadDiagnostics(
-          modelAssets(`existing-methods/truck-${run}`).diagnosticsUrl,
+          createModel(`existing-methods/truck-${run}`, name).diagnosticsUrl!,
         );
         const valid = diagnostics.collisions.length === 0 && diagnostics.floating.length === 0;
         await waitFor(() =>

@@ -5,7 +5,7 @@
   import type Swiper from "swiper";
   import QualitativeResults from "./QualitativeResults.svelte";
   import { agents, prompts, resultModelName } from "#lib/experiment-results.js";
-  import { modelAssets } from "#lib/model-assets.js";
+  import { createModel } from "#lib/models.js";
 
   const { Story } = defineMeta({
     title: "Content/QualitativeResults",
@@ -73,7 +73,7 @@
           });
           viewer.scrollIntoView({ block: "center" });
           const download = within(viewer).getByRole("link", { name: "Download LDraw" });
-          await expect(download).toHaveAttribute("href", modelAssets(`results/${name}`).ldr);
+          await expect(download).toHaveAttribute("href", createModel(`results/${name}`, name).ldr);
           await expect(download).toHaveAttribute("download", filename);
           await waitFor(() => expect(viewer).toHaveAttribute("aria-busy", "false"), {
             timeout: 45_000,
