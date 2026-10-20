@@ -11,7 +11,8 @@
 
 <div
   class={[
-    "mx-auto prose max-w-none prose-bb prose-headings:font-extrabold prose-h2:text-3xl prose-ul:list-[square]",
+    "mx-auto prose max-w-none prose-bb prose-headings:font-extrabold prose-h2:text-3xl",
+    "prose-code:before:content-none prose-code:after:content-none prose-ul:list-[square]",
     className,
   ]}
 >
