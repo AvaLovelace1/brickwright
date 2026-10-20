@@ -12,9 +12,11 @@
     <Prose>
       <h2 id="acknowledgments-heading">Acknowledgments</h2>
       <p>
-        Ava Pun is supported by the Packard Fellowship, CGRS D funded by the Natural Sciences and
-        Engineering Research Council of Canada (NSERC), and IITP grant funded by the Korean
-        Government (MSIT) (No. RS-2024-00457882, National AI Research Lab Project).
+        This work is partly supported by the Packard Foundation, Sloan Foundation, and IITP grant
+        funded by the Korean Government (MSIT) (No. RS-2024-00457882, National AI Research Lab
+        Project). Ava Pun is supported by the Meshy Fellowship, Tata Consultancy Services
+        Presidential Fellowship, and NSERC CGRS D. Maxwell Jones is supported by the Rales
+        Fellowship.
       </p>
     </Prose>
   </Container>

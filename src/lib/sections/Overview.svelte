@@ -4,6 +4,7 @@
   import Teaser from "#lib/content/Teaser.svelte";
   import Prose from "#lib/components/Prose.svelte";
   import AgentComparison from "#lib/content/AgentComparison.svelte";
+  import ExternalLink from "#lib/components/ExternalLink.svelte";
 
   const AUTHORS = [
     { name: "Ava\u00A0Pun", aff: 1 },
@@ -75,7 +76,9 @@
           especially useful for lightweight agents: on a sample of 512 prompts, it improves GPT-6
           Luna's performance from 7% to 100% physically valid builds while boosting prompt
           adherence, at 2% the price of frontier models. BrickWright works with any agent backend;
-          <a href="https://github.com/AvaLovelace1/brickwright">code is available on GitHub.</a>
+          <ExternalLink href="https://github.com/AvaLovelace1/brickwright"
+            >code is available on GitHub.</ExternalLink
+          >
         </p>
       </Prose>
     </Container>

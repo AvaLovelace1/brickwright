@@ -2,6 +2,7 @@
   import Container from "#lib/components/Container.svelte";
   import Prose from "#lib/components/Prose.svelte";
   import ExistingMethods from "#lib/content/ExistingMethods.svelte";
+  import ExternalLink from "#lib/components/ExternalLink.svelte";
 </script>
 
 <section
@@ -15,10 +16,12 @@
       <p>
         Frontier coding agents like GPT-6 Astra are becoming increasingly adept at modeling 3D
         objects, including brick builds. Agentic methods produce higher-fidelity builds and
-        generalize better than specialized text-to-brick methods, such as BrickGPT and BrickNet
-        [cite these in a footnote]. However, agents still face challenges in creating
-        <em>physically feasible</em> builds, often producing assemblies with floating parts, colliding
-        (intersecting) parts, or many disconnected components.
+        generalize better than specialized text-to-brick methods, such as
+        <ExternalLink href="https://avalovelace1.github.io/BrickGPT/">BrickGPT</ExternalLink>
+        and <ExternalLink href="https://kulits.github.io/BrickNet/">BrickNet</ExternalLink>.
+        However, agents still face challenges in creating <em>physically feasible</em> builds. Here we
+        define a build to be physically feasible if it uses only real parts, has no colliding (intersecting)
+        or floating parts, and forms a connected structure if possible.
       </p>
     </Prose>
   </Container>

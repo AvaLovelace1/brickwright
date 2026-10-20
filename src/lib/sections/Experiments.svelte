@@ -3,6 +3,7 @@
   import Prose from "#lib/components/Prose.svelte";
   import QualitativeResults from "#lib/content/QualitativeResults.svelte";
   import QuantitativeResults from "#lib/content/QuantitativeResults.svelte";
+  import ExternalLink from "#lib/components/ExternalLink.svelte";
 </script>
 
 <section
@@ -34,9 +35,10 @@
         builds with more bricks than vanilla agent baselines, while improving prompt adherence for
         lightweight models (Haiku, Luna) and maintaining it for powerful models (Sol, Astra).
         BrickWright-equipped agents additionally outperform specially trained text-to-brick models
-        in overall validity, connectivity, and prompt adherence. The Articraft baseline, which is
-        intended for digital 3D assets and does not handle brick build-specific constraints, yields
-        better prompt adherence but worse physical validity.
+        in overall validity, connectivity, and prompt adherence. The
+        <ExternalLink href="https://articraft3d.github.io/">Articraft</ExternalLink> baseline, which is
+        intended for digital 3D assets and does not handle brick build-specific constraints, yields better
+        prompt adherence but worse physical validity.
       </p>
     </Prose>
   </Container>
