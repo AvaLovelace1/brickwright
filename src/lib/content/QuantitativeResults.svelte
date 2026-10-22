@@ -3,10 +3,8 @@
   import {
     results,
     metricColumns,
-    changeOutcome,
     fullAgentName,
     type ResultMetric,
-    type MetricDirection,
     type MetricKey,
   } from "#lib/experiment-results.js";
 
@@ -23,21 +21,13 @@
   };
   const uid = $props.id();
   const directionArrows = { higher: "↑", lower: "↓" };
-  const deltaClasses = {
-    improvement: "text-success-deep dark:text-success-bright",
-    regression: "text-danger dark:text-danger-brighter",
-  };
 </script>
 
-{#snippet metric(cell: ResultMetric, metricDirection: MetricDirection | null)}
+{#snippet metric(cell: ResultMetric)}
   <span
     class={[cell.emphasis === "bold" && "font-bold", cell.emphasis === "underline" && "underline"]}
     >{cell.value}</span
   >
-  {#if cell.change}
-    {@const outcome = changeOutcome(cell.change, metricDirection)}
-    <span class={["block text-xs", outcome && deltaClasses[outcome]]}>({cell.change})</span>
-  {/if}
 {/snippet}
 
 <h3 id="{uid}-heading" class="text-2xl">Quantitative results</h3>
@@ -91,7 +81,7 @@
           </th>
           {#each metricColumns as column (column.key)}
             <td class="p-3 text-right align-top whitespace-nowrap">
-              {@render metric(row.metrics[column.key], column.direction)}
+              {@render metric(row.metrics[column.key])}
             </td>
           {/each}
         </tr>
@@ -102,9 +92,10 @@
 <div id="{uid}-notes" class="mt-4 text-sm text-pretty">
   <p>
     We report the proportion of prompts yielding valid builds (no collisions or floaters),
-    collision-free builds, and floater-free builds. Components and Bricks are the mean
-    connected-component and part count, respectively. ↑ means higher is better; ↓ means lower is
-    better. Parentheses show absolute changes from the matching Claude Code or Codex baseline. Time
-    and cost are averages per prompt; costs use October 2026 token pricing, including cache savings.
+    collision-free builds, and floater-free builds. Components, Parts, and Unique parts are the mean
+    connected-component, part, and distinct part-ID counts. Checks is the mean number of
+    <code>validate</code> calls. ↑ means higher is better; ↓ means lower is better. Bold and underline
+    mark the best and second-best results within each agent. Time and cost are averages per prompt; costs
+    use October 2026 token pricing, including cache savings.
   </p>
 </div>

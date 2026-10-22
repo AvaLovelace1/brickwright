@@ -28,10 +28,7 @@
       await expect(metricCells).toHaveLength(metricColumns.length);
       for (const [columnIndex, column] of metricColumns.entries()) {
         const metric = result.metrics[column.key];
-        const cell = within(metricCells[columnIndex]);
-        await expect(cell.getByText(metric.value, { exact: true })).toBeVisible();
-        if (metric.change !== undefined)
-          await expect(cell.getByText(`(${metric.change})`, { exact: true })).toBeVisible();
+        await expect(metricCells[columnIndex].textContent?.trim()).toBe(metric.value);
       }
     }
   }

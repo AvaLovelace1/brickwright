@@ -6,7 +6,6 @@ import {
   prompts,
   results,
   metricColumns,
-  changeOutcome,
   fullAgentName,
   resultModelName,
 } from "./experiment-results";
@@ -79,28 +78,32 @@ test("table rows reference configured agents and provide usable values for every
       const cell = row.metrics[column.key];
       expect(cell, context).toBeDefined();
       expect(cell.value.trim(), context).not.toBe("");
-      if (cell.change !== undefined) {
-        expect(cell.change.trim(), context).not.toBe("");
-        expect(Number.isFinite(Number(cell.change)), context).toBe(true);
-      }
     }
   }
 });
 
-test.each([
-  { change: "+1", direction: "higher", outcome: "improvement" },
-  { change: "-1", direction: "higher", outcome: "regression" },
-  { change: "-1", direction: "lower", outcome: "improvement" },
-  { change: "+1", direction: "lower", outcome: "regression" },
-  { change: "0", direction: "higher", outcome: null },
-  { change: "+0.000", direction: "lower", outcome: null },
-  { change: undefined, direction: "higher", outcome: null },
-  { change: undefined, direction: "lower", outcome: null },
-  { change: "+1", direction: null, outcome: null },
-  { change: "-1", direction: null, outcome: null },
-] as const)(
-  "classifies $change with $direction preference as $outcome",
-  ({ change, direction, outcome }) => {
-    expect(changeOutcome(change, direction)).toBe(outcome);
-  },
-);
+test("bold and underline mark the best and second-best ranked metrics within each agent", () => {
+  const ranked = metricColumns.filter((column) => column.ranked);
+  for (const agent of agents) {
+    const group = results.filter((row) => row.agent === agent.value);
+    for (const column of ranked) {
+      const scores = [
+        ...new Set(
+          group.map((row) => Number(row.metrics[column.key].value)).filter(Number.isFinite),
+        ),
+      ].sort((a, b) => (column.direction === "higher" ? b - a : a - b));
+      for (const row of group) {
+        const rank = scores.indexOf(Number(row.metrics[column.key].value));
+        const expected = rank === 0 ? "bold" : rank === 1 ? "underline" : undefined;
+        expect(
+          row.metrics[column.key].emphasis,
+          `${agent.value} / ${row.method} / ${column.key}`,
+        ).toBe(expected);
+      }
+    }
+  }
+  for (const row of results)
+    for (const column of metricColumns)
+      if (row.agent === null || !column.ranked)
+        expect(row.metrics[column.key].emphasis, `${row.method} / ${column.key}`).toBeUndefined();
+});
