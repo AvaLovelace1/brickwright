@@ -38,10 +38,12 @@
     await step("Shows the prompt and its model viewer", async () => {
       await expect(canvas.getByRole("region", { name: "Prompt to brick build" })).toBeVisible();
       await expect(
-        canvas.getByRole("button", { name: "Help me design… A giant mushroom treehouse" }),
+        canvas.getByRole("button", {
+          name: "Help me design… A lighthouse besieged by a sea serpent",
+        }),
       ).toBeVisible();
       await expect(
-        canvas.getByRole("figure", { name: "A giant mushroom treehouse" }),
+        canvas.getByRole("figure", { name: "A lighthouse besieged by a sea serpent" }),
       ).toBeVisible();
     });
     await step("Shows the physical validity guarantees", async () => {
@@ -66,7 +68,7 @@
       ["A combine harvester from an image", "combine-harvester"],
       ["Hong Kong’s Victoria Harbour", "victoria-harbour"],
       ["A poseable crab", "poseable-crab"],
-      ["A giant mushroom treehouse", "giant-mushroom-treehouse"],
+      ["A lighthouse besieged by a sea serpent", "lighthouse-sea-serpent"],
     ]) {
       await step(`Select ${prompt}`, async () => {
         await userEvent.click(trigger);

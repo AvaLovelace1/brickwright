@@ -3,23 +3,23 @@
   "snapshot_created_at": "2026-10-09T21:32:07.690997+00:00",
   "models": [
     {
-      "id": "5d22a206-3c48-4204-8bb3-29bb14365ee3",
-      "caption": "A giant mushroom treehouse, with spiral stairs, tiny balconies, and a spotted red cap.",
+      "id": "0f7b2537-663d-4b5c-be31-220d8bfaee58",
+      "caption": "A lighthouse besieged by a sea serpent.",
       "run_id": "brickwright-astra-references",
       "run_label": "BrickWright (Astra High + references)",
-      "record": "20261009-113703-a-giant-mushroom-treehou-23f42abb",
+      "record": "20261020-234229-a-lighthouse-besieged-by-bc9eb6fd",
       "stop_reason": "finalized",
-      "ldraw_url": "models/5d22a206-3c48-4204-8bb3-29bb14365ee3/brickwright-astra-references/model.ldr",
-      "report_url": "models/5d22a206-3c48-4204-8bb3-29bb14365ee3/brickwright-astra-references/report.json",
-      "parts": 1040,
+      "ldraw_url": "models/0f7b2537-663d-4b5c-be31-220d8bfaee58/brickwright-astra-references/model.ldr",
+      "report_url": "models/0f7b2537-663d-4b5c-be31-220d8bfaee58/brickwright-astra-references/report.json",
+      "parts": 359,
       "coverage": "complete",
       "collision_pairs": 0,
       "floating_parts": 0,
       "components": 1,
-      "local_ldraw_file": "giant-mushroom-treehouse.ldr",
-      "local_ldraw_sha256": "3029d7d25dea8727875aa81717a6b5bdc6a41f648d2830e60a8a7770a9160046",
-      "local_packed_file": "giant-mushroom-treehouse.packed.mpd",
-      "local_packed_sha256": "23bb0c7520fd9076a934a5b5f6bfde41ec657064b76efda73d01b5b170bdffcd"
+      "local_ldraw_file": "lighthouse-sea-serpent.ldr",
+      "local_ldraw_sha256": "b0ff8c413c90aadf8637eb8dc41b2b2c05ebaedfad7f7e856cdf1c2b7ba496a1",
+      "local_packed_file": "lighthouse-sea-serpent.packed.mpd",
+      "local_packed_sha256": "9a676f1a9006beb839ee072355612892cb2c8baf133071b7489d6cc4f6abd29d"
     },
     {
       "id": "6232a1c9-9184-4ea6-9bf8-0293d2905e9c",

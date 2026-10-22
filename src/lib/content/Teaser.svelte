@@ -9,9 +9,9 @@
 
   const prompts = [
     {
-      label: "A giant mushroom treehouse",
-      filename: "giant-mushroom-treehouse",
-      text: "A giant mushroom treehouse, with spiral stairs, tiny balconies, and a spotted red cap.",
+      label: "A lighthouse besieged by a sea serpent",
+      filename: "lighthouse-sea-serpent",
+      text: "A lighthouse besieged by a sea serpent.",
     },
     {
       label: "A combine harvester from an image",

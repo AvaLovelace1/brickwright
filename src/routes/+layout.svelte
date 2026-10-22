@@ -39,6 +39,11 @@
 <svelte:head><link rel="icon" href={favicon} /></svelte:head>
 
 <Tooltip.Provider>
+  <a
+    href="#main-content"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bb-border focus:bg-surface focus:px-4 focus:py-2 focus:text-text"
+    >Skip to content</a
+  >
   <Header />
   <div class="flex-1 pt-17 md:flex md:flex-row">
     <div
@@ -58,8 +63,10 @@
       />
     </div>
     <main
+      id="main-content"
+      tabindex="-1"
       use:trackSections
-      class="mt-15 min-w-0 flex-1 md:mt-0 [&>section]:scroll-mt-32 md:[&>section]:scroll-mt-17"
+      class="mt-15 min-w-0 flex-1 scroll-mt-32 md:mt-0 md:scroll-mt-17 [&>section]:scroll-mt-32 md:[&>section]:scroll-mt-17"
     >
       {@render children()}
     </main>
