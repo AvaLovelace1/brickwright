@@ -28,7 +28,7 @@ test("every validation shows the same checks and agrees with its actual report",
       ...names.map(
         (name) =>
           report.checks.find((check: { name: string; passed: boolean }) => check.name === name)
-            .passed,
+            ?.passed,
       ),
     ];
     expect(step.result.checks.map((check) => check.passed)).toEqual(passed);

@@ -34,11 +34,10 @@ function validationChecks(revision: BuildRevision): ValidationCheck[] {
   const report = methodBuilds[revision].report;
   return [
     { label: "Compiles", passed: report.build_error === null },
-    ...displayedChecks.map(({ name, label }) => {
-      const check = report.checks.find((check) => check.name === name);
-      if (!check) throw new Error(`Missing ${name} check in the ${revision} report`);
-      return { label, passed: check.passed };
-    }),
+    ...displayedChecks.map(({ name, label }) => ({
+      label,
+      passed: report.checks.some((check) => check.name === name && check.passed),
+    })),
   ];
 }
 
