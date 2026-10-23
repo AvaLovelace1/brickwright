@@ -120,8 +120,7 @@
         showCaption={false}
         badge={{
           text: "Physically feasible",
-          description:
-            "Real LEGO® parts · No intersecting or floating parts · One connected component",
+          description: ["Real LEGO® parts", "No collisions or floaters", "Fully connected"],
         }}
       />
       <SharedCanvas models={[models[index]]} />

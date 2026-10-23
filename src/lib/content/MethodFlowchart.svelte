@@ -2,6 +2,7 @@
   import { tick } from "svelte";
   import { stageStyles, type Flow, type Stage } from "#lib/method.js";
   import PythonCode from "#lib/components/PythonCode.svelte";
+  import Bullet from "#lib/components/Bullet.svelte";
 
   let { stage, flow }: { stage: Stage; flow?: Flow } = $props();
   const uid = $props.id();
@@ -32,15 +33,17 @@
     title: string;
     icon: string;
     codeTitle?: boolean;
-    description?: string;
+    description?: string | [label: string, text: string][];
     code?: string;
   }[] = [
     {
       id: "input",
       title: "Input",
       icon: "tdesign--chat-message",
-      description:
-        "User ▪ Text and/or image prompt\nSystem ▪ BrickLayer documentation; create-execute-validate instructions",
+      description: [
+        ["User", "Text and/or image prompt"],
+        ["System", "BrickLayer documentation; create-execute-validate instructions"],
+      ],
     },
     {
       id: "write",
@@ -227,8 +230,14 @@
               <code class="font-mono text-xs">{node.title}</code>
             {:else}<span>{node.title}</span>{/if}
           </div>
-          {#if node.description}
-            <p class="text-sm leading-relaxed whitespace-pre-line">{node.description}</p>
+          {#if typeof node.description === "string"}
+            <p class="text-sm leading-relaxed">{node.description}</p>
+          {:else if node.description}
+            {#each node.description as [label, text] (label)}
+              <p class="text-sm leading-relaxed">
+                <span class="italic">{label}</span><Bullet class="mx-1" />{text}
+              </p>
+            {/each}
           {/if}
           {#if node.code}<pre class="mt-3 font-mono text-xs leading-relaxed"><PythonCode
                 code={node.code}

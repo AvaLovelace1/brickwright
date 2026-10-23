@@ -3,6 +3,7 @@
   import { Button as BitsButton } from "bits-ui";
   import Button from "#lib/components/Button.svelte";
   import Tooltip from "#lib/components/Tooltip.svelte";
+  import Bullet from "#lib/components/Bullet.svelte";
   import { demoSteps } from "#lib/method.js";
   import MethodFlowchart from "./MethodFlowchart.svelte";
   import MethodChat from "./MethodChat.svelte";
@@ -105,9 +106,8 @@
               aria-atomic="true"
               class="text-sm"
             >
-              <span class="font-semibold tabular-nums">Step {index + 1}/{demoSteps.length}</span>
-              <span class="mx-1" aria-hidden="true">▪</span>
-              {step.title}
+              <span class="font-semibold tabular-nums">Step {index + 1}/{demoSteps.length}</span
+              ><Bullet class="mx-1" />{step.title}
             </p>
           </div>
           <div class="mt-2 flex gap-1" role="group" aria-label="Demo steps">

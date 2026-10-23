@@ -5,6 +5,7 @@
   import Prose from "#lib/components/Prose.svelte";
   import AgentComparison from "#lib/content/AgentComparison.svelte";
   import ExternalLink from "#lib/components/ExternalLink.svelte";
+  import Bullet from "#lib/components/Bullet.svelte";
 
   const AUTHORS = [
     { name: "Ava\u00A0Pun", aff: 1 },
@@ -23,7 +24,6 @@
     "Independent researcher",
     "Stanford\u00A0University",
   ];
-  const BULLET = " \u00A0▪\u00A0 ";
 </script>
 
 <section id="overview" aria-label="Overview">
@@ -32,7 +32,7 @@
       <Teaser />
       <span class="bb-badge bb-badge-primary mb-4 border-bg">Preprint 2026</span>
       <hgroup>
-        <h1 class="mb-1 text-5xl sm:text-6xl">
+        <h1 class="mb-1 text-4xl min-[360px]:text-5xl sm:text-6xl">
           <BrickWrightLogo />
         </h1>
         <p class="mb-4 text-2xl font-semibold text-balance sm:text-3xl">
@@ -42,7 +42,7 @@
           {#each AUTHORS as a, i (a.name)}
             <span>
               {a.name}&#8239;<sup class="font-normal">{a.aff}</sup>
-              <span class="text-primary">{i < AUTHORS.length - 1 ? BULLET : ""}</span>
+              {#if i < AUTHORS.length - 1}<Bullet class="mx-2 text-primary" />{/if}
             </span>
           {/each}
         </p>
@@ -50,7 +50,7 @@
           {#each AFFILIATIONS as aff, j (aff)}
             <span>
               <sup>{j + 1}</sup>&#8239;{aff}
-              <span class="text-secondary">{j < AFFILIATIONS.length - 1 ? BULLET : ""}</span>
+              {#if j < AFFILIATIONS.length - 1}<Bullet class="mx-2 text-secondary" />{/if}
             </span>
           {/each}
         </p>

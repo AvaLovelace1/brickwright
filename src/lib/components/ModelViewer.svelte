@@ -3,6 +3,7 @@
   import { Canvas } from "@threlte/core";
   import LegoModel from "#lib/components/LegoModel.svelte";
   import HardShadow from "#lib/components/HardShadow.svelte";
+  import Bullet from "#lib/components/Bullet.svelte";
   import type { ClassValue } from "svelte/elements";
   import { Button, Dialog } from "bits-ui";
   import { fade, scale } from "#lib/motion.svelte.js";
@@ -181,7 +182,11 @@
     {#if showIntersectionLine}
       <span class="h-0.5 w-3 shrink-0 bg-[#f00]" aria-hidden="true"></span>
     {/if}
-    {text}
+    <span>
+      {#each [text].flat() as item, i (item)}
+        {#if i > 0}<Bullet class="mx-1" />{/if}<span>{item}</span>
+      {/each}
+    </span>
   </span>
 {/snippet}
 
