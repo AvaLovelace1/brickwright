@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from "svelte";
+  import { untrack } from "svelte";
   import { prefersReducedMotion } from "svelte/motion";
   import Swiper from "swiper";
   import { A11y } from "swiper/modules";
@@ -17,39 +17,39 @@
   let outgoingPromptIndex = $state<number | null>(null);
   let showIntersections = $state(true);
   let highlightCollisions = $state(false);
-  let container: HTMLDivElement;
-  let swiper = $state<Swiper>();
+  let swiper: Swiper | undefined;
 
-  onMount(() => {
-    const carousel = new Swiper(container, {
-      modules: [A11y],
-      slidesPerView: 1,
-      autoHeight: true,
-      loop: true,
-      spaceBetween: 24,
-      speed: prefersReducedMotion.current ? 0 : 300,
-      a11y: {
-        slideLabelMessage: "{{index}} of {{slidesLength}}",
-        wrapperLiveRegion: false,
-      },
-      on: {
-        // Swiper reorders slides when looping; realIndex still follows the prompt order.
-        realIndexChange(instance) {
-          outgoingPromptIndex = activePromptIndex;
-          activePromptIndex = instance.realIndex;
-        },
-        slideChangeTransitionEnd() {
-          outgoingPromptIndex = null;
-        },
-      },
+  function carousel(container: HTMLDivElement) {
+    const instance = untrack(
+      () =>
+        new Swiper(container, {
+          modules: [A11y],
+          slidesPerView: 1,
+          autoHeight: true,
+          loop: true,
+          spaceBetween: 24,
+          a11y: {
+            slideLabelMessage: "{{index}} of {{slidesLength}}",
+            wrapperLiveRegion: false,
+          },
+          on: {
+            // Swiper reorders slides when looping; realIndex still follows the prompt order.
+            realIndexChange({ realIndex }) {
+              outgoingPromptIndex = activePromptIndex;
+              activePromptIndex = realIndex;
+            },
+            slideChangeTransitionEnd() {
+              outgoingPromptIndex = null;
+            },
+          },
+        }),
+    );
+    $effect(() => {
+      instance.params.speed = prefersReducedMotion.current ? 0 : 300;
     });
-    swiper = carousel;
-    return () => carousel.destroy(true, true);
-  });
-
-  $effect(() => {
-    if (swiper) swiper.params.speed = prefersReducedMotion.current ? 0 : 300;
-  });
+    swiper = instance;
+    return () => instance.destroy(true, true);
+  }
 </script>
 
 <section aria-label="Qualitative comparison" aria-roledescription="carousel">
@@ -62,7 +62,7 @@
     </div>
     <ModelDiagnosticControls bind:showIntersections bind:highlightCollisions />
   </div>
-  <div class="swiper min-w-0" bind:this={container}>
+  <div class="swiper min-w-0" {@attach carousel}>
     <div class="swiper-wrapper">
       {#each prompts as prompt, index (prompt.id)}
         {@const showModels = index === activePromptIndex || index === outgoingPromptIndex}
