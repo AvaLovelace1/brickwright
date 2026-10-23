@@ -110,7 +110,11 @@
               ><Bullet class="mx-1" />{step.title}
             </p>
           </div>
-          <div class="mt-2 flex gap-1" role="group" aria-label="Demo steps">
+          <div
+            class="mt-2 grid grid-cols-6 gap-x-1 sm:grid-cols-11"
+            role="group"
+            aria-label="Demo steps"
+          >
             {#each demoSteps as marker, i (marker)}
               {@const label = `Step ${i + 1}: ${marker.title}`}
               <Tooltip
@@ -118,7 +122,7 @@
                 aria-label={label}
                 onclick={() => goToStep(i)}
                 aria-current={i === index ? "step" : undefined}
-                class="group flex h-6 min-w-0 flex-1 cursor-pointer items-center
+                class="group flex h-6 min-w-6 cursor-pointer items-center
                        focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line"
               >
                 {#snippet child({ props })}

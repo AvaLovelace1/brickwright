@@ -76,7 +76,8 @@
         await expect(demo.messages()).toHaveLength(index + 2);
         if (stages[index] === "render()") {
           const image = within(demo.messages().at(-1)!).getByRole<HTMLImageElement>("img");
-          await waitFor(() => expect(image.naturalWidth).toBeGreaterThan(0));
+          await image.decode();
+          await expect(image.naturalWidth).toBeGreaterThan(0);
         }
         if (stages[index] === "Write build.py" || stages[index] === "finalize()") {
           const result = within(demo.messages().at(-1)!).getByRole("group", {
