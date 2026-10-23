@@ -9,6 +9,9 @@ export interface ModelView {
   window?: HTMLElement;
   loaded?: boolean;
   loadRequested?: boolean;
+  loadError?: boolean;
+  loadAttempt?: number;
+  activeView?: "inline" | "expanded";
   diagnosticsUrl?: string;
   diagnostics?: ModelDiagnostics;
   diagnosticsError?: boolean;
@@ -26,12 +29,9 @@ const urls = import.meta.glob<string>(
 
 export function createModel(name: string, caption: string): ModelView {
   const path = `./assets/models/${name}`;
-  const ldr = urls[`${path}.ldr`];
-  const ldrPacked = urls[`${path}.packed.mpd`];
-  if (!ldr || !ldrPacked) throw new Error(`Missing model assets: ${name}`);
   return {
-    ldr,
-    ldrPacked,
+    ldr: urls[`${path}.ldr`],
+    ldrPacked: urls[`${path}.packed.mpd`],
     diagnosticsUrl: urls[`${path}.diagnostics.json`],
     caption,
     stepsShown: 1,

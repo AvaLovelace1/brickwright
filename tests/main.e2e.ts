@@ -332,3 +332,16 @@ test("citation copy button works", async ({ page, mainPage }) => {
   await expect(page.evaluate(() => navigator.clipboard.readText())).resolves.toBe(citationText);
   await expect(copyButton).toHaveText("Copy");
 });
+
+test("every model viewer links an LDraw file the site serves", async ({ page, mainPage }) => {
+  await mainPage.goto();
+  const viewers = page.locator("figure[aria-busy]");
+  const hrefs = await viewers
+    .getByRole("link", { name: "Download LDraw" })
+    .evaluateAll((links) => links.map((link) => link.getAttribute("href")!));
+  expect(hrefs).toHaveLength(await viewers.count());
+  for (const href of hrefs) {
+    expect(href).toMatch(/\.ldr$/);
+    expect((await page.request.get(href)).ok(), href).toBe(true);
+  }
+});

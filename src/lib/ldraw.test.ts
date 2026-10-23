@@ -1,9 +1,9 @@
-import { readFile } from "node:fs/promises";
-import { expect, test } from "vitest";
+import { readdir, readFile } from "node:fs/promises";
+import { expect, test, vi } from "vitest";
 import { Box3, Mesh, Vector3, type Group, type Object3D } from "three";
 import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
 import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
-import { createPartWarmup, loadModel, parsePackedModel } from "./ldraw";
+import { createPartWarmup, listParts, loadModel, parsePackedModel } from "./ldraw";
 
 function createLoader() {
   const loader = new LDrawLoader();
@@ -99,6 +99,18 @@ test("loads normalized clones with shared geometry and independent placement vis
   }
 });
 
+test("retries a failed download without blocking subsequent models", async () => {
+  const fetch = vi.spyOn(globalThis, "fetch");
+  fetch.mockResolvedValueOnce(new Response(null, { status: 503 }));
+  const url = `data:text/plain,${encodeURIComponent(NESTED_MODEL)}#retry`;
+  try {
+    await expect(loadModel(url)).rejects.toThrow("503");
+    await expect(loadModel(url)).resolves.toHaveProperty("children.length", 3);
+  } finally {
+    fetch.mockRestore();
+  }
+});
+
 test("warm-up contains one instance of each part reachable through nested submodels", async () => {
   const warmupText = createPartWarmup(NESTED_MODEL)!;
   const warmup = await new Promise<Group>((resolve, reject) =>
@@ -146,3 +158,32 @@ test("loads the full Victoria Harbour model with its tower submodels", async () 
     model.children.find((placement) => placement.name === "tower_ifc.ldr")?.children.length,
   ).toBeGreaterThan(1);
 }, 60_000);
+
+test("lists every part in file order, including parts nested in submodels", async () => {
+  const text = await readFile(
+    "src/lib/assets/models/video-thumbnail/starry-night.packed.mpd",
+    "utf8",
+  );
+  const parts = listParts(await parsePackedModel(createLoader(), text));
+
+  // The whole scene is one submodel, which nests further submodels.
+  expect(parts).toHaveLength(1004);
+  expect(parts[0].name).toBe("parts/91405.dat");
+}, 60_000);
+
+const modelDirectory = "src/lib/assets/models/";
+const packedModels = (await readdir(modelDirectory, { recursive: true })).filter((file) =>
+  file.endsWith(".packed.mpd"),
+);
+
+test.each(packedModels)(
+  "committed model has finite, nonempty bounds: %s",
+  async (file) => {
+    const loader = createLoader();
+    loader.smoothNormals = false;
+    const group = await parsePackedModel(loader, await readFile(modelDirectory + file, "utf8"));
+    const size = Math.max(...new Box3().setFromObject(group).getSize(new Vector3()).toArray());
+    expect(Number.isFinite(size) && size > 0).toBe(true);
+  },
+  60_000,
+);

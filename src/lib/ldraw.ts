@@ -1,4 +1,4 @@
-import { Box3, Vector3, type Group } from "three";
+import { Box3, Vector3, type Group, type Object3D } from "three";
 import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
 import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
 
@@ -11,17 +11,22 @@ const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve));
 export async function loadModel(url: string): Promise<Group> {
   let model = models.get(url);
   if (!model) {
-    model = queue.then(async () => {
-      const response = await fetch(url);
-      if (!response.ok) throw new Error(`Unable to load model: ${response.status} ${url}`);
-      const group = await parsePackedModel(loader, await response.text());
-      group.rotation.x = Math.PI;
-      const box = new Box3().setFromObject(group);
-      const scale = 2 / Math.max(...box.getSize(new Vector3()).toArray());
-      group.scale.setScalar(scale);
-      group.position.copy(box.getCenter(new Vector3())).multiplyScalar(-scale);
-      return group;
-    });
+    model = queue
+      .then(async () => {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`Unable to load model: ${response.status} ${url}`);
+        const group = await parsePackedModel(loader, await response.text());
+        group.rotation.x = Math.PI;
+        const box = new Box3().setFromObject(group);
+        const scale = 2 / Math.max(...box.getSize(new Vector3()).toArray());
+        group.scale.setScalar(scale);
+        group.position.copy(box.getCenter(new Vector3())).multiplyScalar(-scale);
+        return group;
+      })
+      .catch((error) => {
+        models.delete(url);
+        throw error;
+      });
     models.set(url, model);
     // Serialize parsing and let the browser handle input between models.
     queue = model.then(yieldToBrowser, yieldToBrowser);
@@ -83,4 +88,10 @@ export async function parsePackedModel(loader: LDrawLoader, text: string): Promi
   const warmupText = createPartWarmup(text);
   if (warmupText) await parse(warmupText);
   return parse(text);
+}
+
+/** Every part in file order, including parts nested in submodels. */
+export function listParts(object: Object3D): Object3D[] {
+  if (/Part|Shortcut/.test(object.userData.type ?? "")) return [object];
+  return object.children.flatMap(listParts);
 }

@@ -1,5 +1,8 @@
+import { readdir } from "node:fs/promises";
 import { expect, test } from "vitest";
 import { createModel } from "./models";
+
+const modelDirectory = "src/lib/assets/models/";
 
 test("creates independent viewer state for the same model assets", () => {
   const first = createModel("method/house-draft1", "First view");
@@ -20,7 +23,17 @@ test("creates independent viewer state for the same model assets", () => {
   expect(second.ldrPacked).toBe(first.ldrPacked);
 });
 
-test("allows models without diagnostics and rejects missing geometry", () => {
+test("allows models without diagnostics", () => {
   expect(createModel("teaser/poseable-crab", "Crab").diagnosticsUrl).toBeUndefined();
-  expect(() => createModel("missing", "Missing")).toThrow("Missing model assets: missing");
+});
+
+test("every committed LDraw model has a packed copy for the viewer", async () => {
+  const files = await readdir(modelDirectory, { recursive: true });
+  const unpacked = files.filter(
+    (file) =>
+      file.endsWith(".ldr") &&
+      !file.startsWith("test-examples/") &&
+      !files.includes(file.replace(/\.ldr$/, ".packed.mpd")),
+  );
+  expect(unpacked).toEqual([]);
 });
