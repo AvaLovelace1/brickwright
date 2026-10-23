@@ -47,6 +47,7 @@
            outline-primary focus-visible:outline-2 focus-visible:outline-offset-3"
       index={0}
       aria-labelledby="{uid}-label"
+      aria-valuetext={fmtValue(value)}
       onfocus={() => (showTooltip = true)}
       onblur={() => (showTooltip = false)}
       bind:ref={tooltipAnchor}

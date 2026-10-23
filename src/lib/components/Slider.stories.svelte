@@ -9,6 +9,7 @@
     tags: ["autodocs"],
     args: {
       label: "Slider",
+      value: 1,
       min: 1,
       max: 100,
       step: 1,
@@ -21,6 +22,7 @@
   name="Default"
   play={async ({ canvas, step }) => {
     const sliderHandle = canvas.getByRole("slider");
+    await expect(sliderHandle).toHaveAttribute("aria-valuetext", "Value: 1");
     await step("Tooltip is not visible initially", async () => {
       await expect(screen.queryByRole("tooltip")).toBeNull();
     });
