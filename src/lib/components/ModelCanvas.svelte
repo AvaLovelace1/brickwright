@@ -20,7 +20,7 @@
   <Canvas renderMode="manual" dpr={Math.min(window.devicePixelRatio, 2)}>
     <RenderOnScroll />
     {#each models as model, index (model.caption)}
-      {#if model.loadRequested}
+      {#if model.status !== "idle"}
         <View dom={model.window}>
           <LegoModel bind:model={models[index]} {highlightCollisions} {showIntersections} />
         </View>

@@ -23,6 +23,7 @@
     caption: "A detailed cruise ship",
     stepsShown: 1,
     maxSteps: 600,
+    status: "idle",
   });
 
   let autoplayModel = $state<ModelView>({
@@ -31,6 +32,7 @@
     caption: "An autoplaying cruise ship",
     stepsShown: 1,
     maxSteps: 600,
+    status: "idle",
   });
 
   function createDiagnosticModel() {
@@ -51,7 +53,7 @@
   async function expectDiagnosticsLoaded(model: ModelView) {
     await waitFor(
       () => {
-        expect(model.loaded).toBe(true);
+        expect(model.status).toBe("loaded");
         expect(model.diagnostics?.collisions.length).toBeGreaterThan(0);
       },
       { timeout: 45_000 },
@@ -202,7 +204,7 @@
       await expect(canvas.getByRole("figure", { name: /A detailed cruise ship/ })).toBeVisible();
     });
     await step("The viewer starts with a complete build and can be rewound", async () => {
-      await waitFor(() => expect(args.model.loaded).toBe(true), { timeout: 45_000 });
+      await waitFor(() => expect(args.model.status).toBe("loaded"), { timeout: 45_000 });
       await waitFor(() => expect(args.model.stepsShown).toBe(args.model.maxSteps));
       await userEvent.click(canvas.getByRole("button", { name: "Rewind" }));
       await expect(args.model.stepsShown).toBe(1);

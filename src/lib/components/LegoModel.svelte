@@ -98,21 +98,22 @@
   });
 
   $effect(() => {
+    // Retry sets the status back to loading.
+    if (ldrawGroup || model.status === "error") return;
     let disposed = false;
-    void model.loadAttempt;
-    model.loadError = false;
-    loadModel(model.ldrPacked)
-      .then((group) => {
+    loadModel(model.ldrPacked).then(
+      (group) => {
         if (disposed) return;
         // A step reveals one top-level object: a part or an entire submodel.
         prevStepsShown = group.children.length;
         ldrawGroup = group;
         model.maxSteps = group.children.length;
-        model.loaded = true;
-      })
-      .catch(() => {
-        if (!disposed) model.loadError = true;
-      });
+        model.status = "loaded";
+      },
+      () => {
+        if (!disposed) model.status = "error";
+      },
+    );
     return () => {
       disposed = true;
     };

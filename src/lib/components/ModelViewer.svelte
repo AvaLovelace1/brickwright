@@ -134,7 +134,7 @@
   );
 
   $effect(() => {
-    if (!model.loaded || initialized) return;
+    if (model.status !== "loaded" || initialized) return;
     initialized = true;
     if (autoplay && !prefersReducedMotion.current) {
       model.stepsShown = 1;
@@ -145,8 +145,8 @@
   });
 
   function requestLoad() {
-    if (model.loadRequested) return;
-    model.loadRequested = true;
+    if (model.status !== "idle") return;
+    model.status = "loading";
     if (!model.diagnosticsUrl || model.diagnostics) return;
     loadDiagnostics(model.diagnosticsUrl).then(
       (data) => (model.diagnostics = data),
@@ -164,12 +164,6 @@
     );
     observer.observe(figure);
     return () => observer.disconnect();
-  }
-
-  function retryModel() {
-    model.loadError = false;
-    model.loaded = false;
-    model.loadAttempt = (model.loadAttempt ?? 0) + 1;
   }
 
   // We use outline instead of border so the model doesn't cover the border when zoomed.
@@ -235,7 +229,7 @@
   <Tooltip {onclick} type={href ? undefined : "button"} interactOutsideBehavior="ignore">
     {#snippet child({ props })}
       <Button.Root {...props} class={BTN_CLASS} {href} {download}>
-        <span class="text-xl iconify {icon}" aria-hidden="true"></span>
+        <span class="iconify text-xl {icon}" aria-hidden="true"></span>
         <span class="sr-only">{label}</span>
       </Button.Root>
     {/snippet}
@@ -244,14 +238,14 @@
 {/snippet}
 
 {#snippet loadStatus()}
-  {#if model.loadError}
+  {#if model.status === "error"}
     <div
       class="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center text-sm text-text"
     >
       <p role="alert">Unable to load the 3D model.</p>
-      <ActionButton text="Retry model" action={retryModel} />
+      <ActionButton text="Retry model" action={() => (model.status = "loading")} />
     </div>
-  {:else if !model.loaded}
+  {:else if model.status !== "loaded"}
     <p
       aria-live="polite"
       class="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-text italic"
@@ -265,7 +259,7 @@
   <div
     class="absolute right-2 bottom-2 left-2 z-10 flex items-center justify-end gap-1 text-text @min-[240px]:gap-2"
   >
-    {#if model.loaded && !model.loadError && showBuildControls && model.maxSteps > 1}
+    {#if model.status === "loaded" && showBuildControls && model.maxSteps > 1}
       <span class="hidden @min-[240px]:contents">{@render viewerTool("previous")}</span>
       {@render viewerTool("playback")}
       <span class="hidden @min-[240px]:contents">{@render viewerTool("next")}</span>
@@ -285,7 +279,7 @@
 
 <figure
   {@attach trackViewport}
-  aria-busy={!model.loaded && !model.loadError}
+  aria-busy={model.status === "idle" || model.status === "loading"}
   class={["@container relative", className]}
   aria-labelledby={hasCaption ? `${uid}-figcaption` : undefined}
   aria-label={!hasCaption ? model.caption : undefined}

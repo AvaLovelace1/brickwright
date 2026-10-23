@@ -12,12 +12,13 @@
   }: Props = $props();
 </script>
 
-{#if models.some((model) => model.loadRequested)}
-  {#key models.map((model) => model.loadAttempt ?? 0).join(",")}
+{#if models.some((model) => model.status !== "idle")}
+  <!-- Rebuilding the canvas when models enter or leave the error state lets Retry recover from a canvas that failed to start. -->
+  {#key models.some((model) => model.status === "error")}
     <svelte:boundary
       onerror={() => {
         for (const model of models) {
-          if (model.loadRequested) model.loadError = true;
+          if (model.status !== "idle") model.status = "error";
         }
       }}
     >

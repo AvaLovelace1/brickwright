@@ -16,9 +16,9 @@ test("creates independent viewer state for the same model assets", () => {
     diagnosticsUrl: expect.stringContaining("house-draft1.diagnostics.json"),
   });
   first.stepsShown = 10;
-  first.loaded = true;
+  first.status = "loaded";
   expect(second.stepsShown).toBe(1);
-  expect(second.loaded).toBeUndefined();
+  expect(second.status).toBe("idle");
   expect(second.caption).toBe("Second view");
   expect(second.ldrPacked).toBe(first.ldrPacked);
 });

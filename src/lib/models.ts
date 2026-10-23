@@ -8,10 +8,7 @@ export interface ModelView {
   stepsShown: number;
   maxSteps: number;
   window?: HTMLElement;
-  loaded?: boolean;
-  loadRequested?: boolean;
-  loadError?: boolean;
-  loadAttempt?: number;
+  status: "idle" | "loading" | "loaded" | "error";
   inViewport?: boolean;
   expanded?: boolean;
   diagnosticsUrl?: string;
@@ -38,6 +35,7 @@ export function createModel(name: string, caption: string): ModelView {
     caption,
     stepsShown: 1,
     maxSteps: 1,
+    status: "idle",
   };
 }
 
