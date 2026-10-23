@@ -262,14 +262,14 @@
     class: "h-80 w-full max-w-xl",
     badge: {
       text: "Physically feasible",
-      description: "Real LEGO® parts · No intersecting or floating parts · One connected component",
+      description: ["Real LEGO® parts", "No collisions or floaters", "Fully connected"],
     },
   }}
   play={async ({ canvas, args, step }) => {
     const badge = args.badge!;
     await step("Badge and description appear alongside the caption", async () => {
       await expect(canvas.getByRole("status")).toHaveTextContent(badge.text);
-      await expect(canvas.getByText(badge.description!)).toBeVisible();
+      for (const item of badge.description!) await expect(canvas.getByText(item)).toBeVisible();
       await expect(canvas.getByRole("figure", { name: /A detailed cruise ship/ })).toBeVisible();
     });
   }}
@@ -307,6 +307,8 @@
       canvas.getByRole("slider", { name: "Steps shown" }).focus();
       await userEvent.keyboard("{End}");
       await expect(canvas.getByText("Intersections", { exact: true })).toBeVisible();
+      // The Rewind tooltip is still fading in, and the a11y check measures its contrast
+      await Promise.all(document.getAnimations().map((animation) => animation.finished));
     });
   }}
 />

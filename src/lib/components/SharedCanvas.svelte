@@ -1,7 +1,4 @@
 <script lang="ts">
-  import { Canvas } from "@threlte/core";
-  import LegoModel from "#lib/components/LegoModel.svelte";
-  import { View } from "@threlte/extras";
   import type { ModelView } from "#lib/models.js";
   import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
 
@@ -15,14 +12,19 @@
   }: Props = $props();
 </script>
 
-<div class="pointer-events-none absolute inset-0">
-  <Canvas>
-    {#each models as model, index (model.caption)}
-      {#if model.loadRequested}
-        <View dom={model.window}>
-          <LegoModel bind:model={models[index]} {highlightCollisions} {showIntersections} />
-        </View>
-      {/if}
-    {/each}
-  </Canvas>
-</div>
+{#if models.some((model) => model.loadRequested)}
+  {#key models.map((model) => model.loadAttempt ?? 0).join(",")}
+    <svelte:boundary
+      onerror={() => {
+        for (const model of models) {
+          if (model.loadRequested) model.loadError = true;
+        }
+      }}
+    >
+      {#await import("./ModelCanvas.svelte") then { default: ModelCanvas }}
+        <ModelCanvas {models} {highlightCollisions} {showIntersections} />
+      {/await}
+      {#snippet failed()}<span class="sr-only">3D viewer unavailable</span>{/snippet}
+    </svelte:boundary>
+  {/key}
+{/if}

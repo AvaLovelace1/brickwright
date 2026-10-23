@@ -1,4 +1,5 @@
 import type { ModelDiagnostics } from "./model-diagnostics";
+import { isPageVisible } from "./page-visibility.svelte";
 
 export interface ModelView {
   ldr: string;
@@ -11,7 +12,8 @@ export interface ModelView {
   loadRequested?: boolean;
   loadError?: boolean;
   loadAttempt?: number;
-  activeView?: "inline" | "expanded";
+  inViewport?: boolean;
+  expanded?: boolean;
   diagnosticsUrl?: string;
   diagnostics?: ModelDiagnostics;
   diagnosticsError?: boolean;
@@ -37,4 +39,11 @@ export function createModel(name: string, caption: string): ModelView {
     stepsShown: 1,
     maxSteps: 1,
   };
+}
+
+/** Which of the model's views animates, if the page is visible and the view is on screen. */
+export function activeView(model: ModelView): "inline" | "expanded" | undefined {
+  if (!isPageVisible()) return undefined;
+  if (model.expanded) return "expanded";
+  return model.inViewport === false ? undefined : "inline";
 }

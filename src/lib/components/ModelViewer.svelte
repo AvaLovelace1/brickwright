@@ -1,12 +1,12 @@
 <script lang="ts">
   import { onMount } from "svelte";
-  import { Canvas } from "@threlte/core";
-  import LegoModel from "#lib/components/LegoModel.svelte";
+  import { on } from "svelte/events";
   import HardShadow from "#lib/components/HardShadow.svelte";
   import Bullet from "#lib/components/Bullet.svelte";
+  import ActionButton from "#lib/components/Button.svelte";
+  import Dialog from "#lib/components/Dialog.svelte";
   import type { ClassValue } from "svelte/elements";
-  import { Button, Dialog } from "bits-ui";
-  import { fade, scale } from "#lib/motion.svelte.js";
+  import { Button, Dialog as BitsDialog } from "bits-ui";
   import Slider from "#lib/components/Slider.svelte";
   import Tooltip from "#lib/components/Tooltip.svelte";
   import { prefersReducedMotion } from "svelte/motion";
@@ -15,11 +15,11 @@
     isPhysicallyValid,
     type DiagnosticDisplay,
   } from "#lib/model-diagnostics.js";
-  import type { ModelView } from "#lib/models.js";
+  import { activeView, type ModelView } from "#lib/models.js";
 
   export interface ViewerBadge {
     text: string;
-    description?: string;
+    description?: string[];
     tone?: "success" | "danger";
   }
 
@@ -62,10 +62,8 @@
   let popupContent: HTMLElement | null = $state(null);
 
   let paused = $state(true);
-  let expanded = $state(false);
   const ended = $derived(model.stepsShown >= model.maxSteps);
   let initialized = false;
-  let figure: HTMLElement;
 
   const playLabel = $derived(ended ? "Rewind" : paused ? "Play" : "Pause");
   const playIcon = $derived(
@@ -103,9 +101,13 @@
     close: {
       label: "Close view",
       icon: "tdesign--fullscreen-exit",
-      onclick: () => (expanded = false),
+      onclick: () => (model.expanded = false),
     },
-    expand: { label: "Expand view", icon: "tdesign--fullscreen", onclick: () => (expanded = true) },
+    expand: {
+      label: "Expand view",
+      icon: "tdesign--fullscreen",
+      onclick: () => (model.expanded = true),
+    },
   });
   function togglePlayback() {
     if (ended) {
@@ -117,13 +119,19 @@
   }
 
   $effect(() => {
-    if (paused) return;
+    if (paused || !activeView(model)) return;
     const timer = setInterval(() => {
       if (model.stepsShown < model.maxSteps) model.stepsShown += 1;
       if (model.stepsShown >= model.maxSteps) paused = true;
     }, 10);
     return () => clearInterval(timer);
   });
+
+  onMount(() =>
+    on(window.matchMedia("(prefers-reduced-motion: reduce)"), "change", (event) => {
+      if (event.matches) paused = true;
+    }),
+  );
 
   $effect(() => {
     if (!model.loaded || initialized) return;
@@ -136,46 +144,44 @@
     }
   });
 
-  $effect(() => {
-    if (!model.loadRequested || !model.diagnosticsUrl || model.diagnostics) return;
-    let disposed = false;
+  function requestLoad() {
+    if (model.loadRequested) return;
+    model.loadRequested = true;
+    if (!model.diagnosticsUrl || model.diagnostics) return;
     loadDiagnostics(model.diagnosticsUrl).then(
-      (data) => {
-        if (!disposed) model.diagnostics = data;
-      },
-      () => {
-        if (!disposed) model.diagnosticsError = true;
-      },
+      (data) => (model.diagnostics = data),
+      () => (model.diagnosticsError = true),
     );
-    return () => {
-      disposed = true;
-    };
-  });
+  }
 
-  onMount(() => {
+  function trackViewport(figure: HTMLElement) {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          model.loadRequested = true;
-          observer.disconnect();
-        }
+        model.inViewport = entry.isIntersecting;
+        if (entry.isIntersecting) requestLoad();
       },
       { rootMargin: "200px" },
     );
     observer.observe(figure);
     return () => observer.disconnect();
-  });
+  }
+
+  function retryModel() {
+    model.loadError = false;
+    model.loaded = false;
+    model.loadAttempt = (model.loadAttempt ?? 0) + 1;
+  }
 
   // We use outline instead of border so the model doesn't cover the border when zoomed.
   const WINDOW_CLASS =
     "size-[calc(100%-2px)] rounded-(--bb-border-radius) bg-surface outline-2 outline-line";
   const OVERLAY_CLASS = "pointer-events-none absolute top-1 right-2 left-1 z-10";
   const BTN_CLASS =
-    "flex cursor-pointer items-center text-text hover:text-link " +
+    "flex min-h-6 min-w-6 cursor-pointer items-center justify-center text-text hover:text-link " +
     "focus-visible:text-link focus-visible:outline-2 outline-link";
 </script>
 
-{#snippet badgeDetail(text: string, showIntersectionLine = false)}
+{#snippet badgeDetail(text: string | string[], showIntersectionLine = false)}
   <span
     class="inline-flex items-center gap-1 rounded-(--bb-border-radius) bg-surface px-1 text-xs sm:text-sm"
   >
@@ -229,7 +235,7 @@
   <Tooltip {onclick} type={href ? undefined : "button"} interactOutsideBehavior="ignore">
     {#snippet child({ props })}
       <Button.Root {...props} class={BTN_CLASS} {href} {download}>
-        <span class="iconify {icon}" aria-hidden="true"></span>
+        <span class="text-xl iconify {icon}" aria-hidden="true"></span>
         <span class="sr-only">{label}</span>
       </Button.Root>
     {/snippet}
@@ -237,12 +243,32 @@
   </Tooltip>
 {/snippet}
 
+{#snippet loadStatus()}
+  {#if model.loadError}
+    <div
+      class="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center text-sm text-text"
+    >
+      <p role="alert">Unable to load the 3D model.</p>
+      <ActionButton text="Retry model" action={retryModel} />
+    </div>
+  {:else if !model.loaded}
+    <p
+      aria-live="polite"
+      class="pointer-events-none absolute inset-0 flex items-center justify-center text-sm text-text italic"
+    >
+      Loading model…
+    </p>
+  {/if}
+{/snippet}
+
 {#snippet viewerTools(isExpandedView: boolean)}
-  <div class="absolute right-2 bottom-2 left-2 z-10 flex items-center justify-end gap-2 text-text">
-    {#if model.loaded && showBuildControls}
-      {@render viewerTool("previous")}
+  <div
+    class="absolute right-2 bottom-2 left-2 z-10 flex items-center justify-end gap-1 text-text @min-[240px]:gap-2"
+  >
+    {#if model.loaded && !model.loadError && showBuildControls && model.maxSteps > 1}
+      <span class="hidden @min-[240px]:contents">{@render viewerTool("previous")}</span>
       {@render viewerTool("playback")}
-      {@render viewerTool("next")}
+      <span class="hidden @min-[240px]:contents">{@render viewerTool("next")}</span>
       <Slider
         label="Steps shown"
         min={1}
@@ -258,15 +284,16 @@
 {/snippet}
 
 <figure
-  bind:this={figure}
-  aria-busy={!model.loaded}
-  class={["relative", className]}
+  {@attach trackViewport}
+  aria-busy={!model.loaded && !model.loadError}
+  class={["@container relative", className]}
   aria-labelledby={hasCaption ? `${uid}-figcaption` : undefined}
   aria-label={!hasCaption ? model.caption : undefined}
 >
   <HardShadow class="size-full">
     <div class={WINDOW_CLASS} bind:this={model.window}></div>
   </HardShadow>
+  {@render loadStatus()}
   {#if hasCaption}
     <figcaption id="{uid}-figcaption" class={[OVERLAY_CLASS, "flex flex-col gap-2"]}>
       <span class="bb-badge relative -top-3 -left-3 -mb-3 w-fit max-w-full bg-bg">
@@ -280,52 +307,31 @@
   {@render viewerTools(false)}
 </figure>
 
-<Dialog.Root bind:open={expanded}>
-  <Dialog.Portal>
-    <Dialog.Overlay forceMount>
-      {#snippet child({ props, open })}
-        {#if open}
-          <div
-            class="fixed inset-0 z-60 bg-black/50"
-            role="presentation"
-            in:fade={{ duration: "long" }}
-            out:fade={{ duration: "medium" }}
-            {...props}
-          ></div>
-        {/if}
-      {/snippet}
-    </Dialog.Overlay>
-    <Dialog.Content
-      forceMount
-      interactOutsideBehavior="close"
-      bind:ref={popupContent}
-      onOpenAutoFocus={(event) => {
-        event.preventDefault();
-        popupContent?.focus();
-      }}
-      aria-label="Expanded model view"
-    >
-      {#snippet child({ props, open })}
-        {#if open}
-          <div class="fixed inset-0 z-60 flex items-center justify-center">
-            <div
-              class="aspect-square size-full max-h-144 max-w-xl p-3 sm:max-h-168 sm:max-w-2xl md:max-h-192 md:max-w-3xl"
-              {...props}
-              in:scale={{ duration: "medium" }}
-              out:scale={{ duration: "short" }}
-            >
-              <HardShadow class="size-full">
-                <div class={WINDOW_CLASS}>
-                  <Canvas>
-                    <LegoModel bind:model {highlightCollisions} {showIntersections} />
-                  </Canvas>
-                </div>
-                {@render viewerTools(true)}
-              </HardShadow>
-            </div>
-          </div>
-        {/if}
-      {/snippet}
-    </Dialog.Content>
-  </Dialog.Portal>
-</Dialog.Root>
+<BitsDialog.Root bind:open={() => model.expanded ?? false, (open) => (model.expanded = open)}>
+  <Dialog
+    class="@container aspect-square size-full max-h-144 max-w-xl sm:max-h-168 sm:max-w-2xl md:max-h-192 md:max-w-3xl"
+    bind:ref={popupContent}
+    onOpenAutoFocus={(event) => {
+      event.preventDefault();
+      popupContent?.focus();
+    }}
+    aria-label="Expanded model view"
+  >
+    <HardShadow class="size-full">
+      <div class={WINDOW_CLASS}>
+        <svelte:boundary>
+          {#await import("./ExpandedModel.svelte") then { default: ExpandedModel }}
+            <ExpandedModel {model} {highlightCollisions} {showIntersections} />
+          {/await}
+          {#snippet failed()}
+            <p role="alert" class="p-4 text-text">
+              3D viewer unavailable. You can still download the LDraw file.
+            </p>
+          {/snippet}
+        </svelte:boundary>
+      </div>
+      {@render loadStatus()}
+      {@render viewerTools(true)}
+    </HardShadow>
+  </Dialog>
+</BitsDialog.Root>
