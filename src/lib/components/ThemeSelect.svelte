@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from "svelte";
   import Select from "./Select.svelte";
+  import { saveSetting } from "#lib/settings.svelte.js";
 
   const themes = [
     { value: "auto", label: "Auto", icon: "tdesign--contrast-filled" },
@@ -18,12 +19,8 @@
     theme = value;
     if (value === "auto") delete document.documentElement.dataset.theme;
     else document.documentElement.dataset.theme = value;
-    try {
-      localStorage.setItem("brickwright-theme", value);
-    } catch {
-      // Theme selection still works when browser storage is unavailable
-    }
+    saveSetting("brickwright-theme", value);
   }
 </script>
 
-<Select label="Theme" options={themes} bind:value={() => theme, selectTheme} hideLabel iconOnly />
+<Select label="Theme" options={themes} bind:value={() => theme, selectTheme} />

@@ -33,7 +33,7 @@
 <Story
   name="Default"
   play={async ({ canvas, userEvent, step }) => {
-    const trigger = canvas.getByRole("button", { name: "Model Cruise ship" });
+    const trigger = canvas.getByRole("combobox", { name: "Model Cruise ship" });
     const boundValue = canvas.getByRole("status");
     for (const action of ["Select", "Reselect"]) {
       await step(`${action} an option without clearing the bound value`, async () => {
@@ -68,7 +68,7 @@
   name="Keyboard Selection"
   args={{ value: "ship", hideLabel: true }}
   play={async ({ canvas, userEvent }) => {
-    const trigger = canvas.getByRole("button", { name: "Model Cruise ship" });
+    const trigger = canvas.getByRole("combobox", { name: "Model Cruise ship" });
     trigger.focus();
     await userEvent.keyboard("{Enter}{ArrowDown}{Enter}");
     await expect(trigger).toHaveAccessibleName("Model Giraffe");
@@ -82,7 +82,7 @@
 <Story
   name="Placeholder"
   play={async ({ canvas }) => {
-    await expect(canvas.getByRole("button", { name: "Model Select an option" })).toBeVisible();
+    await expect(canvas.getByRole("combobox", { name: "Model Select an option" })).toBeVisible();
   }}
 />
 
@@ -90,7 +90,7 @@
   name="Disabled"
   args={{ value: "ship", disabled: true }}
   play={async ({ canvas }) => {
-    await expect(canvas.getByRole("button", { name: "Model Cruise ship" })).toBeDisabled();
+    await expect(canvas.getByRole("combobox", { name: "Model Cruise ship" })).toBeDisabled();
   }}
 />
 
@@ -99,7 +99,7 @@
   args={{ value: "ship", labelClass: "shrink-0 text-base font-semibold", class: "min-w-0 flex-1" }}
   play={async ({ canvas }) => {
     const label = canvas.getByText("Model", { exact: true });
-    const trigger = canvas.getByRole("button", { name: "Model Cruise ship" });
+    const trigger = canvas.getByRole("combobox", { name: "Model Cruise ship" });
     await expect(label).toBeVisible();
     await expect(label).toHaveClass("shrink-0", "text-base", "font-semibold");
     await expect(trigger).toHaveClass("min-w-0", "flex-1");

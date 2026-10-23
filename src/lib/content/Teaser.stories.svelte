@@ -38,8 +38,8 @@
     await step("Shows the prompt and its model viewer", async () => {
       await expect(canvas.getByRole("region", { name: "Prompt to brick build" })).toBeVisible();
       await expect(
-        canvas.getByRole("button", {
-          name: "Help me design… A lighthouse besieged by a sea serpent",
+        canvas.getByRole("combobox", {
+          name: "Help me build… A lighthouse besieged by a sea serpent",
         }),
       ).toBeVisible();
       await expect(
@@ -63,7 +63,7 @@
 <Story
   name="Select a Prompt"
   play={async ({ canvas, userEvent, step }) => {
-    const trigger = canvas.getByRole("button", { name: /^Help me design…/ });
+    const trigger = canvas.getByRole("combobox", { name: /^Help me build…/ });
     for (const [prompt, filename] of [
       ["A combine harvester from an image", "combine-harvester"],
       ["Hong Kong’s Victoria Harbour", "victoria-harbour"],
@@ -74,7 +74,7 @@
         await userEvent.click(trigger);
         await userEvent.click(await screen.findByRole("option", { name: prompt }));
         await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
-        await expect(trigger).toHaveAccessibleName(`Help me design… ${prompt}`);
+        await expect(trigger).toHaveAccessibleName(`Help me build… ${prompt}`);
         await expect(trigger).toHaveFocus();
         await expect(canvas.getByRole("figure", { name: prompt })).toBeVisible();
         await expect(canvas.getAllByRole("figure")).toHaveLength(1);

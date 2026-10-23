@@ -81,7 +81,7 @@
 {#snippet promptContent()}
   <div class="grid items-center gap-x-2 gap-y-1 text-base sm:grid-cols-[auto_minmax(0,1fr)]">
     <Select
-      label="Help me design…"
+      label="Help me build…"
       labelClass="font-semibold italic text-lg"
       class="min-w-0"
       {options}

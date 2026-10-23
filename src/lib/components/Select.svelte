@@ -48,7 +48,7 @@
     title={iconOnly ? `${label}: ${selectedLabel}` : undefined}
     aria-labelledby="{uid}-label {uid}-value"
     class={[
-      "flex cursor-pointer items-center justify-between gap-2 px-3 py-2",
+      "flex cursor-pointer items-center justify-between gap-3 px-3 py-2",
       iconOnly ? "w-auto shrink-0" : "w-full",
       "bb-border bg-surface",
       "text-left text-text",
@@ -60,7 +60,7 @@
     {#if selectedOption?.icon}
       <span class="iconify {selectedOption.icon} shrink-0" aria-hidden="true"></span>
     {/if}
-    <span id="{uid}-value" class:sr-only={iconOnly}>{selectedLabel}</span>
+    <span id="{uid}-value" class="flex-1" class:sr-only={iconOnly}>{selectedLabel}</span>
     <span
       class={["iconify shrink-0", open ? "tdesign--chevron-up" : "tdesign--chevron-down"]}
       aria-hidden="true"
@@ -70,7 +70,7 @@
     <BitsSelect.Content
       sideOffset={4}
       forceMount
-      class={["z-50 text-text", iconOnly ? "w-max min-w-32" : "w-(--bits-select-anchor-width)"]}
+      class={["z-100 text-text", iconOnly ? "w-max min-w-32" : "w-(--bits-select-anchor-width)"]}
       align="end"
     >
       {#snippet child({ props, wrapperProps, open })}

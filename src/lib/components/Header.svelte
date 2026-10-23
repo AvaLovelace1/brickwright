@@ -2,28 +2,28 @@
   import { resolve } from "$app/paths";
   import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
   import Button from "#lib/components/Button.svelte";
-  import ThemeSelect from "#lib/components/ThemeSelect.svelte";
+  import SettingsDialog from "#lib/components/SettingsDialog.svelte";
 </script>
 
 <header
-  class="fixed top-0 z-50 flex w-full items-center gap-2 border-b-4 border-primary bg-surface px-4 py-2 sm:px-8"
+  class="fixed top-0 z-50 flex w-full items-center gap-2 border-b-4 border-primary bg-surface px-2 py-2 min-[360px]:px-4 sm:px-8"
 >
-  <a class="text-4xl sm:text-3xl" href={resolve("/")}>
+  <a class="shrink-0 text-4xl sm:text-3xl" href={resolve("/")}>
     <BrickWrightLogo class="max-sm:flex max-sm:[&>img]:mb-0" textClass="sr-only sm:not-sr-only" />
   </a>
   <div class="ml-auto flex gap-2 pt-1">
-    <!-- TODO replace with real arxiv link -->
     <Button
       text="Paper"
-      action="https://arxiv.org"
-      class="bb-btn-primary ms-auto"
+      action="https://arxiv.org/abs/2610.31651"
+      class="bb-btn-primary ms-auto max-[360px]:px-3"
       icon="tdesign--file-1"
     />
     <Button
       text="Code"
       action="https://github.com/AvaLovelace1/brickwright"
       icon="tdesign--logo-github"
+      class="max-[360px]:px-3"
     />
+    <SettingsDialog />
   </div>
-  <ThemeSelect />
 </header>

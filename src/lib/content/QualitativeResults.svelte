@@ -85,8 +85,8 @@
   </div>
   <div class="mt-6 flex items-center justify-between gap-3">
     <p class="min-w-0 flex-1 text-sm text-pretty">
-      Swipe the prompt or use the arrows to browse. Red lines show mesh intersections. Drag a build
-      to rotate it.
+      Swipe the prompt or use the arrows to browse. Red lines indicate brick intersections. Drag a
+      build to rotate it.
     </p>
     <div class="bb-btn-container flex shrink-0 items-center gap-3 pt-1 pl-1">
       <Button

@@ -23,7 +23,7 @@
 <Story
   name="Select a Theme"
   play={async ({ canvas, userEvent }) => {
-    const trigger = canvas.getByRole("button", { name: /^Theme / });
+    const trigger = canvas.getByRole("combobox", { name: /^Theme / });
     for (const label of ["Dark", "Light", "Auto"]) {
       await userEvent.click(trigger);
       const option = await screen.findByRole("option", { name: label });

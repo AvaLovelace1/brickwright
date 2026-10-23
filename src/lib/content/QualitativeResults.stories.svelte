@@ -26,7 +26,7 @@
   name="Agent Selection and Diagnostics"
   play={async ({ canvas, canvasElement, userEvent, step }) => {
     const progress = canvas.getByRole("status", { name: "Prompt position" });
-    const agentSelect = canvas.getByRole("button", { name: /^Agent model/ });
+    const agentSelect = canvas.getByRole("combobox", { name: /^Agent model/ });
     const currentAgent = agents.find((agent) => agent.label === agentSelect.textContent?.trim())!;
     const selectedAgent =
       agents.find((agent) => agent.value !== currentAgent.value) ?? currentAgent;

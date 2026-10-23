@@ -96,7 +96,9 @@ test("explicit themes persist across reloads and override the system", async ({
     await page.emulateMedia({ colorScheme: theme === "Dark" ? "light" : "dark" });
     await mainPage.selectTheme(theme);
     await page.reload();
-    await expect(page.getByRole("button", { name: `Theme ${theme}` })).toBeVisible();
+    const settings = await mainPage.openSettings();
+    await expect(settings.getByRole("combobox", { name: `Theme ${theme}` })).toBeVisible();
+    await mainPage.closeSettings();
     await expect(page.locator("html")).toHaveAttribute("data-theme", theme.toLowerCase());
     await expect(page.locator("html")).toHaveCSS("color-scheme", theme.toLowerCase());
     await expectMethodColors(mainPage, colors[theme === "Dark" ? "dark" : "light"]);
@@ -111,7 +113,9 @@ test("Auto follows live system changes and remains selected after reload", async
   await mainPage.selectTheme("Dark");
   await mainPage.selectTheme("Auto");
   await page.reload();
-  await expect(page.getByRole("button", { name: "Theme Auto" })).toBeVisible();
+  const settings = await mainPage.openSettings();
+  await expect(settings.getByRole("combobox", { name: "Theme Auto" })).toBeVisible();
+  await mainPage.closeSettings();
   await expect(page.locator("html")).not.toHaveAttribute("data-theme");
   await page.emulateMedia({ colorScheme: "light" });
   await expectMethodColors(mainPage, colors.light);
@@ -168,7 +172,7 @@ test("navbar links work while the LEGO models are still loading", async ({ page,
 
 test("content fits the viewport across mobile and desktop widths", async ({ page, mainPage }) => {
   await mainPage.goto("method");
-  const widths = [1280, 1100, 1024, 900, 800, 768, 390];
+  const widths = [1280, 1100, 1024, 900, 800, 768, 390, 320];
   const expectFits = async (width: number) => {
     await page.setViewportSize({ width, height: 900 });
     await expect
@@ -196,7 +200,7 @@ test("models start complete when the visitor prefers reduced motion", async ({
   mainPage,
 }) => {
   const modelDownload = Promise.withResolvers<void>();
-  await page.route(/\/giant-mushroom-treehouse\.packed\.[\w-]+\.mpd$/, async (route) => {
+  await page.route(/\/lighthouse-sea-serpent\.packed\.[\w-]+\.mpd$/, async (route) => {
     await modelDownload.promise;
     await route.continue();
   });
