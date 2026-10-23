@@ -1,5 +1,4 @@
 <script lang="ts">
-  import { onMount } from "svelte";
   import { Button as BitsButton } from "bits-ui";
   import Button from "#lib/components/Button.svelte";
   import Tooltip from "#lib/components/Tooltip.svelte";
@@ -59,15 +58,13 @@
     }, STEP_DURATION_MS);
     return () => window.clearTimeout(timer);
   });
-
-  onMount(() => {
-    const pauseWhenHidden = () => {
-      if (document.hidden) playing = false;
-    };
-    document.addEventListener("visibilitychange", pauseWhenHidden);
-    return () => document.removeEventListener("visibilitychange", pauseWhenHidden);
-  });
 </script>
+
+<svelte:document
+  onvisibilitychange={() => {
+    if (document.hidden) playing = false;
+  }}
+/>
 
 <figure aria-labelledby="{uid}-title" aria-describedby="{uid}-caption" class="min-w-0">
   <div class="overflow-hidden bb-border bg-bg">
