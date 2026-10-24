@@ -6,6 +6,11 @@
   "imports": {
     "#lib/*": "./src/lib/*"
   },
+  "overrides": {
+    "@tailwindcss/typography": {
+      "postcss-selector-parser": "^7.1.7"
+    }
+  },
   "scripts": {
     "dev": "vite dev",
     "build": "vite build",
@@ -19,7 +24,8 @@
     "test:unit": "vitest",
     "test:e2e": "playwright install && playwright test",
     "storybook": "storybook dev -p 6006",
-    "build-storybook": "storybook build"
+    "build-storybook": "storybook build",
+    "render-video-thumbnail": "node scripts/render-video-thumbnail.ts"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
