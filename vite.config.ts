@@ -7,6 +7,18 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "@vitest/browser-playwright";
 
 export default defineConfig({
+  // Discover the deferred viewer before dev/Storybook starts serving pages,
+  // otherwise Vite's late optimization reloads an in-progress interaction.
+  optimizeDeps: {
+    include: [
+      "@threlte/core",
+      "@threlte/extras",
+      "three",
+      "three/addons/materials/LDrawConditionalLineMaterial.js",
+      "three/examples/jsm/loaders/HDRLoader.js",
+      "three/examples/jsm/loaders/LDrawLoader.js",
+    ],
+  },
   plugins: [
     tailwindcss(),
     sveltekit({
@@ -50,7 +62,10 @@ export default defineConfig({
             enabled: true,
             headless: true,
             // Full Chromium's headless mode supports hardware WebGL rendering.
-            provider: playwright({ launchOptions: { channel: "chromium" } }),
+            provider: playwright({
+              launchOptions: { channel: "chromium" },
+              contextOptions: { permissions: ["clipboard-read", "clipboard-write"] },
+            }),
             instances: [{ browser: "chromium" }],
           },
         },
