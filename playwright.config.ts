@@ -2,7 +2,12 @@ import { defineConfig, devices } from "@playwright/test";
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
 const browsers = [
-  { name: "chromium", device: "Desktop Chrome", permissions: ["clipboard-read"] },
+  {
+    name: "chromium",
+    device: "Desktop Chrome",
+    permissions: ["clipboard-read"],
+    channel: "chromium",
+  },
   { name: "safari", device: "Desktop Safari", permissions: ["clipboard-read"] },
   { name: "firefox", device: "Desktop Firefox", permissions: [] },
 ];
@@ -16,9 +21,9 @@ export default defineConfig({
   use: { baseURL: `http://localhost:${port}` },
   reporter: "html",
   projects: (["light", "dark"] as const).flatMap((colorScheme) =>
-    browsers.map(({ name, device, permissions }) => ({
+    browsers.map(({ name, device, ...options }) => ({
       name: `${name}-${colorScheme}`,
-      use: { ...devices[device], colorScheme, permissions },
+      use: { ...devices[device], colorScheme, ...options },
     })),
   ),
 });

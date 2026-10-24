@@ -5,7 +5,7 @@
   import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import ldr from "#lib/assets/models/test-examples/cruise-ship.ldr?url";
   import ldrPacked from "#lib/assets/models/test-examples/cruise-ship.ldr_Packed.mpd?url";
-  import { expect, screen, waitFor, within } from "storybook/test";
+  import { expect, screen, spyOn, waitFor, within } from "storybook/test";
   import { Tooltip as BitsTooltip } from "bits-ui";
   import { flushSync } from "svelte";
   import { createModel, type ModelView } from "#lib/models.js";
@@ -30,6 +30,16 @@
     ldr,
     ldrPacked,
     caption: "An autoplaying cruise ship",
+    stepsShown: 1,
+    maxSteps: 600,
+    status: "idle",
+  });
+
+  // Fragments keep separate cache entries without changing the file that is fetched.
+  let retryModel = $state<ModelView>({
+    ldr,
+    ldrPacked: `${ldrPacked}#retry`,
+    caption: "A cruise ship that fails to download once",
     stepsShown: 1,
     maxSteps: 600,
     status: "idle",
@@ -242,6 +252,53 @@
       });
       await expect(canvas.getByRole("button", { name: /pause/i })).toBeVisible();
     });
+  }}
+/>
+
+<Story
+  name="Expanded"
+  args={{ model: model, class: "size-64" }}
+  parameters={{ a11y: { context: "body" } }}
+  play={async ({ canvas, userEvent }) => {
+    const expand = canvas.getByRole("button", { name: "Expand view" });
+    await userEvent.click(expand);
+    const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
+    // Let the Expand tooltip close so Escape reaches the dialog.
+    await userEvent.hover(dialog);
+    await waitFor(() => expect(screen.queryByRole("tooltip", { hidden: true })).toBeNull(), {
+      timeout: 5_000,
+    });
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    await expect(expand).toHaveFocus();
+    // Leave the dialog open for the accessibility audit.
+    await userEvent.click(expand);
+    await screen.findByRole("dialog", { name: "Expanded model view" });
+  }}
+/>
+
+<Story
+  name="Retry After Failed Download"
+  args={{ model: retryModel, class: "size-64" }}
+  beforeEach={() => {
+    const realFetch = globalThis.fetch;
+    let failed = false;
+    const fetch = spyOn(globalThis, "fetch").mockImplementation((input, init) => {
+      if (failed || !String(input).endsWith("#retry")) return realFetch(input, init);
+      failed = true;
+      return Promise.resolve(new Response(null, { status: 503 }));
+    });
+    return () => fetch.mockRestore();
+  }}
+  play={async ({ canvas, canvasElement, userEvent }) => {
+    await expect(await canvas.findByRole("alert", {}, { timeout: 45_000 })).toHaveTextContent(
+      "Unable to load",
+    );
+    await expect(canvasElement.querySelector("figure")).toHaveAttribute("aria-busy", "false");
+    await userEvent.click(canvas.getByRole("button", { name: "Retry model" }));
+    await expect(
+      await canvas.findByRole("slider", { name: "Steps shown" }, { timeout: 45_000 }),
+    ).toBeVisible();
   }}
 />
 

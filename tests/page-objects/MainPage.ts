@@ -8,8 +8,6 @@ export class MainPage {
   readonly firstModel: Locator;
   readonly settings: Locator;
   readonly rotationCheckbox: Locator;
-  readonly citation: Locator;
-  readonly copyButton: Locator;
 
   constructor(page: Page) {
     this.page = page;
@@ -21,8 +19,6 @@ export class MainPage {
     this.rotationCheckbox = this.settings.getByRole("checkbox", {
       name: "Automatically rotate models",
     });
-    this.citation = this.main.getByTestId("citation");
-    this.copyButton = this.section("citation").getByRole("button", { name: /^(Copy|Copied!)$/ });
   }
 
   async goto(section?: string) {

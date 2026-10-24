@@ -8,6 +8,16 @@
     component: Header,
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },
+    beforeEach: () => {
+      const saved = localStorage.getItem("brickwright-theme");
+      const theme = document.documentElement.dataset.theme;
+      return () => {
+        if (saved === null) localStorage.removeItem("brickwright-theme");
+        else localStorage.setItem("brickwright-theme", saved);
+        if (theme === undefined) delete document.documentElement.dataset.theme;
+        else document.documentElement.dataset.theme = theme;
+      };
+    },
   });
 </script>
 
@@ -32,16 +42,30 @@
       const dialogElement = await screen.findByRole("dialog", { name: "Settings" });
       await waitFor(() => expect(dialogElement).toBeVisible());
       const dialog = within(dialogElement);
-      await expect(dialog.getByRole("combobox", { name: /^Theme / })).toHaveTextContent(
-        /Auto|Light|Dark/,
-      );
       await expect(dialog.getByText("Theme", { exact: true })).toBeVisible();
       await expect(
         dialog.getByRole("checkbox", { name: "Automatically rotate models" }),
       ).toBeVisible();
-      await userEvent.click(dialog.getByRole("button", { name: "Close settings" }));
+      const theme = dialog.getByRole("combobox", { name: /^Theme / });
+      await userEvent.click(theme);
+      await userEvent.click(await screen.findByRole("option", { name: "Dark" }));
+      await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
+      await expect(dialogElement).toBeVisible();
+      await expect(theme).toHaveFocus();
+      await expect(document.documentElement.dataset.theme).toBe("dark");
+      await userEvent.keyboard("{Escape}");
       await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
       await expect(trigger).toHaveFocus();
     });
+  }}
+/>
+
+<Story
+  name="Settings Open"
+  parameters={{ a11y: { context: "body" } }}
+  play={async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Settings" }));
+    // Leave the dialog open for the accessibility audit.
+    await waitFor(() => expect(screen.getByRole("dialog", { name: "Settings" })).toBeVisible());
   }}
 />
