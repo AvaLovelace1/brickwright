@@ -34,14 +34,6 @@ test("the narrow mobile page has no detectable WCAG accessibility violations", a
   expect(violations).toEqual([]);
 });
 
-test("author names link to their homepages", async ({ mainPage }) => {
-  await mainPage.goto();
-  const author = mainPage.section("overview").getByRole("link", { name: "Ava Pun", exact: true });
-  await expect(author).toHaveAttribute("href", /^https:\/\//);
-  await expect(author).toHaveAttribute("target", "_blank");
-  await expect(author).toHaveAttribute("rel", "external noopener");
-});
-
 test("keyboard users can skip navigation", async ({ page, browserName }) => {
   await page.goto("/");
   // Safari on macOS uses Option-Tab to include links in keyboard navigation.

@@ -8,16 +8,16 @@
   import Bullet from "#lib/components/Bullet.svelte";
 
   const AUTHORS = [
-    { name: "Ava\u00A0Pun", aff: 1 },
-    { name: "Kevin\u00A0Dai", aff: 1 },
-    { name: "Sally\u00A0Chen", aff: 1 },
-    { name: "Maxwell\u00A0Jones", aff: 1 },
-    { name: "Ruixuan\u00A0Liu", aff: 1 },
-    { name: "Kangle\u00A0Deng", aff: 2 },
-    { name: "Changliu\u00A0Liu", aff: 1 },
-    { name: "Maneesh\u00A0Agrawala", aff: 3 },
-    { name: "Deva\u00A0Ramanan", aff: 1 },
-    { name: "Jun\u2011Yan\u00A0Zhu", aff: 1 },
+    { name: "Ava\u00A0Pun", aff: 1, href: "https://avapun.com/" },
+    { name: "Kevin\u00A0Dai", aff: 1, href: "https://github.com/K1ngHungry" },
+    { name: "Sally\u00A0Chen", aff: 1, href: "https://sally-chen.github.io/" },
+    { name: "Maxwell\u00A0Jones", aff: 1, href: "https://maxwelljon.es/" },
+    { name: "Ruixuan\u00A0Liu", aff: 1, href: "https://waynekyrie.github.io/" },
+    { name: "Kangle\u00A0Deng", aff: 2, href: "https://dunbar12138.github.io/" },
+    { name: "Changliu\u00A0Liu", aff: 1, href: "https://www.ri.cmu.edu/ri-faculty/changliu-liu/" },
+    { name: "Maneesh\u00A0Agrawala", aff: 3, href: "https://graphics.stanford.edu/~maneesh/" },
+    { name: "Deva\u00A0Ramanan", aff: 1, href: "https://www.cs.cmu.edu/~deva/" },
+    { name: "Jun\u2011Yan\u00A0Zhu", aff: 1, href: "https://www.cs.cmu.edu/~junyanz/" },
   ];
   const AFFILIATIONS = [
     "Carnegie\u00A0Mellon\u00A0University",
@@ -41,8 +41,13 @@
         <p class="mb-1 font-medium sm:text-lg">
           {#each AUTHORS as a, i (a.name)}
             <span>
-              {a.name}&#8239;<sup class="font-normal">{a.aff}</sup>
-              {#if i < AUTHORS.length - 1}<Bullet class="mx-2 text-primary" />{/if}
+              <ExternalLink
+                href={a.href}
+                class="font-medium underline hover:text-primary dark:hover:text-primary-deep"
+              >
+                {a.name}
+              </ExternalLink>&#8239;<sup class="font-normal">{a.aff}</sup
+              >{#if i < AUTHORS.length - 1}<Bullet class="mx-2 text-primary" />{/if}
             </span>
           {/each}
         </p>
