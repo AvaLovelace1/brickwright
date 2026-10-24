@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, waitFor, within } from "storybook/test";
-  import { Tooltip } from "bits-ui";
+  import { waitForModel } from "#lib/story-helpers.js";
   import AgentComparison from "./AgentComparison.svelte";
 
   const { Story } = defineMeta({
@@ -14,11 +14,7 @@
 </script>
 
 {#snippet template()}
-  <Tooltip.Provider>
-    <div class="mx-auto max-w-7xl p-4 sm:p-8">
-      <AgentComparison />
-    </div>
-  </Tooltip.Provider>
+  <div class="mx-auto max-w-7xl p-4 sm:p-8"><AgentComparison /></div>
 {/snippet}
 
 <Story
@@ -29,21 +25,16 @@
     const model = within(viewer);
 
     await step("The baseline model shows its intersections", async () => {
-      viewer.scrollIntoView({ block: "center" });
-      await waitFor(() => expect(model.getByText("Intersections", { exact: true })).toBeVisible(), {
-        timeout: 45_000,
-      });
+      await waitForModel(viewer);
+      await waitFor(() => expect(model.getByText("Intersections", { exact: true })).toBeVisible());
     });
-
     await step("Models without intersections do not show the legend", async () => {
-      const validViewer = within(
-        canvas.getByRole("figure", { name: "GPT-6 Astra build with BrickWright" }),
-      );
-      await waitFor(
-        () => expect(validViewer.getByRole("button", { name: "Rewind" })).toBeVisible(),
-        { timeout: 45_000 },
-      );
-      await expect(validViewer.queryByText("Intersections", { exact: true })).toBeNull();
+      const validViewer = canvas.getByRole("figure", {
+        name: "GPT-6 Astra build with BrickWright",
+      });
+      await waitForModel(validViewer);
+      await expect(within(validViewer).getByRole("button", { name: "Rewind" })).toBeVisible();
+      await expect(within(validViewer).queryByText("Intersections", { exact: true })).toBeNull();
     });
     await step("The comparison control hides the baseline's intersections", async () => {
       await userEvent.click(intersections);

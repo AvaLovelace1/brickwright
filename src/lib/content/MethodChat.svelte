@@ -1,36 +1,36 @@
 <script lang="ts">
-  import { tick } from "svelte";
   import { prefersReducedMotion } from "svelte/motion";
   import { fly } from "svelte/transition";
-  import { stageStyles, systemMessage, type DemoStep } from "#lib/method.js";
+  import { stageColors, systemMessage, type DemoStep } from "#lib/method.js";
   import HardShadow from "#lib/components/HardShadow.svelte";
   import draft2Render from "#lib/assets/models/method/house-draft2.webp";
   import finalRender from "#lib/assets/models/method/house-final.webp";
 
-  const renders = { draft2: draft2Render, final: finalRender };
+  const renders = {
+    draft2: {
+      src: draft2Render,
+      alt: "BrickWright render of the twenty-part house with an off-center brown door",
+    },
+    final: {
+      src: finalRender,
+      alt: "BrickWright render of the twenty-part house with a centered brown door",
+    },
+  };
+  const speakers = {
+    System: { icon: "tdesign--setting", bubble: "bg-primary-bright text-ink" },
+    User: { icon: "tdesign--user", bubble: "bg-secondary-bright text-ink" },
+    Agent: { icon: "tdesign--robot", bubble: "bg-surface" },
+  };
 
   let { messages, playing }: { messages: readonly DemoStep[]; playing: boolean } = $props();
   let transcript: HTMLDivElement;
   let transcriptWidth = $state(0);
-  const speakerIcons = {
-    System: "tdesign--setting",
-    User: "tdesign--user",
-    Agent: "tdesign--robot",
-  };
 
   $effect(() => {
     // New messages, the thinking indicator, and line wrapping can change the scroll height.
     void [messages, playing, transcriptWidth];
-    let cancelled = false;
-    void tick().then(() => {
-      if (!cancelled) transcript?.scrollTo({ top: transcript.scrollHeight, behavior: "instant" });
-    });
-    return () => {
-      cancelled = true;
-    };
+    transcript.scrollTo({ top: transcript.scrollHeight, behavior: "instant" });
   });
-
-  const LOADING_SQUARE_CLASS = "size-2 rounded-(--bb-border-radius)";
 </script>
 
 {#snippet resultBadge(label: string, success: boolean)}
@@ -56,28 +56,21 @@
     {#each [systemMessage, ...messages] as message, messageIndex (messageIndex)}
       <li
         in:fly={{
-          y: prefersReducedMotion.current ? 0 : 8,
+          y: 8,
           opacity: 1,
           duration: message.role === "System" || prefersReducedMotion.current ? 0 : 200,
         }}
         class={message.role === "User" ? "ml-auto max-w-[90%]" : "mr-auto w-full max-w-[94%]"}
       >
         <div class="mb-1 flex items-center gap-2 text-sm">
-          <span aria-hidden="true" class={["iconify size-4 shrink-0", speakerIcons[message.role]]}
+          <span aria-hidden="true" class={["iconify size-4 shrink-0", speakers[message.role].icon]}
           ></span>
           <span class="font-semibold">{message.role}</span>
           {#if message.role === "System"}<span>({message.annotation})</span>{/if}
         </div>
         <HardShadow>
           <div
-            class={[
-              "bb-border px-4 py-3 text-sm leading-relaxed",
-              message.role === "System"
-                ? "bg-primary-bright text-ink"
-                : message.role === "User"
-                  ? "bg-secondary-bright text-ink"
-                  : "bg-surface",
-            ]}
+            class={["bb-border px-4 py-3 text-sm leading-relaxed", speakers[message.role].bubble]}
           >
             {#each message.text
               .trim()
@@ -100,7 +93,8 @@
           <div
             role="group"
             aria-label="Tool result"
-            class={["mt-3 ml-3 border-l-4 pl-3", stageStyles[message.stage].border]}
+            style:--stage-color={stageColors[message.stage]}
+            class="mt-3 ml-3 border-l-4 border-(--stage-color) pl-3"
           >
             {#if message.result.kind === "text"}
               <p class="text-xs leading-loose whitespace-pre-line">{message.result.text}</p>
@@ -119,12 +113,11 @@
                 {/each}
               </p>
             {:else if message.result.kind === "render"}
+              {@const render = renders[message.result.revision]}
               <figure class="mt-3 w-fit max-w-full bb-border bg-bg">
                 <img
-                  src={renders[message.result.revision]}
-                  alt={message.result.revision === "final"
-                    ? "BrickWright render of the twenty-part house with a centered brown door"
-                    : "BrickWright render of the twenty-part house with an off-center brown door"}
+                  src={render.src}
+                  alt={render.alt}
                   width="512"
                   height="512"
                   class="aspect-square w-48 object-contain"
@@ -139,19 +132,12 @@
   {#if playing}
     <div class="mx-auto mt-6 flex max-w-3xl items-center gap-2 py-2 text-sm font-semibold">
       <span class="flex items-center gap-1" aria-hidden="true">
-        <span class={[LOADING_SQUARE_CLASS, "bg-primary motion-safe:animate-bounce"]}></span>
-        <span
-          class={[
-            LOADING_SQUARE_CLASS,
-            "bg-secondary motion-safe:animate-[var(--animate-bounce)_150ms]",
-          ]}
-        ></span>
-        <span
-          class={[
-            LOADING_SQUARE_CLASS,
-            "bg-primary motion-safe:animate-[var(--animate-bounce)_300ms]",
-          ]}
-        ></span>
+        {#each ["bg-primary", "bg-secondary", "bg-primary"] as color, i (i)}
+          <span
+            style:animation-delay="{i * 150}ms"
+            class={["size-2 rounded-(--bb-border-radius) motion-safe:animate-bounce", color]}
+          ></span>
+        {/each}
       </span>
       <span>Agent is thinking…</span>
     </div>

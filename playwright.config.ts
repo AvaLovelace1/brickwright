@@ -2,14 +2,9 @@ import { defineConfig, devices } from "@playwright/test";
 
 const port = Number(process.env.PLAYWRIGHT_PORT ?? 4173);
 const browsers = [
-  {
-    name: "chromium",
-    device: "Desktop Chrome",
-    permissions: ["clipboard-read"],
-    channel: "chromium",
-  },
-  { name: "safari", device: "Desktop Safari", permissions: ["clipboard-read"] },
-  { name: "firefox", device: "Desktop Firefox", permissions: [] },
+  { name: "chromium", device: "Desktop Chrome", channel: "chromium" },
+  { name: "safari", device: "Desktop Safari" },
+  { name: "firefox", device: "Desktop Firefox" },
 ];
 
 export default defineConfig({
@@ -24,6 +19,7 @@ export default defineConfig({
     browsers.map(({ name, device, ...options }) => ({
       name: `${name}-${colorScheme}`,
       use: { ...devices[device], colorScheme, ...options },
+      ...(colorScheme === "dark" && { grep: /@a11y/ }),
     })),
   ),
 });

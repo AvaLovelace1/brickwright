@@ -1,32 +1,23 @@
 import { expect, test } from "vitest";
-import { isPhysicallyValid, loadDiagnostics, type ModelDiagnostics } from "./model-diagnostics";
+import { isPhysicallyValid, loadDiagnostics } from "./model-diagnostics";
 
-const diagnostics: ModelDiagnostics = {
-  version: 1,
-  coordinateSystem: "ldraw",
-  units: "LDU",
-  placements: [],
-  floating: ["floating"],
-  collisions: [["first", "second"]],
-  intersectionPositions: [],
-};
+const collisions: [string, string][] = [["first", "second"]];
+const floating = ["floating"];
 
 test.each([
   { condition: "separate grounded components", collisions: [], floating: [], valid: true },
-  { condition: "collisions", collisions: diagnostics.collisions, floating: [], valid: false },
-  { condition: "floating parts", collisions: [], floating: diagnostics.floating, valid: false },
-  {
-    condition: "collisions and floating parts",
-    collisions: diagnostics.collisions,
-    floating: diagnostics.floating,
-    valid: false,
-  },
+  { condition: "collisions", collisions, floating: [], valid: false },
+  { condition: "floating parts", collisions: [], floating, valid: false },
+  { condition: "collisions and floating parts", collisions, floating, valid: false },
 ])("physical validity with $condition", ({ collisions, floating, valid }) => {
-  const report = { collisions, floating, components: 2 };
-  expect(isPhysicallyValid(report)).toBe(valid);
+  expect(isPhysicallyValid({ collisions, floating })).toBe(valid);
 });
 
-test("loads valid diagnostic data", async () => {
-  const url = `data:application/json,${encodeURIComponent(JSON.stringify(diagnostics))}`;
-  await expect(loadDiagnostics(url)).resolves.toEqual(diagnostics);
+test("loads diagnostics with intersection positions as a typed array", async () => {
+  const data = { placements: [], floating, collisions, intersectionPositions: [1, 2, 3, 4, 5, 6] };
+  const url = `data:application/json,${encodeURIComponent(JSON.stringify(data))}`;
+  await expect(loadDiagnostics(url)).resolves.toEqual({
+    ...data,
+    intersectionPositions: new Float32Array(data.intersectionPositions),
+  });
 });

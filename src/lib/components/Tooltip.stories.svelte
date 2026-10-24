@@ -1,6 +1,5 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { Tooltip as BitsTooltip } from "bits-ui";
   import Tooltip from "./Tooltip.svelte";
   import type { Props as TooltipProps } from "./Tooltip.svelte";
   import { expect, waitFor, screen, waitForElementToBeRemoved } from "storybook/test";
@@ -18,12 +17,10 @@
 </script>
 
 {#snippet template(args: TooltipProps)}
-  <BitsTooltip.Provider>
-    <Tooltip {...args}>
-      {BUTTON_NAME}
-      {#snippet tooltipContent()}<p>{TOOLTIP_TEXT}</p>{/snippet}
-    </Tooltip>
-  </BitsTooltip.Provider>
+  <Tooltip {...args}>
+    {BUTTON_NAME}
+    {#snippet tooltipContent()}<p>{TOOLTIP_TEXT}</p>{/snippet}
+  </Tooltip>
 {/snippet}
 
 <Story

@@ -39,7 +39,7 @@
         <pre
           class="not-prose bb-card text-sm text-wrap"
           data-testid="citation">{CITATION_TEXT}</pre>
-        <div class="absolute -top-2 -right-3 left-auto z-10 sm:-right-4" data-testid="copy-button">
+        <div class="absolute -top-2 -right-3 left-auto z-10 sm:-right-4">
           <Button {...COPY_STATES[copyStatus]} action={handleCopy} />
         </div>
       </div>

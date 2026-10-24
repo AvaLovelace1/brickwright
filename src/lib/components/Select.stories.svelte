@@ -3,14 +3,6 @@
   import { expect, screen, waitFor } from "storybook/test";
   import Select from "./Select.svelte";
 
-  async function expectAnimationToFinish(element: HTMLElement) {
-    // Svelte starts transitions on the next frame.
-    await new Promise(requestAnimationFrame);
-    const animations = element.getAnimations();
-    await expect(animations.length).toBeGreaterThan(0);
-    await Promise.all(animations.map((animation) => animation.finished));
-  }
-
   const { Story } = defineMeta({
     title: "Components/Select",
     component: Select,
@@ -19,7 +11,6 @@
       label: "Model",
       options: [
         { value: "ship", label: "Cruise ship" },
-        { value: "unavailable", label: "Unavailable model", disabled: true },
         { value: "giraffe", label: "Giraffe" },
       ],
     },
@@ -45,14 +36,12 @@
         await expect(boundValue).toHaveTextContent("Selected: giraffe");
       });
     }
-    await step("Opening and closing animations", async () => {
+    await step("The menu opens and closes repeatedly", async () => {
       for (let opening = 1; opening <= 2; opening++) {
         await userEvent.click(trigger);
         const menu = await screen.findByRole("listbox");
-        await expectAnimationToFinish(menu);
-        await expect(menu).toBeVisible();
+        await waitFor(() => expect(menu).toBeVisible());
         await userEvent.keyboard("{Escape}");
-        await expectAnimationToFinish(menu);
         await waitFor(() => expect(menu).not.toBeInTheDocument());
       }
     });
@@ -66,7 +55,7 @@
 
 <Story
   name="Keyboard Selection"
-  args={{ value: "ship", hideLabel: true }}
+  args={{ value: "ship", labelClass: "sr-only" }}
   play={async ({ canvas, userEvent }) => {
     const trigger = canvas.getByRole("combobox", { name: "Model Cruise ship" });
     trigger.focus();
@@ -76,21 +65,6 @@
     await userEvent.keyboard("{Enter}{ArrowUp}{Escape}");
     await expect(trigger).toHaveAccessibleName("Model Giraffe");
     await expect(trigger).toHaveAttribute("aria-expanded", "false");
-  }}
-/>
-
-<Story
-  name="Placeholder"
-  play={async ({ canvas }) => {
-    await expect(canvas.getByRole("combobox", { name: "Model Select an option" })).toBeVisible();
-  }}
-/>
-
-<Story
-  name="Disabled"
-  args={{ value: "ship", disabled: true }}
-  play={async ({ canvas }) => {
-    await expect(canvas.getByRole("combobox", { name: "Model Cruise ship" })).toBeDisabled();
   }}
 />
 

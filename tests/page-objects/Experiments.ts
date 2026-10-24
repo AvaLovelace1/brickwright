@@ -1,4 +1,5 @@
 import type { Locator, Page } from "@playwright/test";
+import { ModelViewer } from "./ModelViewer";
 
 export class Experiments {
   readonly section: Locator;
@@ -7,7 +8,7 @@ export class Experiments {
   readonly previous: Locator;
   readonly next: Locator;
   readonly prompt: Locator;
-  readonly viewers: Locator;
+  readonly viewer: ModelViewer;
   readonly tableScroller: Locator;
 
   constructor(private readonly page: Page) {
@@ -16,10 +17,10 @@ export class Experiments {
     this.progress = this.carousel.getByRole("status", { name: "Prompt position" });
     this.previous = this.carousel.getByRole("button", { name: "Previous prompt" });
     this.next = this.carousel.getByRole("button", { name: "Next prompt" });
-    // Swiper owns slide order and active classes; keep that integration detail in one place.
+    // Swiper marks the active slide with a class.
     const activeSlide = this.carousel.locator(".swiper-slide-active");
     this.prompt = activeSlide.locator("p").first();
-    this.viewers = activeSlide.getByRole("figure");
+    this.viewer = new ModelViewer(activeSlide.getByRole("figure").first());
     this.tableScroller = this.section.getByRole("region", { name: "Quantitative results" });
   }
 

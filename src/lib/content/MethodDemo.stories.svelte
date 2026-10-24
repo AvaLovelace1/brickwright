@@ -1,9 +1,16 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { expect, screen, userEvent as storyUserEvent, waitFor, within } from "storybook/test";
+  import {
+    expect,
+    screen,
+    userEvent as storyUserEvent,
+    waitFor,
+    within,
+    type UserEventObject,
+  } from "storybook/test";
   import { install } from "@sinonjs/fake-timers";
   import { tick } from "svelte";
-  import { Tooltip } from "bits-ui";
+  import { waitForModel } from "#lib/story-helpers.js";
   import MethodDemo from "./MethodDemo.svelte";
 
   const { Story } = defineMeta({
@@ -33,12 +40,31 @@
       viewer: () => canvas.getByRole("figure", { name: "Current house build" }),
     };
   }
+
+  /** Runs `play` on fake timers; `advance` moves the clock forward and flushes Svelte updates. */
+  async function withFakeClock(
+    play: (clock: {
+      user: UserEventObject;
+      advance: (milliseconds: number) => Promise<void>;
+    }) => Promise<void>,
+  ) {
+    const clock = install({ toFake: ["setTimeout", "clearTimeout"] });
+    try {
+      await play({
+        user: storyUserEvent.setup({ advanceTimers: (delay) => clock.tickAsync(delay) }),
+        advance: async (milliseconds) => {
+          await clock.tickAsync(milliseconds);
+          await tick();
+        },
+      });
+    } finally {
+      clock.uninstall();
+    }
+  }
 </script>
 
 {#snippet template()}
-  <Tooltip.Provider>
-    <div class="mx-auto max-w-7xl p-4 sm:p-8"><MethodDemo /></div>
-  </Tooltip.Provider>
+  <div class="mx-auto max-w-7xl p-4 sm:p-8"><MethodDemo /></div>
 {/snippet}
 
 <Story
@@ -113,14 +139,8 @@
   name="Playback"
   play={async ({ canvasElement }) => {
     const demo = demoElements(canvasElement);
-    const clock = install({ toFake: ["setTimeout", "clearTimeout"] });
-    const user = storyUserEvent.setup({ advanceTimers: (delay) => clock.tickAsync(delay) });
-    const advance = async (milliseconds: number) => {
-      await clock.tickAsync(milliseconds);
-      await tick();
-    };
-    try {
-      await expect(demo.canvas.queryByText("Agent is thinking")).toBeNull();
+    await withFakeClock(async ({ user, advance }) => {
+      await expect(demo.canvas.queryByText("Agent is thinking…", { exact: true })).toBeNull();
       await user.click(demo.button("Play demo"));
       await expect(demo.canvas.getByText("Agent is thinking…", { exact: true })).toBeVisible();
       await advance(4500);
@@ -143,9 +163,7 @@
       await expect(demo.canvas.queryByText("Agent is thinking…", { exact: true })).toBeNull();
       await advance(9000);
       await expect(demo.progress).toHaveTextContent("Step 11/11");
-    } finally {
-      clock.uninstall();
-    }
+    });
   }}
 />
 
@@ -153,9 +171,7 @@
   name="Jump and Keyboard Navigation"
   play={async ({ canvasElement }) => {
     const demo = demoElements(canvasElement);
-    const clock = install({ toFake: ["setTimeout", "clearTimeout"] });
-    const user = storyUserEvent.setup({ advanceTimers: (delay) => clock.tickAsync(delay) });
-    try {
+    await withFakeClock(async ({ user, advance }) => {
       await expect(
         within(demo.canvas.getByRole("group", { name: "Demo steps" })).getAllByRole("button"),
       ).toHaveLength(11);
@@ -167,8 +183,7 @@
       await expect(demo.source()).toHaveTextContent("DOOR_X = 3");
       await expect(demo.messages()).toHaveLength(9);
       await expect(demo.button("Play demo")).toBeVisible();
-      await clock.tickAsync(9000);
-      await tick();
+      await advance(9000);
       await expect(demo.progress).toHaveTextContent("Step 8/11");
 
       demo.step(3).focus();
@@ -185,9 +200,7 @@
       await expect(demo.progress).toHaveTextContent("Step 1/11");
       await expect(demo.canvas.getByText("No build yet", { exact: true })).toBeVisible();
       await expect(demo.canvas.getByText("No file yet", { exact: true })).toBeVisible();
-    } finally {
-      clock.uninstall();
-    }
+    });
   }}
 />
 
@@ -196,10 +209,7 @@
   play={async ({ canvasElement, userEvent, step }) => {
     const demo = demoElements(canvasElement);
     await userEvent.click(demo.step(3));
-    demo.viewer().scrollIntoView({ block: "center" });
-    await waitFor(() => expect(demo.viewer()).toHaveAttribute("aria-busy", "false"), {
-      timeout: 45_000,
-    });
+    await waitForModel(demo.viewer());
     await waitFor(
       () => expect(within(demo.viewer()).getByRole("status")).toHaveTextContent("Invalid"),
       { timeout: 45_000 },
@@ -235,10 +245,7 @@
         [8, "final", "DOOR_X = 3", "Valid"],
       ] as const) {
         await userEvent.click(demo.step(number));
-        demo.viewer().scrollIntoView({ block: "center" });
-        await waitFor(() => expect(demo.viewer()).toHaveAttribute("aria-busy", "false"), {
-          timeout: 45_000,
-        });
+        await waitForModel(demo.viewer());
         await expect(
           within(demo.viewer()).getByRole("link", { name: "Download LDraw" }),
         ).toHaveAttribute("href", expect.stringContaining(`house-${revision}.ldr`));

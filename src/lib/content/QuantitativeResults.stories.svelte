@@ -2,7 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within } from "storybook/test";
   import QuantitativeResults from "./QuantitativeResults.svelte";
-  import { agents, results, metricColumns } from "#lib/experiment-results.js";
+  import { fullAgentName, results, metricColumns } from "#lib/experiment-results.js";
 
   const { Story } = defineMeta({
     title: "Content/QuantitativeResults",
@@ -10,6 +10,7 @@
     tags: ["autodocs"],
     render: template,
     parameters: { layout: "fullscreen" },
+    play: ({ canvasElement }) => checkTable(canvasElement),
   });
 
   async function checkTable(element: HTMLElement) {
@@ -22,14 +23,11 @@
     for (const [index, result] of results.entries()) {
       const row = within(rows[index]);
       const [agentCell, ...metricCells] = row.getAllByRole("cell");
-      const agentLabel = agents.find((agent) => agent.value === result.agent)?.label ?? "—";
-      await expect(agentCell.textContent).toBe(agentLabel);
+      await expect(agentCell.textContent).toBe(fullAgentName(result.agent));
       await expect(row.getByRole("rowheader").textContent).toBe(result.method);
       await expect(metricCells).toHaveLength(metricColumns.length);
-      for (const [columnIndex, column] of metricColumns.entries()) {
-        const metric = result.metrics[column.key];
-        await expect(metricCells[columnIndex].textContent?.trim()).toBe(metric.value);
-      }
+      for (const [columnIndex, column] of metricColumns.entries())
+        await expect(metricCells[columnIndex].textContent?.trim()).toBe(result.metrics[column.key]);
     }
   }
 </script>
@@ -38,13 +36,9 @@
   <div class="mx-auto max-w-7xl p-4 sm:p-8"><QuantitativeResults /></div>
 {/snippet}
 
-<Story name="Results" play={async ({ canvasElement }) => checkTable(canvasElement)} />
+<Story name="Results" />
 
-<Story
-  name="Dark"
-  globals={{ theme: "dark" }}
-  play={async ({ canvasElement }) => checkTable(canvasElement)}
-/>
+<Story name="Dark" globals={{ theme: "dark" }} />
 
 <Story
   name="Narrow Container"

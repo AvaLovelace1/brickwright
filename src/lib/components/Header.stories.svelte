@@ -8,16 +8,6 @@
     component: Header,
     tags: ["autodocs"],
     parameters: { layout: "fullscreen" },
-    beforeEach: () => {
-      const saved = localStorage.getItem("brickwright-theme");
-      const theme = document.documentElement.dataset.theme;
-      return () => {
-        if (saved === null) localStorage.removeItem("brickwright-theme");
-        else localStorage.setItem("brickwright-theme", saved);
-        if (theme === undefined) delete document.documentElement.dataset.theme;
-        else document.documentElement.dataset.theme = theme;
-      };
-    },
   });
 </script>
 

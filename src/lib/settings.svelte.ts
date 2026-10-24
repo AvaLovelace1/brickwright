@@ -1,6 +1,6 @@
 import { prefersReducedMotion } from "svelte/motion";
 
-export function readSetting(key: string): string | null {
+function readSetting(key: string): string | null {
   try {
     return localStorage.getItem(key);
   } catch {
@@ -18,9 +18,7 @@ export function saveSetting(key: string, value: string) {
 
 const ROTATION_KEY = "brickwright-rotation";
 const savedRotation = readSetting(ROTATION_KEY);
-let rotationPreference = $state(
-  savedRotation === "true" ? true : savedRotation === "false" ? false : undefined,
-);
+let rotationPreference = $state(savedRotation === null ? undefined : savedRotation === "true");
 
 export const viewerSettings = {
   get rotateModels() {

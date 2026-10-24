@@ -1,6 +1,6 @@
 import {
+  BufferAttribute,
   BufferGeometry,
-  Float32BufferAttribute,
   Group,
   LineBasicMaterial,
   LineSegments,
@@ -10,7 +10,6 @@ import {
   Mesh,
   Object3D,
 } from "three";
-
 import type { ModelDiagnostics, DiagnosticDisplay } from "./model-diagnostics";
 
 const partName = (name: string) =>
@@ -97,7 +96,7 @@ export function createDiagnosticView(model: Object3D, data: ModelDiagnostics) {
   });
 
   const geometry = new BufferGeometry();
-  geometry.setAttribute("position", new Float32BufferAttribute(data.intersectionPositions, 3));
+  geometry.setAttribute("position", new BufferAttribute(data.intersectionPositions, 3));
   const material = new LineBasicMaterial({
     color: 0xff0000,
     transparent: true,

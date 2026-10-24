@@ -1,4 +1,6 @@
-export interface DiagnosticPlacement {
+import { cached } from "./cached";
+
+interface DiagnosticPlacement {
   id: string;
   part: string;
   position: number[];
@@ -6,14 +8,17 @@ export interface DiagnosticPlacement {
 }
 
 export interface ModelDiagnostics {
-  version: number;
-  coordinateSystem: string;
-  units: string;
   placements: DiagnosticPlacement[];
   floating: string[];
   collisions: [string, string][];
-  intersectionPositions: number[];
+  intersectionPositions: Float32Array;
 }
+
+export const FEASIBILITY_CHECKS = [
+  "Real LEGO® parts",
+  "No collisions or floaters",
+  "Fully connected",
+];
 
 /** Separate grounded assemblies can be valid; connectivity is a separate property. */
 export function isPhysicallyValid(
@@ -22,24 +27,13 @@ export function isPhysicallyValid(
   return data.collisions.length === 0 && data.floating.length === 0;
 }
 
-const downloads = new Map<string, Promise<ModelDiagnostics>>();
-
-export function loadDiagnostics(url: string): Promise<ModelDiagnostics> {
-  let download = downloads.get(url);
-  if (!download) {
-    download = fetch(url)
-      .then(async (response) => {
-        if (!response.ok) throw new Error(`Unable to load diagnostics: ${response.status}`);
-        return (await response.json()) as ModelDiagnostics;
-      })
-      .catch((error) => {
-        downloads.delete(url);
-        throw error;
-      });
-    downloads.set(url, download);
-  }
-  return download;
-}
+export const loadDiagnostics = cached(async (url): Promise<ModelDiagnostics> => {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(`Unable to load diagnostics: ${response.status}`);
+  const data = await response.json();
+  // A typed array keeps Svelte from proxying every coordinate when the model enters $state.
+  return { ...data, intersectionPositions: new Float32Array(data.intersectionPositions) };
+});
 
 export interface DiagnosticDisplay {
   highlightCollisions: boolean;

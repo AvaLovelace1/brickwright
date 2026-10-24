@@ -36,7 +36,6 @@
         <ModelViewer
           bind:model={models[revision]}
           class="h-64"
-          showCaption={false}
           showBuildControls={false}
           {highlightCollisions}
           {showIntersections}

@@ -1,23 +1,15 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect } from "storybook/test";
-  import { Tooltip } from "bits-ui";
   import Overview from "./Overview.svelte";
 
   const { Story } = defineMeta({
     title: "Sections/Overview",
     component: Overview,
     tags: ["autodocs"],
-    render: template,
     parameters: { layout: "fullscreen" },
   });
 </script>
-
-{#snippet template()}
-  <Tooltip.Provider>
-    <Overview />
-  </Tooltip.Provider>
-{/snippet}
 
 <Story
   name="Default"

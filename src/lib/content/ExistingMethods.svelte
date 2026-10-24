@@ -1,82 +1,36 @@
 <script lang="ts">
   import { createModel } from "#lib/models.js";
-  import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
-  import ModelViewer from "#lib/components/ModelViewer.svelte";
-  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
+  import ModelComparison from "./ModelComparison.svelte";
 
-  const uid = $props.id();
-  const methodGroups = [
+  const method = (label: string, run: string) => ({
+    label,
+    ...createModel(`existing-methods/truck-${run}`, `${label} build`),
+  });
+  let groups = $state([
     {
       name: "Specialized text-to-brick models",
-      methods: [
-        { name: "BrickGPT", run: "brickgpt" },
-        { name: "BrickNet", run: "bricknet" },
-      ],
+      models: [method("BrickGPT", "brickgpt"), method("BrickNet", "bricknet")],
     },
     {
       name: "Agentic methods",
-      methods: [
-        { name: "Codex (GPT-6 Astra)", run: "codex-astra-docs" },
-        { name: "Codex (GPT-6.1 Sol)", run: "codex-sol-docs" },
+      models: [
+        method("Codex (GPT-6 Astra)", "codex-astra-docs"),
+        method("Codex (GPT-6.1 Sol)", "codex-sol-docs"),
       ],
     },
-  ] as const;
-
-  let groups = $state(
-    methodGroups.map((group) => ({
-      name: group.name,
-      models: group.methods.map(({ run, name }) => ({
-        name,
-        ...createModel(`existing-methods/truck-${run}`, `${name} build`),
-      })),
-    })),
-  );
-  const models = $derived(groups.flatMap((group) => group.models));
-  let showIntersections = $state(true);
-  let highlightCollisions = $state(false);
+  ]);
 </script>
 
-<figure aria-labelledby="{uid}-title" aria-describedby="{uid}-caption" class="relative">
-  <div class="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
-    <h3 id="{uid}-title" class="font-display text-2xl font-extrabold">Existing methods</h3>
-    <ModelDiagnosticControls bind:showIntersections bind:highlightCollisions />
-  </div>
-  <p class="mb-6 text-sm text-pretty">
-    <span class="font-bold">Prompt:</span>
-    <span class="italic">
-      “This is a blue and gray LEGO flatbed truck featuring a detailed cab, four wheels with
-      fenders, and a large gray cylindrical object mounted on its black studded cargo bed.”
-    </span>
-  </p>
-  <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-    {#each groups as group (group.name)}
-      <div class="min-w-0">
-        <h4 class="mb-3 border-b border-line pb-1 text-center font-display text-xl font-extrabold">
-          {group.name}
-        </h4>
-        <div class="grid grid-cols-2 gap-3">
-          {#each group.models as model, i (model.name)}
-            <div class="min-w-0">
-              <p class="mb-1 text-center font-semibold">{model.name}</p>
-              <ModelViewer
-                bind:model={group.models[i]}
-                class="aspect-square"
-                showCaption={false}
-                {highlightCollisions}
-                {showIntersections}
-              />
-            </div>
-          {/each}
-        </div>
-      </div>
-    {/each}
-  </div>
-  <SharedCanvas {models} {highlightCollisions} {showIntersections} />
-  <figcaption id="{uid}-caption" class="mt-6 text-sm text-pretty">
+<ModelComparison
+  title="Existing methods"
+  prompt="This is a blue and gray LEGO flatbed truck featuring a detailed cab, four wheels with fenders, and a large gray cylindrical object mounted on its black studded cargo bed."
+  bind:groups
+>
+  {#snippet caption()}
     <strong>
       Agentic methods better capture the request, but still produce physically infeasible builds.
     </strong>
     Both Codex outputs contain colliding bricks. Red lines indicate brick intersections. Drag a model
     to rotate it.
-  </figcaption>
-</figure>
+  {/snippet}
+</ModelComparison>

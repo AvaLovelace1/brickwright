@@ -26,12 +26,10 @@
     // Recheck after content changes size, even when the visitor hasn't scrolled
     const observer = new ResizeObserver(() => spy.detect());
     for (const section of main.querySelectorAll("section[id]")) observer.observe(section);
-    return {
-      destroy() {
-        document.removeEventListener("gumshoeactivate", activate);
-        observer.disconnect();
-        spy.destroy();
-      },
+    return () => {
+      document.removeEventListener("gumshoeactivate", activate);
+      observer.disconnect();
+      spy.destroy();
     };
   }
 </script>
@@ -65,7 +63,7 @@
     <main
       id="main-content"
       tabindex="-1"
-      use:trackSections
+      {@attach trackSections}
       class="mt-15 min-w-0 flex-1 scroll-mt-32 md:mt-0 md:scroll-mt-17 [&>section]:scroll-mt-32 md:[&>section]:scroll-mt-17"
     >
       {@render children()}

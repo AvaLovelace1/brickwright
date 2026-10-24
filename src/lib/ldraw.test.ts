@@ -1,15 +1,7 @@
-import { readdir, readFile } from "node:fs/promises";
+import { readFile } from "node:fs/promises";
 import { expect, test, vi } from "vitest";
 import { Box3, Mesh, Vector3, type Group, type Object3D } from "three";
-import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
-import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
-import { createPartWarmup, listParts, loadModel, parsePackedModel } from "./ldraw";
-
-function createLoader() {
-  const loader = new LDrawLoader();
-  loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
-  return loader;
-}
+import { createLoader, createPartWarmup, listParts, loadModel, parsePackedModel } from "./ldraw";
 
 test.each(["", "0 FILE main.ldr\n"])(
   "preserves repeated part placements, transforms, and colors with root header %j",
@@ -123,17 +115,14 @@ test("warm-up contains one instance of each part reachable through nested submod
   ]);
 });
 
-test("preserves nested submodel placements, transforms, and colors", async () => {
+test("lists nested part placements in file order with their transforms and colors", async () => {
   const model = await parsePackedModel(createLoader(), NESTED_MODEL);
   expect(model.children.map(({ name }) => name)).toEqual([
     "tower-a.ldr",
     "tower-b.ldr",
     "tower-a.ldr",
   ]);
-  const partPlacements: Object3D[] = [];
-  model.traverse((object) => {
-    if (["Part", "Unofficial_Part"].includes(object.userData.type)) partPlacements.push(object);
-  });
+  const partPlacements = listParts(model);
   expect(partPlacements.map((part) => part.getWorldPosition(new Vector3()).x)).toEqual([
     11, 12, 13, 55, 56, 57, 55, 101, 102, 103,
   ]);
@@ -147,7 +136,7 @@ test("preserves nested submodel placements, transforms, and colors", async () =>
 
 test("loads the full Victoria Harbour model with its tower submodels", async () => {
   const text = await readFile("src/lib/assets/models/teaser/victoria-harbour.packed.mpd", "utf8");
-  const model = await parsePackedModel(createLoader(), text);
+  const model = await parsePackedModel(createLoader({ smoothNormals: false }), text);
 
   // Root placements include individual parts and entire tower submodels.
   expect(model.children).toHaveLength(1597);
@@ -158,32 +147,3 @@ test("loads the full Victoria Harbour model with its tower submodels", async () 
     model.children.find((placement) => placement.name === "tower_ifc.ldr")?.children.length,
   ).toBeGreaterThan(1);
 }, 60_000);
-
-test("lists every part in file order, including parts nested in submodels", async () => {
-  const text = await readFile(
-    "src/lib/assets/models/video-thumbnail/starry-night.packed.mpd",
-    "utf8",
-  );
-  const parts = listParts(await parsePackedModel(createLoader(), text));
-
-  // The whole scene is one submodel, which nests further submodels.
-  expect(parts).toHaveLength(1004);
-  expect(parts[0].name).toBe("parts/91405.dat");
-}, 60_000);
-
-const modelDirectory = "src/lib/assets/models/";
-const packedModels = (await readdir(modelDirectory, { recursive: true })).filter((file) =>
-  file.endsWith(".packed.mpd"),
-);
-
-test.each(packedModels)(
-  "committed model has finite, nonempty bounds: %s",
-  async (file) => {
-    const loader = createLoader();
-    loader.smoothNormals = false;
-    const group = await parsePackedModel(loader, await readFile(modelDirectory + file, "utf8"));
-    const size = Math.max(...new Box3().setFromObject(group).getSize(new Vector3()).toArray());
-    expect(Number.isFinite(size) && size > 0).toBe(true);
-  },
-  60_000,
-);

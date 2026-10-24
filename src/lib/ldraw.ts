@@ -1,37 +1,38 @@
 import { Box3, Vector3, type Group, type Object3D } from "three";
-import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
+import { LDrawLoader } from "three/addons/loaders/LDrawLoader.js";
 import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
+import { cached } from "./cached";
 
-const loader = new LDrawLoader();
-loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
-const models = new Map<string, Promise<Group>>();
+export function createLoader({ smoothNormals = true } = {}) {
+  const loader = new LDrawLoader();
+  loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
+  loader.smoothNormals = smoothNormals;
+  return loader;
+}
+
+const loader = createLoader();
 let queue: Promise<unknown> = Promise.resolve();
 const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve));
 
+const loadCenteredModel = cached((url) => {
+  const model = queue.then(async () => {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error(`Unable to load model: ${response.status} ${url}`);
+    const group = await parsePackedModel(loader, await response.text());
+    group.rotation.x = Math.PI;
+    const box = new Box3().setFromObject(group);
+    const scale = 2 / Math.max(...box.getSize(new Vector3()).toArray());
+    group.scale.setScalar(scale);
+    group.position.copy(box.getCenter(new Vector3())).multiplyScalar(-scale);
+    return group;
+  });
+  // Serialize parsing and let the browser handle input between models.
+  queue = model.then(yieldToBrowser, yieldToBrowser);
+  return model;
+});
+
 export async function loadModel(url: string): Promise<Group> {
-  let model = models.get(url);
-  if (!model) {
-    model = queue
-      .then(async () => {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`Unable to load model: ${response.status} ${url}`);
-        const group = await parsePackedModel(loader, await response.text());
-        group.rotation.x = Math.PI;
-        const box = new Box3().setFromObject(group);
-        const scale = 2 / Math.max(...box.getSize(new Vector3()).toArray());
-        group.scale.setScalar(scale);
-        group.position.copy(box.getCenter(new Vector3())).multiplyScalar(-scale);
-        return group;
-      })
-      .catch((error) => {
-        models.delete(url);
-        throw error;
-      });
-    models.set(url, model);
-    // Serialize parsing and let the browser handle input between models.
-    queue = model.then(yieldToBrowser, yieldToBrowser);
-  }
-  return (await model).clone();
+  return (await loadCenteredModel(url)).clone();
 }
 
 function referencedFilenames(text: string): string[] {

@@ -2,24 +2,24 @@ import { createHighlighterCoreSync } from "@shikijs/core";
 import { createJavaScriptRegexEngine } from "@shikijs/engine-javascript";
 import python from "@shikijs/langs/python";
 
-const syntax = {
-  plain: { color: "#1B2A34", className: "text-text" },
-  keyword: { color: "#A65301", className: "font-semibold text-(--python-keyword)" },
-  string: { color: "#206873", className: "text-(--python-string)" },
-  constant: { color: "#873461", className: "text-(--python-constant)" },
-  comment: { color: "#2D5F2C", className: "italic text-(--python-comment)" },
-  function: { color: "#003373", className: "text-(--python-function)" },
+// Shiki reports each token's theme color, so every kind gets a distinct placeholder color to read back.
+const colors = {
+  plain: "#000000",
+  keyword: "#000001",
+  string: "#000002",
+  constant: "#000003",
+  comment: "#000004",
+  function: "#000005",
 } as const;
 
-export type PythonTokenKind = keyof typeof syntax;
+export type PythonTokenKind = keyof typeof colors;
 export interface PythonToken {
   content: string;
   kind: PythonTokenKind;
-  className: string;
 }
 
 const kinds = new Map<string, PythonTokenKind>(
-  Object.entries(syntax).map(([kind, style]) => [style.color, kind as PythonTokenKind]),
+  Object.entries(colors).map(([kind, color]) => [color, kind as PythonTokenKind]),
 );
 
 const highlighter = createHighlighterCoreSync({
@@ -29,11 +29,11 @@ const highlighter = createHighlighterCoreSync({
     {
       name: "brickbrand-python",
       type: "light",
-      colors: { "editor.foreground": syntax.plain.color, "editor.background": "#F9F7F1" },
+      colors: { "editor.foreground": colors.plain },
       tokenColors: [
         {
           scope: ["keyword", "storage.type", "storage.modifier"],
-          settings: { foreground: syntax.keyword.color },
+          settings: { foreground: colors.keyword },
         },
         {
           scope: [
@@ -43,20 +43,20 @@ const highlighter = createHighlighterCoreSync({
             "support.type",
             "support.class",
           ],
-          settings: { foreground: syntax.function.color },
+          settings: { foreground: colors.function },
         },
-        { scope: ["punctuation"], settings: { foreground: syntax.plain.color } },
+        { scope: ["punctuation"], settings: { foreground: colors.plain } },
         {
           scope: ["string", "punctuation.definition.string"],
-          settings: { foreground: syntax.string.color },
+          settings: { foreground: colors.string },
         },
         {
           scope: ["constant.numeric", "constant.language", "constant.character"],
-          settings: { foreground: syntax.constant.color },
+          settings: { foreground: colors.constant },
         },
         {
           scope: ["comment", "punctuation.definition.comment"],
-          settings: { foreground: syntax.comment.color },
+          settings: { foreground: colors.comment },
         },
       ],
     },
@@ -72,11 +72,10 @@ export function highlightPython(code: string): PythonToken[] {
   });
   return tokens.flatMap((line, index) => {
     const result = line.map((token): PythonToken => {
-      const kind = kinds.get(token.color?.toUpperCase() ?? "") ?? "plain";
-      return { content: token.content, kind, className: syntax[kind].className };
+      const kind = kinds.get(token.color ?? "") ?? "plain";
+      return { content: token.content, kind };
     });
-    if (newlines[index])
-      result.push({ content: newlines[index], kind: "plain", className: syntax.plain.className });
+    if (newlines[index]) result.push({ content: newlines[index], kind: "plain" });
     return result;
   });
 }

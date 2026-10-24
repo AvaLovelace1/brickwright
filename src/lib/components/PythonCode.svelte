@@ -1,8 +1,7 @@
 <script lang="ts">
-  import type { ClassValue } from "svelte/elements";
-  import { highlightPython } from "#lib/python-highlighting.js";
+  import { highlightPython, type PythonTokenKind } from "#lib/python-highlighting.js";
 
-  let { code, class: className = "" }: { code: string; class?: ClassValue } = $props();
+  let { code }: { code: string } = $props();
   const tokens = $derived(highlightPython(code));
 
   const paletteClasses = [
@@ -12,10 +11,19 @@
     "[--python-comment:var(--color-success-deep)] dark:[--python-comment:var(--color-success-bright)]",
     "[--python-function:var(--color-info-deep)] dark:[--python-function:var(--color-secondary-bright)]",
   ];
+  const tokenClasses: Record<PythonTokenKind, string> = {
+    plain: "text-text",
+    keyword: "font-semibold text-(--python-keyword)",
+    string: "text-(--python-string)",
+    constant: "text-(--python-constant)",
+    comment: "italic text-(--python-comment)",
+    function: "text-(--python-function)",
+  };
 </script>
 
-<code data-language="python" class={["block font-mono", paletteClasses, className]}
-  >{#each tokens as token, index (index)}<span class={token.className} data-token={token.kind}
-      >{token.content}</span
+<code class={["block font-mono", paletteClasses]}
+  >{#each tokens as token, index (index)}<span
+      class={tokenClasses[token.kind]}
+      data-token={token.kind}>{token.content}</span
     >{/each}</code
 >

@@ -11,15 +11,15 @@
     showModels: boolean;
   }
 
-  let { agent, prompt, showModels, showIntersections, highlightCollisions }: Props = $props();
+  let { agent, prompt, showModels, ...display }: Props = $props();
   const uid = $props.id();
+  const methodLabel = (side: number) => (side === 0 ? agent.baseline : "BrickWright");
 
-  // The parent remounts when the agent or showModels changes, resetting the viewer state.
   let models = $state(
-    (["baseline", "brickwright"] as const).map((method) =>
+    (["baseline", "brickwright"] as const).map((method, side) =>
       createModel(
         `results/${resultModelName(prompt, agent, method)}`,
-        `${prompt.title} — ${agent.label} — ${method === "baseline" ? agent.baseline : "BrickWright"}`,
+        `${prompt.title} — ${agent.label} — ${methodLabel(side)}`,
       ),
     ),
   );
@@ -38,22 +38,16 @@
         id="{uid}-title-{side}"
         class="self-end text-center font-body leading-snug font-semibold text-pretty"
       >
-        {side === 0 ? agent.baseline : "BrickWright"} ({agent.label})
+        {methodLabel(side)} ({agent.label})
       </h4>
       {#if showModels}
-        <ModelViewer
-          bind:model={models[side]}
-          class="aspect-square min-w-0"
-          showCaption={false}
-          {showIntersections}
-          {highlightCollisions}
-        />
+        <ModelViewer bind:model={models[side]} class="aspect-square min-w-0" {...display} />
       {:else}
         <div class="aspect-square bg-surface" aria-hidden="true"></div>
       {/if}
     </div>
   {/each}
   {#if showModels}
-    <SharedCanvas {models} {showIntersections} {highlightCollisions} />
+    <SharedCanvas {models} {...display} />
   {/if}
 </div>

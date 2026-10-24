@@ -2,14 +2,7 @@
   import type { ModelView } from "#lib/models.js";
   import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
 
-  interface Props extends Partial<DiagnosticDisplay> {
-    models: ModelView[];
-  }
-  let {
-    models = $bindable(),
-    highlightCollisions = false,
-    showIntersections = false,
-  }: Props = $props();
+  let { models, ...display }: { models: ModelView[] } & Partial<DiagnosticDisplay> = $props();
 </script>
 
 {#if models.some((model) => model.status !== "idle")}
@@ -23,7 +16,7 @@
       }}
     >
       {#await import("./ModelCanvas.svelte") then { default: ModelCanvas }}
-        <ModelCanvas {models} {highlightCollisions} {showIntersections} />
+        <ModelCanvas {models} {...display} />
       {/await}
       {#snippet failed()}<span class="sr-only">3D viewer unavailable</span>{/snippet}
     </svelte:boundary>

@@ -2,32 +2,23 @@ import { fade as svelteFade, fly as svelteFly, scale as svelteScale } from "svel
 import { prefersReducedMotion } from "svelte/motion";
 import { cubicOut } from "svelte/easing";
 
-const durations = { short: 150, medium: 300, long: 450 };
+const durations = { short: 150, medium: 300 };
 type Duration = keyof typeof durations;
 
+const timing = (duration: Duration) => ({ duration: durations[duration], easing: cubicOut });
+
 export function fade(node: Element, { duration }: { duration: Duration }) {
-  return svelteFade(node, {
-    duration: durations[duration],
-    easing: cubicOut,
-  });
+  return svelteFade(node, timing(duration));
 }
 
 export function scale(node: Element, { duration }: { duration: Duration }) {
-  return svelteScale(node, {
-    start: prefersReducedMotion.current ? 1 : 0.8,
-    duration: durations[duration],
-    easing: cubicOut,
-  });
+  return svelteScale(node, { start: prefersReducedMotion.current ? 1 : 0.8, ...timing(duration) });
 }
 
 export function fly(
   node: Element,
   { x = 0, y = 0, duration }: { x?: number; y?: number; duration: Duration },
 ) {
-  return svelteFly(node, {
-    x: prefersReducedMotion.current ? 0 : x,
-    y: prefersReducedMotion.current ? 0 : y,
-    duration: durations[duration],
-    easing: cubicOut,
-  });
+  const still = prefersReducedMotion.current;
+  return svelteFly(node, { x: still ? 0 : x, y: still ? 0 : y, ...timing(duration) });
 }

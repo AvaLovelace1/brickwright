@@ -1,6 +1,6 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import HardShadow from "#lib/components/HardShadow.svelte";
+  import HardShadow from "./HardShadow.svelte";
 
   interface NavItem {
     label: string;
@@ -11,8 +11,6 @@
     current: string;
   }
   const { items, current }: Props = $props();
-
-  const formatNum = (num: number) => num.toLocaleString("en-US", { minimumIntegerDigits: 2 });
 </script>
 
 <nav class="h-full bg-surface px-4 py-3 sm:px-8 md:px-4">
@@ -23,14 +21,15 @@
         <HardShadow bgClass={isCurrent ? "bg-primary-deep" : "bg-transparent"}>
           <a
             class={[
-              "flex cursor-pointer items-center gap-1 bb-border px-3 py-2",
-              isCurrent && "bg-primary text-ink",
-              !isCurrent && "border-transparent hover:border-line hover:bg-bg",
+              "flex items-center gap-1 bb-border px-3 py-2",
+              isCurrent
+                ? "bg-primary text-ink"
+                : "border-transparent hover:border-line hover:bg-bg",
             ]}
             href={resolve(`/${href}`)}
             aria-current={isCurrent ? "location" : undefined}
           >
-            <span class="font-mono text-xs">{formatNum(i + 1)}</span>
+            <span class="font-mono text-xs">{String(i + 1).padStart(2, "0")}</span>
             <span class="sr-only font-semibold md:not-sr-only">{label}</span>
           </a>
         </HardShadow>

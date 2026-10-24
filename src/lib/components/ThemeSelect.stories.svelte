@@ -7,16 +7,6 @@
     title: "Components/ThemeSelect",
     component: ThemeSelect,
     tags: ["autodocs"],
-    beforeEach: () => {
-      const saved = localStorage.getItem("brickwright-theme");
-      const theme = document.documentElement.dataset.theme;
-      return () => {
-        if (saved === null) localStorage.removeItem("brickwright-theme");
-        else localStorage.setItem("brickwright-theme", saved);
-        if (theme === undefined) delete document.documentElement.dataset.theme;
-        else document.documentElement.dataset.theme = theme;
-      };
-    },
   });
 </script>
 

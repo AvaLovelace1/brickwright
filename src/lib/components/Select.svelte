@@ -4,63 +4,43 @@
   import { fly } from "#lib/motion.svelte.js";
   import type { ClassValue } from "svelte/elements";
 
-  export interface SelectOption {
+  interface Props {
+    label: string;
+    options: readonly { value: string; label: string; icon?: string }[];
     value: string;
-    label: string;
-    disabled?: boolean;
-    icon?: string;
-  }
-
-  export interface Props {
-    label: string;
-    options: readonly SelectOption[];
-    value?: string;
-    hideLabel?: boolean;
-    /** Hide the selected label in the trigger; menu options still show their labels. */
-    iconOnly?: boolean;
     labelClass?: ClassValue;
-    placeholder?: string;
-    disabled?: boolean;
     class?: ClassValue;
   }
 
   let {
     label,
     options,
-    value = $bindable(""),
-    hideLabel = false,
-    iconOnly = false,
+    value = $bindable(),
     labelClass = "mb-1 text-sm",
-    placeholder = "Select an option",
-    disabled = false,
     class: className = "",
   }: Props = $props();
 
   let open = $state(false);
   const uid = $props.id();
   const selectedOption = $derived(options.find((option) => option.value === value));
-  const selectedLabel = $derived(selectedOption?.label ?? placeholder);
 </script>
 
-<div id="{uid}-label" class={[labelClass, hideLabel && "sr-only"]}>{label}</div>
-<BitsSelect.Root type="single" bind:value bind:open allowDeselect={false} {disabled}>
+<div id="{uid}-label" class={labelClass}>{label}</div>
+<BitsSelect.Root type="single" bind:value bind:open allowDeselect={false}>
   <BitsSelect.Trigger
-    title={iconOnly ? `${label}: ${selectedLabel}` : undefined}
     aria-labelledby="{uid}-label {uid}-value"
     class={[
-      "flex cursor-pointer items-center justify-between gap-3 px-3 py-2",
-      iconOnly ? "w-auto shrink-0" : "w-full",
+      "flex w-full cursor-pointer items-center justify-between gap-3 px-3 py-2",
       "bb-border bg-surface",
       "text-left text-text",
       "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-line",
-      "disabled:cursor-not-allowed disabled:opacity-50",
       className,
     ]}
   >
     {#if selectedOption?.icon}
       <span class="iconify {selectedOption.icon} shrink-0" aria-hidden="true"></span>
     {/if}
-    <span id="{uid}-value" class="flex-1" class:sr-only={iconOnly}>{selectedLabel}</span>
+    <span id="{uid}-value" class="flex-1">{selectedOption?.label}</span>
     <span
       class={["iconify shrink-0", open ? "tdesign--chevron-up" : "tdesign--chevron-down"]}
       aria-hidden="true"
@@ -70,8 +50,7 @@
     <BitsSelect.Content
       sideOffset={4}
       forceMount
-      class={["z-100 text-text", iconOnly ? "w-max min-w-32" : "w-(--bits-select-anchor-width)"]}
-      align="end"
+      class="z-100 w-(--bits-select-anchor-width) text-text"
     >
       {#snippet child({ props, wrapperProps, open })}
         {#if open}
@@ -88,11 +67,9 @@
                     <BitsSelect.Item
                       value={option.value}
                       label={option.label}
-                      disabled={option.disabled}
                       class={[
                         "flex cursor-pointer items-center justify-between gap-3 px-3 py-2",
                         "rounded-(--bb-border-radius)",
-                        "data-disabled:cursor-not-allowed data-disabled:opacity-50",
                         "data-highlighted:bg-bg data-highlighted:outline-2",
                         "data-highlighted:-outline-offset-2 data-highlighted:outline-line",
                       ]}

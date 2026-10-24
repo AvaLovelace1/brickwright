@@ -1,6 +1,5 @@
 <script lang="ts">
-  import { tick } from "svelte";
-  import { stageStyles, type Flow, type Stage } from "#lib/method.js";
+  import { stageColors, type Flow, type Stage } from "#lib/method.js";
   import PythonCode from "#lib/components/PythonCode.svelte";
   import Bullet from "#lib/components/Bullet.svelte";
 
@@ -121,24 +120,12 @@
   ]);
 
   $effect(() => {
-    // Keep the highlighted node in the diagram's own viewport on small screens.
-    // Scrolling this container never moves the surrounding page or chat.
-    const active = stage;
-    const width = viewportWidth;
-    const element = viewport;
-    let cancelled = false;
-    void tick().then(() => {
-      if (cancelled || !element) return;
-      const node = element.querySelector<HTMLElement>(`[data-stage="${active}"]`);
-      if (node)
-        element.scrollTo({
-          left: node.offsetLeft - Math.max(0, (width - node.offsetWidth) / 2),
-          behavior: "instant",
-        });
+    // Center the current node on small screens by scrolling only the diagram, never the page.
+    const { left, width } = layout[stage];
+    viewport.scrollTo({
+      left: left - Math.max(0, (viewportWidth - width) / 2),
+      behavior: "instant",
     });
-    return () => {
-      cancelled = true;
-    };
   });
 </script>
 
@@ -162,37 +149,29 @@
       aria-hidden="true"
     >
       <defs>
-        <marker
-          id="{uid}-arrow"
-          viewBox="0 0 10 10"
-          refX="9"
-          refY="5"
-          markerWidth="5"
-          markerHeight="5"
-          orient="auto-start-reverse"
-        >
-          <path d="M0 0 L10 5 L0 10 z" class="fill-line" />
-        </marker>
-        <marker
-          id="{uid}-active-arrow"
-          viewBox="0 0 10 10"
-          refX="9"
-          refY="5"
-          markerWidth="5"
-          markerHeight="5"
-          orient="auto-start-reverse"
-        >
-          <path d="M0 0 L10 5 L0 10 z" class="fill-link" />
-        </marker>
+        {#each [["arrow", "fill-line"], ["active-arrow", "fill-link"]] as [id, fill] (id)}
+          <marker
+            id="{uid}-{id}"
+            viewBox="0 0 10 10"
+            refX="9"
+            refY="5"
+            markerWidth="5"
+            markerHeight="5"
+            orient="auto-start-reverse"
+          >
+            <path d="M0 0 L10 5 L0 10 z" class={fill} />
+          </marker>
+        {/each}
       </defs>
       {#each orderedEdges as edge (edge.id)}
+        {@const active = flow === edge.id}
         <path
           d={edge.path}
           fill="none"
           stroke="currentColor"
-          stroke-width={flow === edge.id ? 3 : 1.5}
-          marker-end="url(#{uid}-{flow === edge.id ? 'active-arrow' : 'arrow'})"
-          class={flow === edge.id ? "text-link" : "text-line"}
+          stroke-width={active ? 3 : 1.5}
+          marker-end="url(#{uid}-{active ? 'active-arrow' : 'arrow'})"
+          class={active ? "text-link" : "text-line"}
         />
       {/each}
       <g class="fill-success-deep font-body text-xs font-semibold dark:fill-success-bright">
@@ -206,22 +185,22 @@
     </svg>
     <ol aria-label="Flowchart stages">
       {#each nodes as node (node.id)}
-        {@const colors = stageStyles[node.id]}
+        {@const current = stage === node.id}
         <li
           bind:offsetHeight={heights[node.id]}
-          data-stage={node.id}
           style:--node-left={`${layout[node.id].left}px`}
           style:--node-width={`${layout[node.id].width}px`}
           style:--node-top={`${node.id === "explore" ? EXPLORE_Y : ROW_Y}px`}
-          aria-current={stage === node.id ? "step" : undefined}
+          style:--stage-color={stageColors[node.id]}
+          aria-current={current ? "step" : undefined}
           class={[
             "absolute top-(--node-top) left-(--node-left) w-(--node-width) rounded-(--bb-border-radius)",
-            "border-2 border-t-4 p-3 transition-colors duration-200 motion-reduce:transition-none",
+            "border-2 border-t-4 border-t-(--stage-color) bg-surface p-3",
+            "transition-colors duration-200 motion-reduce:transition-none",
             node.id !== "explore" && "-translate-y-1/2",
-            colors.topBorder,
-            stage === node.id
-              ? ["bg-surface ring-2 ring-offset-2 ring-offset-bg", colors.border, colors.ring]
-              : "border-line bg-surface",
+            current
+              ? "border-(--stage-color) ring-2 ring-(--stage-color) ring-offset-2 ring-offset-bg"
+              : "border-line",
           ]}
         >
           <div class="mb-2 flex items-center gap-2 text-sm leading-tight font-semibold">
@@ -242,8 +221,13 @@
           {#if node.code}<pre class="mt-3 font-mono text-xs leading-relaxed"><PythonCode
                 code={node.code}
               /></pre>{/if}
-          {#if stage === node.id}
-            <span class={["absolute -top-3 right-2 px-1 text-xs font-semibold", colors.badge]}>
+          {#if current}
+            <span
+              class={[
+                "absolute -top-3 right-2 bg-(--stage-color) px-1 text-xs font-semibold",
+                node.id === "input" ? "text-bg" : "text-(--bb-ink-deep)",
+              ]}
+            >
               Current step
             </span>
           {/if}

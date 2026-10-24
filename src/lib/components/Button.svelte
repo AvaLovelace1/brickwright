@@ -36,13 +36,6 @@
   );
 </script>
 
-{#snippet content()}
-  <div class="flex items-center gap-1">
-    {#if icon}<span class={["iconify", icon, iconOnly && "text-lg"]} aria-hidden="true"></span>{/if}
-    <span class:sr-only={iconOnly}>{text}</span>
-  </div>
-{/snippet}
-
 {#snippet button(triggerProps: Record<string, unknown>)}
   <Button.Root
     {...triggerProps}
@@ -50,7 +43,11 @@
     class={["bb-btn", iconOnly && "p-2", className]}
     {disabled}
   >
-    {@render content()}
+    <div class="flex items-center gap-1">
+      {#if icon}<span class={["iconify", icon, iconOnly && "text-lg"]} aria-hidden="true"
+        ></span>{/if}
+      <span class:sr-only={iconOnly}>{text}</span>
+    </div>
   </Button.Root>
 {/snippet}
 

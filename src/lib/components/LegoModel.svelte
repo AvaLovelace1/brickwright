@@ -5,25 +5,19 @@
     type Texture,
     type Vector3Tuple,
   } from "three";
-  import { HDRLoader } from "three/examples/jsm/loaders/HDRLoader.js";
+  import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
   import envMapUrl from "#lib/assets/studio_kontrast_02_1k.hdr?url";
+  import { cached } from "#lib/cached.js";
   import { loadModel } from "#lib/ldraw.js";
-  export const CAMERA = { position: [3, 0, 3] as Vector3Tuple, fov: 35 };
-  let envMap: Promise<Texture> | undefined;
 
-  export function loadEnvMap() {
-    envMap ??= new HDRLoader()
-      .loadAsync(envMapUrl)
-      .then((texture) => {
-        texture.mapping = EquirectangularReflectionMapping;
-        return texture;
-      })
-      .catch((error) => {
-        envMap = undefined;
-        throw error;
-      });
-    return envMap;
-  }
+  export const CAMERA = { position: [3, 0, 3] as Vector3Tuple, fov: 35 };
+
+  const loadTexture = cached(async (url) => {
+    const texture = await new HDRLoader().loadAsync(url);
+    texture.mapping = EquirectangularReflectionMapping;
+    return texture;
+  });
+  export const loadEnvMap = () => loadTexture(envMapUrl);
 </script>
 
 <script lang="ts">
@@ -32,7 +26,7 @@
   import { onMount } from "svelte";
   import { on } from "svelte/events";
   import { viewerSettings } from "#lib/settings.svelte.js";
-  import type { OrbitControls as OrbitControlsImpl } from "three/examples/jsm/controls/OrbitControls.js";
+  import type { OrbitControls as OrbitControlsImpl } from "three/addons/controls/OrbitControls.js";
   import { createDiagnosticView, type DiagnosticView } from "#lib/model-diagnostic-view.js";
   import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
   import { activeView, type ModelView } from "#lib/models.js";
@@ -40,72 +34,57 @@
 
   interface Props extends Partial<DiagnosticDisplay> {
     model: ModelView;
-    expanded?: boolean;
+    view?: "inline" | "expanded";
   }
   let {
     model = $bindable(),
     highlightCollisions = false,
     showIntersections = false,
-    expanded = false,
+    view = "inline",
   }: Props = $props();
-  let prevStepsShown = 0;
   let ldrawGroup = $state<Object3D>();
   let envMapTexture = $state<Texture>();
   let diagnosticView = $state<DiagnosticView>();
   let controls = $state<OrbitControlsImpl>();
   let interacting = $state(false);
   let focused = $state(false);
-  const active = $derived(activeView(model) === (expanded ? "expanded" : "inline"));
+  const active = $derived(activeView(model) === view);
   const autoRotate = $derived(active && viewerSettings.rotateModels && !interacting && !focused);
 
-  function showSteps(group: Object3D) {
-    const shown = Math.min(model.stepsShown, group.children.length);
-    if (prevStepsShown < shown) {
-      for (let i = prevStepsShown; i < shown; i++) {
-        group.children[i].visible = true;
-      }
-    } else {
-      for (let i = shown; i < prevStepsShown; i++) {
-        group.children[i].visible = false;
-      }
-    }
-    prevStepsShown = shown;
-    invalidate();
-  }
-
   $effect(() => {
-    if (ldrawGroup) showSteps(ldrawGroup);
+    if (!ldrawGroup) return;
+    // A step reveals one top-level object: a part or an entire submodel.
+    for (const [i, step] of ldrawGroup.children.entries()) step.visible = i < model.stepsShown;
+    invalidate();
   });
 
   $effect(() => {
     if (!ldrawGroup || !model.diagnostics) return;
-    const view = createDiagnosticView(ldrawGroup, model.diagnostics);
-    diagnosticView = view;
+    const current = createDiagnosticView(ldrawGroup, model.diagnostics);
+    diagnosticView = current;
     return () => {
       diagnosticView = undefined;
-      view.dispose();
+      current.dispose();
     };
   });
 
   $effect(() => {
-    if (!diagnosticView || !ldrawGroup) return;
+    if (!diagnosticView) return;
     diagnosticView.update({
       highlightCollisions,
-      // The exported lines describe the complete assembly, not individual build steps.
+      // Intersection lines describe the finished assembly, so they appear once every step is shown.
       showIntersections: showIntersections && model.stepsShown >= model.maxSteps,
     });
     invalidate();
   });
 
   $effect(() => {
-    // Retry sets the status back to loading.
+    // Reruns when Retry sets an errored model back to loading.
     if (ldrawGroup || model.status === "error") return;
     let disposed = false;
     loadModel(model.ldrPacked).then(
       (group) => {
         if (disposed) return;
-        // A step reveals one top-level object: a part or an entire submodel.
-        prevStepsShown = group.children.length;
         ldrawGroup = group;
         model.maxSteps = group.children.length;
         model.status = "loaded";

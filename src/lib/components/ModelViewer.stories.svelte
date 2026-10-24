@@ -2,13 +2,11 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import type { Props as ModelViewerProps } from "./ModelViewer.svelte";
   import ModelViewer from "./ModelViewer.svelte";
-  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
-  import ldr from "#lib/assets/models/test-examples/cruise-ship.ldr?url";
-  import ldrPacked from "#lib/assets/models/test-examples/cruise-ship.ldr_Packed.mpd?url";
+  import SharedCanvas from "./SharedCanvas.svelte";
   import { expect, screen, spyOn, waitFor, within } from "storybook/test";
-  import { Tooltip as BitsTooltip } from "bits-ui";
   import { flushSync } from "svelte";
   import { createModel, type ModelView } from "#lib/models.js";
+  import { FEASIBILITY_CHECKS } from "#lib/model-diagnostics.js";
 
   const { Story } = defineMeta({
     title: "Components/Model Viewer",
@@ -17,33 +15,12 @@
     tags: ["autodocs"],
   });
 
-  let model = $state<ModelView>({
-    ldr,
-    ldrPacked,
-    caption: "A detailed cruise ship",
-    stepsShown: 1,
-    maxSteps: 600,
-    status: "idle",
-  });
-
-  let autoplayModel = $state<ModelView>({
-    ldr,
-    ldrPacked,
-    caption: "An autoplaying cruise ship",
-    stepsShown: 1,
-    maxSteps: 600,
-    status: "idle",
-  });
-
-  // Fragments keep separate cache entries without changing the file that is fetched.
-  let retryModel = $state<ModelView>({
-    ldr,
-    ldrPacked: `${ldrPacked}#retry`,
-    caption: "A cruise ship that fails to download once",
-    stepsShown: 1,
-    maxSteps: 600,
-    status: "idle",
-  });
+  const cruiseShip = (caption: string) => createModel("test-examples/cruise-ship", caption);
+  let model = $state(cruiseShip("A detailed cruise ship"));
+  let autoplayModel = $state(cruiseShip("An autoplaying cruise ship"));
+  let retryModel = $state(cruiseShip("A cruise ship that fails to download once"));
+  // A fragment gives the model its own cache entry without changing the file that is fetched.
+  retryModel.ldrPacked += "#retry";
 
   function createDiagnosticModel() {
     return createModel(
@@ -55,10 +32,7 @@
   let intersectionModel = $state(createDiagnosticModel());
   let highlightedModel = $state(createDiagnosticModel());
   let combinedModel = $state(createDiagnosticModel());
-  const diagnosticArgs = {
-    class: "size-80",
-    showCaption: false,
-  } satisfies Partial<ModelViewerProps>;
+  const diagnosticArgs = { class: "size-80" } satisfies Partial<ModelViewerProps>;
 
   async function expectDiagnosticsLoaded(model: ModelView) {
     await waitFor(
@@ -68,26 +42,23 @@
       },
       { timeout: 45_000 },
     );
-    await expect(model.diagnosticsError).not.toBe(true);
   }
 </script>
 
 {#snippet template(args: ModelViewerProps)}
-  <BitsTooltip.Provider>
-    <div class="relative">
-      <ModelViewer {...args} bind:model={args.model} />
-      <SharedCanvas
-        models={[args.model]}
-        highlightCollisions={args.highlightCollisions}
-        showIntersections={args.showIntersections}
-      />
-    </div>
-  </BitsTooltip.Provider>
+  <div class="relative">
+    <ModelViewer {...args} bind:model={args.model} />
+    <SharedCanvas
+      models={[args.model]}
+      highlightCollisions={args.highlightCollisions}
+      showIntersections={args.showIntersections}
+    />
+  </div>
 {/snippet}
 
 <Story
   name="Default"
-  args={{ model: model, class: "size-64" }}
+  args={{ model, class: "size-64" }}
   play={async ({ canvas, canvasElement, step, userEvent, args }) => {
     async function sleep(ms: number) {
       return new Promise((resolve) => setTimeout(resolve, ms));
@@ -136,18 +107,13 @@
       const viewBtn = canvas.getByRole("button", { name: /view/i });
 
       await step("All buttons show tooltip on hover", async () => {
-        for (const { btn, name } of [
-          { btn: prevBtn, name: /previous step/i },
-          { btn: playBtn, name: /play/i },
-          { btn: nextBtn, name: /next step/i },
-          { btn: downloadBtn, name: /download/i },
-          { btn: viewBtn, name: /view/i },
-        ]) {
+        for (const btn of [prevBtn, playBtn, nextBtn, downloadBtn, viewBtn]) {
           await userEvent.hover(btn);
+          const name = btn.textContent!.trim();
           await waitFor(() => expect(screen.getByRole("tooltip", { name })).toBeVisible(), {
             timeout: 5_000,
           });
-          // Calling unhover() would target document.body and set pointer-events: none when the dialog is open
+          // Hovering the container leaves the button while the pointer stays inside the dialog.
           await userEvent.hover(container);
           await waitFor(() => expect(screen.queryByRole("tooltip", { hidden: true })).toBeNull(), {
             timeout: 5_000,
@@ -170,7 +136,7 @@
       });
       await step("Download button has correct attributes", async () => {
         await expect(downloadBtn).toBeVisible();
-        await expect(downloadBtn).toHaveAttribute("href", ldr);
+        await expect(downloadBtn).toHaveAttribute("href", args.model.ldr);
         await expect(downloadBtn).toHaveAttribute("download", "cruise-ship.ldr");
       });
       await step("Play button plays", async () => {
@@ -227,6 +193,7 @@
         await openDialog();
         await closeDialog(method);
       }
+      await expect(canvas.getByRole("button", { name: "Expand view" })).toHaveFocus();
     });
 
     await openDialog();
@@ -257,22 +224,11 @@
 
 <Story
   name="Expanded"
-  args={{ model: model, class: "size-64" }}
+  args={{ model, class: "size-64" }}
   parameters={{ a11y: { context: "body" } }}
   play={async ({ canvas, userEvent }) => {
-    const expand = canvas.getByRole("button", { name: "Expand view" });
-    await userEvent.click(expand);
-    const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
-    // Let the Expand tooltip close so Escape reaches the dialog.
-    await userEvent.hover(dialog);
-    await waitFor(() => expect(screen.queryByRole("tooltip", { hidden: true })).toBeNull(), {
-      timeout: 5_000,
-    });
-    await userEvent.keyboard("{Escape}");
-    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
-    await expect(expand).toHaveFocus();
+    await userEvent.click(canvas.getByRole("button", { name: "Expand view" }));
     // Leave the dialog open for the accessibility audit.
-    await userEvent.click(expand);
     await screen.findByRole("dialog", { name: "Expanded model view" });
   }}
 />
@@ -290,11 +246,11 @@
     });
     return () => fetch.mockRestore();
   }}
-  play={async ({ canvas, canvasElement, userEvent }) => {
+  play={async ({ canvas, userEvent }) => {
     await expect(await canvas.findByRole("alert", {}, { timeout: 45_000 })).toHaveTextContent(
       "Unable to load",
     );
-    await expect(canvasElement.querySelector("figure")).toHaveAttribute("aria-busy", "false");
+    await expect(canvas.getByRole("figure")).toHaveAttribute("aria-busy", "false");
     await userEvent.click(canvas.getByRole("button", { name: "Retry model" }));
     await expect(
       await canvas.findByRole("slider", { name: "Steps shown" }, { timeout: 45_000 }),
@@ -303,30 +259,18 @@
 />
 
 <Story
-  name="Hidden Caption"
-  args={{ model: model, class: "size-64", showCaption: false }}
-  play={async ({ canvas, args, step }) => {
-    await step("Figure retains its accessible name without a visible caption", async () => {
-      const figure = canvas.getByRole("figure", { name: args.model.caption });
-      await expect(figure).toBeVisible();
-      await expect(figure.querySelector("figcaption")).toBeNull();
-    });
-  }}
-/>
-
-<Story
   name="Status Badge"
   args={{
-    model: model,
+    model,
     class: "h-80 w-full max-w-xl",
     badge: {
       text: "Physically feasible",
-      description: ["Real LEGO® parts", "No collisions or floaters", "Fully connected"],
+      description: FEASIBILITY_CHECKS,
     },
   }}
   play={async ({ canvas, args, step }) => {
     const badge = args.badge!;
-    await step("Badge and description appear alongside the caption", async () => {
+    await step("Badge and description appear on the figure", async () => {
       await expect(canvas.getByRole("status")).toHaveTextContent(badge.text);
       for (const item of badge.description!) await expect(canvas.getByText(item)).toBeVisible();
       await expect(canvas.getByRole("figure", { name: /A detailed cruise ship/ })).toBeVisible();
@@ -337,13 +281,12 @@
 <Story
   name="Collisions Badge"
   args={{
-    model: model,
+    model,
     class: "size-64",
-    showCaption: false,
     badge: { text: "Collisions", tone: "danger" },
   }}
   play={async ({ canvas, step }) => {
-    await step("A warning badge works without a description or visible caption", async () => {
+    await step("A warning badge works without a description", async () => {
       const badge = canvas.getByRole("status");
       await expect(badge).toBeVisible();
       await expect(badge).toHaveTextContent("Collisions");

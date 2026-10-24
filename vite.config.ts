@@ -7,16 +7,16 @@ import { storybookTest } from "@storybook/addon-vitest/vitest-plugin";
 import { playwright } from "@vitest/browser-playwright";
 
 export default defineConfig({
-  // Discover the deferred viewer before dev/Storybook starts serving pages,
-  // otherwise Vite's late optimization reloads an in-progress interaction.
+  // Pre-bundles the lazily loaded viewer's dependencies, so Vite never reloads a page
+  // mid-interaction to optimize them.
   optimizeDeps: {
     include: [
       "@threlte/core",
       "@threlte/extras",
       "three",
+      "three/addons/loaders/HDRLoader.js",
+      "three/addons/loaders/LDrawLoader.js",
       "three/addons/materials/LDrawConditionalLineMaterial.js",
-      "three/examples/jsm/loaders/HDRLoader.js",
-      "three/examples/jsm/loaders/LDrawLoader.js",
     ],
   },
   plugins: [

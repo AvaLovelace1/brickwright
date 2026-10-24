@@ -1,11 +1,11 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, screen, waitFor, within } from "storybook/test";
-  import { Tooltip } from "bits-ui";
   import type Swiper from "swiper";
   import QualitativeResults from "./QualitativeResults.svelte";
   import { agents, prompts, resultModelName } from "#lib/experiment-results.js";
-  import { createModel } from "#lib/models.js";
+  import { modelFiles } from "#lib/models.js";
+  import { waitForModel } from "#lib/story-helpers.js";
 
   const { Story } = defineMeta({
     title: "Content/QualitativeResults",
@@ -17,9 +17,7 @@
 </script>
 
 {#snippet template()}
-  <Tooltip.Provider>
-    <div class="mx-auto max-w-4xl p-4 sm:p-8"><QualitativeResults /></div>
-  </Tooltip.Provider>
+  <div class="mx-auto max-w-4xl p-4 sm:p-8"><QualitativeResults /></div>
 {/snippet}
 
 <Story
@@ -28,16 +26,15 @@
     const progress = canvas.getByRole("status", { name: "Prompt position" });
     const agentSelect = canvas.getByRole("combobox", { name: /^Agent model/ });
     const currentAgent = agents.find((agent) => agent.label === agentSelect.textContent?.trim())!;
-    const selectedAgent =
-      agents.find((agent) => agent.value !== currentAgent.value) ?? currentAgent;
-    const promptIndex = Math.min(1, prompts.length - 1);
+    const selectedAgent = agents.find((agent) => agent.value !== currentAgent.value)!;
+    const promptIndex = 1;
     const prompt = prompts[promptIndex];
     const position = `${promptIndex + 1} / ${prompts.length}`;
     const collisions = canvas.getByRole("checkbox", { name: "Highlight colliding bricks" });
     await userEvent.click(collisions);
     await expect(collisions).toBeChecked();
     await expect(progress).toHaveTextContent(`1 / ${prompts.length}`);
-    // Arrange a non-default prompt; native arrow and swipe input is covered by the browser test.
+    // Jump to a non-default prompt without animating.
     const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
     await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
     carousel.swiper.slideToLoop(promptIndex, 0);
@@ -61,7 +58,6 @@
         for (const method of ["baseline", "brickwright"] as const) {
           const methodLabel = method === "baseline" ? selectedAgent.baseline : "BrickWright";
           const name = resultModelName(prompt, selectedAgent, method);
-          const filename = `${name}.ldr`;
           const result = within(
             canvas.getByRole("group", { name: `${methodLabel} (${selectedAgent.label})` }),
           );
@@ -71,13 +67,10 @@
           const viewer = result.getByRole("figure", {
             name: `${prompt.title} — ${selectedAgent.label} — ${methodLabel}`,
           });
-          viewer.scrollIntoView({ block: "center" });
           const download = within(viewer).getByRole("link", { name: "Download LDraw" });
-          await expect(download).toHaveAttribute("href", createModel(`results/${name}`, name).ldr);
-          await expect(download).toHaveAttribute("download", filename);
-          await waitFor(() => expect(viewer).toHaveAttribute("aria-busy", "false"), {
-            timeout: 45_000,
-          });
+          await expect(download).toHaveAttribute("href", modelFiles(`results/${name}`).ldr);
+          await expect(download).toHaveAttribute("download", `${name}.ldr`);
+          await waitForModel(viewer);
         }
       },
     );

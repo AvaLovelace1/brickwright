@@ -41,8 +41,6 @@ function validationChecks(revision: BuildRevision): ValidationCheck[] {
   ];
 }
 
-// Blank lines separate paragraphs; backticks mark inline code.
-
 export type Stage = "input" | "explore" | "write" | "validate" | "render" | "finalize";
 export type Flow =
   | "input-explore"
@@ -55,6 +53,7 @@ export type Flow =
 export type DemoStep = {
   stage: Stage;
   title: string;
+  /** Blank lines separate paragraphs; backticks mark inline code. */
   text: string;
   revision: BuildRevision | null;
   flow?: Flow;
@@ -200,38 +199,11 @@ export const demoSteps: readonly DemoStep[] = [
   },
 ];
 
-const secondaryStageStyle = {
-  border: "border-secondary",
-  topBorder: "border-t-secondary",
-  ring: "ring-secondary",
-  badge: "bg-secondary text-(--bb-ink-deep)",
-};
-
-export const stageStyles: Record<Stage, typeof secondaryStageStyle> = {
-  input: {
-    border: "border-line",
-    topBorder: "border-t-line",
-    ring: "ring-line",
-    badge: "bg-line text-bg",
-  },
-  explore: {
-    border: "border-accent",
-    topBorder: "border-t-accent",
-    ring: "ring-accent",
-    badge: "bg-accent text-(--bb-ink-deep)",
-  },
-  write: {
-    border: "border-primary",
-    topBorder: "border-t-primary",
-    ring: "ring-primary",
-    badge: "bg-primary text-(--bb-ink-deep)",
-  },
-  validate: secondaryStageStyle,
-  render: secondaryStageStyle,
-  finalize: {
-    border: "border-success",
-    topBorder: "border-t-success",
-    ring: "ring-success",
-    badge: "bg-success text-(--bb-ink-deep)",
-  },
+export const stageColors: Record<Stage, string> = {
+  input: "var(--color-line)",
+  explore: "var(--color-accent)",
+  write: "var(--color-primary)",
+  validate: "var(--color-secondary)",
+  render: "var(--color-secondary)",
+  finalize: "var(--color-success)",
 };

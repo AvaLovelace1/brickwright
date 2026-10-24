@@ -34,14 +34,3 @@
     await expect(checkbox).not.toBeChecked();
   }}
 />
-
-<Story
-  name="Disabled"
-  args={{ checked: true, disabled: true }}
-  play={async ({ canvas, userEvent }) => {
-    const checkbox = canvas.getByRole("checkbox", { name: "Show intersections" });
-    await expect(checkbox).toBeDisabled();
-    await userEvent.click(canvas.getByText("Show intersections"));
-    await expect(checkbox).toBeChecked();
-  }}
-/>

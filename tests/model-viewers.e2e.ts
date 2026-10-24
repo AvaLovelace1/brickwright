@@ -1,7 +1,9 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures";
 
-async function countDraws(page: Page, selector: string) {
+const COMPARISON = "GPT-6 Astra build without BrickWright";
+
+async function countDraws(page: Page, selector = "canvas") {
   return page.evaluate(async (selector) => {
     const canvases = new Set(document.querySelectorAll(selector));
     if (!canvases.size) throw new Error(`Missing canvas: ${selector}`);
@@ -37,37 +39,28 @@ test("models start complete when the visitor prefers reduced motion", async ({
     await route.continue();
   });
   await page.emulateMedia({ reducedMotion: "reduce" });
+  const viewer = mainPage.viewer();
   try {
     await mainPage.goto();
-    await expect(mainPage.firstModel.getByRole("link", { name: "Download LDraw" })).toBeVisible();
-    await expect(mainPage.firstModel.getByRole("slider", { name: "Steps shown" })).toHaveCount(0);
-    await expect(
-      mainPage.firstModel.getByRole("button", { name: /^(Play|Pause|Rewind)$/ }),
-    ).toHaveCount(0);
+    await expect(viewer.download).toBeVisible();
+    await expect(viewer.steps).toHaveCount(0);
+    await expect(viewer.button(/^(Play|Pause|Rewind)$/)).toHaveCount(0);
   } finally {
     modelDownload.resolve();
   }
-  await expect(
-    mainPage.firstModel.getByRole("button", { name: "Rewind", exact: true }),
-  ).toBeVisible({
-    timeout: 60_000,
-  });
-  const slider = mainPage.firstModel.getByRole("slider", { name: "Steps shown" });
-  expect(Number(await slider.getAttribute("aria-valuemax"))).toBeGreaterThan(1);
-  await expect(slider).toHaveAttribute(
+  await expect(viewer.button("Rewind")).toBeVisible({ timeout: 60_000 });
+  await expect(viewer.steps).toHaveAttribute(
     "aria-valuenow",
-    (await slider.getAttribute("aria-valuemax"))!,
+    (await viewer.steps.getAttribute("aria-valuemax"))!,
   );
 });
 
 test("autoplay pauses when the visitor switches on reduced motion", async ({ page, mainPage }) => {
   await mainPage.goto();
-  const pause = mainPage.firstModel.getByRole("button", { name: "Pause", exact: true });
-  await expect(pause).toBeVisible({ timeout: 60_000 });
+  const viewer = mainPage.viewer();
+  await expect(viewer.button("Pause")).toBeVisible({ timeout: 60_000 });
   await page.emulateMedia({ reducedMotion: "reduce" });
-  await expect(
-    mainPage.firstModel.getByRole("button", { name: "Play", exact: true }),
-  ).toBeVisible();
+  await expect(viewer.button("Play")).toBeVisible();
 });
 
 test("comparison models load as their viewers approach the viewport", async ({
@@ -80,26 +73,15 @@ test("comparison models load as their viewers approach the viewport", async ({
       requestedModels.push(new URL(request.url()).pathname);
   });
   await mainPage.goto();
-  await expect(mainPage.firstModel.getByRole("button", { name: /^(Pause|Rewind)$/ })).toBeVisible({
-    timeout: 60_000,
-  });
-  const viewer = page.getByRole("figure", {
-    name: "GPT-6 Astra build without BrickWright",
-    exact: true,
-  });
+  await expect(mainPage.viewer().button(/^(Pause|Rewind)$/)).toBeVisible({ timeout: 60_000 });
+  const comparison = mainPage.viewer(COMPARISON);
   const packedPath = /\/spaceship-gpt-6-astra-without-brickwright\.packed\.[\w-]+\.mpd$/;
   expect(requestedModels.some((path) => packedPath.test(path))).toBe(false);
-  await viewer.scrollIntoViewIfNeeded();
+  await comparison.figure.scrollIntoViewIfNeeded();
   await expect
     .poll(() => requestedModels.some((path) => packedPath.test(path)), { timeout: 60_000 })
     .toBe(true);
-  const slider = viewer.getByRole("slider", { name: "Steps shown" });
-  await expect
-    .poll(async () => Number(await slider.getAttribute("aria-valuemax")), { timeout: 60_000 })
-    .toBeGreaterThan(1);
-  await expect(viewer.getByRole("button", { name: "Rewind", exact: true })).toBeVisible({
-    timeout: 60_000,
-  });
+  await expect(comparison.button("Rewind")).toBeVisible({ timeout: 60_000 });
 });
 
 test("every model viewer links an LDraw file the site serves", async ({ page, mainPage }) => {
@@ -117,7 +99,7 @@ test("every model viewer links an LDraw file the site serves", async ({ page, ma
 
 test("offscreen sections do not allocate WebGL canvases", async ({ page, mainPage }) => {
   await mainPage.goto();
-  await mainPage.waitForModel();
+  await mainPage.viewer().waitUntilLoaded();
   await expect(page.locator("canvas")).toHaveCount(1);
 });
 
@@ -127,10 +109,10 @@ test("a stationary viewer redraws for keyboard camera input without rendering co
 }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mainPage.goto();
-  await mainPage.waitForModel();
-  const camera = mainPage.firstModel.getByRole("group", { name: /interactive 3D view/ });
-  await camera.focus();
-  await expect.poll(() => countDraws(page, "canvas")).toBe(0);
+  const viewer = mainPage.viewer();
+  await viewer.waitUntilLoaded();
+  await viewer.figure.getByRole("group", { name: /interactive 3D view/ }).focus();
+  await expect.poll(() => countDraws(page)).toBe(0);
   const canvas = page.locator("canvas").first();
   const before = await canvas.screenshot();
   await page.keyboard.press("+");
@@ -144,43 +126,37 @@ test("global rotation respects reduced motion, persists, and controls newly load
   test.slow();
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mainPage.goto();
-  await mainPage.waitForModel();
+  const viewer = mainPage.viewer();
+  await viewer.waitUntilLoaded();
   await mainPage.openSettings();
   await expect(mainPage.rotationCheckbox).not.toBeChecked();
   await mainPage.rotationCheckbox.focus();
   await page.keyboard.press("Space");
   await expect(mainPage.rotationCheckbox).toBeChecked();
   await mainPage.closeSettings();
-  await expect.poll(() => countDraws(page, "canvas")).toBeGreaterThan(0);
+  await expect.poll(() => countDraws(page)).toBeGreaterThan(0);
 
-  await mainPage.firstModel.getByRole("button", { name: "Expand view" }).click();
+  await viewer.button("Expand view").click();
   await expect(page.getByRole("dialog", { name: "Expanded model view" })).toBeVisible();
   await expect.poll(() => countDraws(page, "main canvas")).toBe(0);
   await expect.poll(() => countDraws(page, '[role="dialog"] canvas')).toBeGreaterThan(0);
   await page.keyboard.press("Escape");
 
-  await mainPage.openSettings();
-  await mainPage.rotationCheckbox.uncheck();
-  await mainPage.closeSettings();
+  await mainPage.setRotation(false);
   await page.reload();
-  await mainPage.waitForModel();
+  await viewer.waitUntilLoaded();
   await page.emulateMedia({ reducedMotion: "no-preference" });
   await mainPage.openSettings();
   await expect(mainPage.rotationCheckbox).not.toBeChecked();
   await mainPage.closeSettings();
-  await expect.poll(() => countDraws(page, "canvas")).toBe(0);
+  await expect.poll(() => countDraws(page)).toBe(0);
 
-  const comparison = page.getByRole("figure", {
-    name: "GPT-6 Astra build without BrickWright",
-    exact: true,
-  });
-  await comparison.scrollIntoViewIfNeeded();
-  await mainPage.waitForModel(comparison);
-  await expect.poll(() => countDraws(page, "canvas"), { timeout: 15_000 }).toBe(0);
-  await mainPage.openSettings();
-  await mainPage.rotationCheckbox.check();
-  await mainPage.closeSettings();
-  await expect.poll(() => countDraws(page, "canvas")).toBeGreaterThan(0);
+  const comparison = mainPage.viewer(COMPARISON);
+  await comparison.figure.scrollIntoViewIfNeeded();
+  await comparison.waitUntilLoaded();
+  await expect.poll(() => countDraws(page), { timeout: 15_000 }).toBe(0);
+  await mainPage.setRotation(true);
+  await expect.poll(() => countDraws(page)).toBeGreaterThan(0);
 });
 
 test("the page remains usable when WebGL is unavailable", async ({ page, mainPage }) => {
@@ -195,15 +171,12 @@ test("the page remains usable when WebGL is unavailable", async ({ page, mainPag
       return getContext.call(this, contextId as "2d", options);
     } as typeof getContext;
   });
-  await page.goto("/");
-  const viewer = mainPage.firstModel;
-  await expect(viewer.getByRole("alert")).toContainText("Unable to load");
-  await expect(viewer).toHaveAttribute("aria-busy", "false");
-  await expect(viewer.getByRole("link", { name: "Download LDraw" })).toBeVisible();
-  await page
-    .getByRole("navigation")
-    .getByRole("link", { name: /Citation/ })
-    .click();
+  await mainPage.goto();
+  const viewer = mainPage.viewer();
+  await expect(viewer.figure.getByRole("alert")).toContainText("Unable to load");
+  await expect(viewer.figure).toHaveAttribute("aria-busy", "false");
+  await expect(viewer.download).toBeVisible();
+  await mainPage.sectionLink("citation").click();
   await expect(page).toHaveURL("/#citation");
 });
 
@@ -215,6 +188,6 @@ test("a failed lighting download does not prevent the model from loading", async
   page.on("pageerror", (error) => errors.push(error.message));
   await page.route(/\.hdr$/, (route) => route.abort());
   await mainPage.goto();
-  await mainPage.waitForModel();
+  await mainPage.viewer().waitUntilLoaded();
   expect(errors).toEqual([]);
 });

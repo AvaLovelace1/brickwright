@@ -1,40 +1,28 @@
 <script lang="ts">
   import { Slider, Tooltip as BitsTooltip } from "bits-ui";
-  import Tooltip from "#lib/components/Tooltip.svelte";
+  import Tooltip from "./Tooltip.svelte";
 
-  export interface Props {
+  interface Props {
     label: string;
     value: number;
     min: number;
     max: number;
-    step?: number;
-    hideLabel?: boolean;
-    fmtValue?: (value: number) => string;
+    formatValue: (value: number) => string;
   }
-  let {
-    label,
-    value = $bindable(),
-    min,
-    max,
-    step = 1,
-    hideLabel = false,
-    fmtValue = (value) => value.toString(),
-  }: Props = $props();
+  let { label, value = $bindable(), min, max, formatValue }: Props = $props();
 
-  const uid = $props.id();
-  let showTooltip = $state(false);
-  let tooltipAnchor = $state<HTMLElement | null>(null);
+  let thumb = $state<HTMLElement | null>(null);
+  let thumbFocused = $state(false);
 </script>
 
+<!-- Its own provider keeps the value tooltip open while neighbouring tooltips open and close. -->
 <BitsTooltip.Provider>
-  <div class={["mb-1 text-sm", hideLabel && "sr-only"]} id="{uid}-label">{label}</div>
   <Slider.Root
     type="single"
     bind:value
     class="relative flex w-full touch-none items-center select-none"
     {min}
     {max}
-    {step}
   >
     <span
       class="relative h-1 w-full grow cursor-pointer overflow-hidden rounded-(--bb-border-radius) bg-line/50"
@@ -46,15 +34,15 @@
            bg-radial from-primary-bright from-35% to-transparent to-36%
            outline-primary focus-visible:outline-2 focus-visible:outline-offset-3"
       index={0}
-      aria-labelledby="{uid}-label"
-      aria-valuetext={fmtValue(value)}
-      onfocus={() => (showTooltip = true)}
-      onblur={() => (showTooltip = false)}
-      bind:ref={tooltipAnchor}
+      aria-label={label}
+      aria-valuetext={formatValue(value)}
+      onfocus={() => (thumbFocused = true)}
+      onblur={() => (thumbFocused = false)}
+      bind:ref={thumb}
     />
   </Slider.Root>
 
-  <Tooltip side="top" anchor={showTooltip ? tooltipAnchor : null}>
-    {#snippet tooltipContent()}{fmtValue(value)}{/snippet}
+  <Tooltip anchor={thumbFocused ? thumb : null}>
+    {#snippet tooltipContent()}{formatValue(value)}{/snippet}
   </Tooltip>
 </BitsTooltip.Provider>

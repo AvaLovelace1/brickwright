@@ -1,8 +1,8 @@
 <script lang="ts">
   import { resolve } from "$app/paths";
-  import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
-  import Button from "#lib/components/Button.svelte";
-  import SettingsDialog from "#lib/components/SettingsDialog.svelte";
+  import BrickWrightLogo from "./BrickWrightLogo.svelte";
+  import Button from "./Button.svelte";
+  import SettingsDialog from "./SettingsDialog.svelte";
 </script>
 
 <header
@@ -15,7 +15,7 @@
     <Button
       text="Paper"
       action="https://arxiv.org/abs/2610.31651"
-      class="bb-btn-primary ms-auto max-[360px]:px-3"
+      class="bb-btn-primary max-[360px]:px-3"
       icon="tdesign--file-1"
     />
     <Button

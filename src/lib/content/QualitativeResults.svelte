@@ -57,7 +57,12 @@
     <div class="flex flex-wrap items-center gap-x-4 gap-y-2">
       <h3 class="text-2xl">Qualitative comparison</h3>
       <div class="w-48">
-        <Select label="Agent model" hideLabel options={agents} bind:value={selectedAgent} />
+        <Select
+          label="Agent model"
+          labelClass="sr-only"
+          options={agents}
+          bind:value={selectedAgent}
+        />
       </div>
     </div>
     <ModelDiagnosticControls bind:showIntersections bind:highlightCollisions />
@@ -65,6 +70,7 @@
   <div class="swiper min-w-0" {@attach carousel}>
     <div class="swiper-wrapper">
       {#each prompts as prompt, index (prompt.id)}
+        <!-- Keep the outgoing pair mounted until the slide animation ends. -->
         {@const showModels = index === activePromptIndex || index === outgoingPromptIndex}
         <div
           class="swiper-slide p-1"
@@ -75,7 +81,6 @@
             <span class="font-semibold">Prompt:</span>
             <span class="italic">“{prompt.caption}”</span>
           </p>
-          <!-- Keep the outgoing pair mounted until the slide animation ends. -->
           {#key `${selectedAgent}-${showModels}`}
             <ResultPair {agent} {prompt} {showModels} {showIntersections} {highlightCollisions} />
           {/key}

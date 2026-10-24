@@ -1,58 +1,44 @@
 import AxeBuilder from "@axe-core/playwright";
-import type { Locator } from "@playwright/test";
 import { expect, test } from "./fixtures";
-import { MainPage } from "./page-objects/MainPage";
-import { MethodDemo } from "./page-objects/MethodDemo";
-import { Experiments } from "./page-objects/Experiments";
 import { prompts } from "../src/lib/experiment-results";
 
 const SECTIONS = ["overview", "motivation", "method", "experiments", "acknowledgments", "citation"];
 
-async function expectCurrentSection(mainPage: MainPage, section: string) {
-  await expect(mainPage.sectionLink(section)).toHaveAttribute("aria-current", "location");
-  await expect(mainPage.nav.locator("[aria-current]")).toHaveCount(1);
-}
+test(
+  "page has a title and no detectable accessibility violations",
+  { tag: "@a11y" },
+  async ({ page, mainPage }) => {
+    await mainPage.goto();
+    await expect(page).toHaveTitle(
+      "BrickWright: Agentic Creation of Physically Feasible Brick Builds",
+    );
+    expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
+  },
+);
 
-async function bottom(locator: Locator) {
-  return locator.evaluate((element) => element.getBoundingClientRect().bottom);
-}
+test(
+  "the narrow mobile page has no detectable WCAG accessibility violations",
+  { tag: "@a11y" },
+  async ({ page, mainPage }) => {
+    await page.setViewportSize({ width: 320, height: 844 });
+    await mainPage.goto("method");
+    const { violations } = await new AxeBuilder({ page })
+      .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
+      .analyze();
+    expect(violations).toEqual([]);
+  },
+);
 
-test("page has a title and no detectable accessibility violations", async ({ page, mainPage }) => {
+test("keyboard users can skip navigation", async ({ page, mainPage, browserName }) => {
   await mainPage.goto();
-  await expect(page).toHaveTitle(
-    "BrickWright: Agentic Creation of Physically Feasible Brick Builds",
-  );
-  expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
-});
-
-test("the narrow mobile page has no detectable WCAG accessibility violations", async ({ page }) => {
-  await page.setViewportSize({ width: 320, height: 844 });
-  await page.goto("/#method");
-  const { violations } = await new AxeBuilder({ page })
-    .withTags(["wcag2a", "wcag2aa", "wcag21aa", "wcag22aa"])
-    .analyze();
-  expect(violations).toEqual([]);
-});
-
-test("keyboard users can skip navigation", async ({ page, browserName }) => {
-  await page.goto("/");
   // Safari on macOS uses Option-Tab to include links in keyboard navigation.
   await page.keyboard.press(
     browserName === "webkit" && process.platform === "darwin" ? "Alt+Tab" : "Tab",
   );
-  const skip = page.getByRole("link", { name: "Skip to content" });
-  await expect(skip).toBeFocused();
+  await expect(page.getByRole("link", { name: "Skip to content" })).toBeFocused();
   await page.keyboard.press("Enter");
-  await expect(page.getByRole("main")).toBeFocused();
-  await expect
-    .poll(() =>
-      page.evaluate(
-        () =>
-          document.querySelector("main")!.getBoundingClientRect().top -
-          document.querySelector("header")!.getBoundingClientRect().bottom,
-      ),
-    )
-    .toBeGreaterThanOrEqual(-1);
+  await expect(mainPage.main).toBeFocused();
+  await mainPage.expectBelowChrome(mainPage.main);
 });
 
 for (const width of [1280, 390]) {
@@ -60,36 +46,25 @@ for (const width of [1280, 390]) {
     test.slow();
     await page.setViewportSize({ width, height: 800 });
     await mainPage.goto();
+    const fixedChrome = width < 768 ? mainPage.nav : mainPage.header;
     await test.step("Links jump to visible sections and update the active item", async () => {
       for (const section of SECTIONS) {
         await mainPage.sectionLink(section).click();
         await expect(page).toHaveURL(`/#${section}`);
-        await expectCurrentSection(mainPage, section);
-        const fixedChrome = width < 768 ? mainPage.nav : mainPage.header;
-        await expect
-          .poll(
-            async () => {
-              const top = await mainPage
-                .section(section)
-                .evaluate((el) => el.getBoundingClientRect().top);
-              return top - (await bottom(fixedChrome));
-            },
-            // Parsing newly visible LDraw builds can temporarily occupy the browser's main thread.
-            { timeout: 15_000 },
-          )
-          .toBeGreaterThanOrEqual(-1);
+        await mainPage.expectCurrentSection(section);
+        await mainPage.expectBelowChrome(mainPage.section(section), fixedChrome);
       }
     });
     await test.step("Scrolling back updates the active item without changing the hash", async () => {
       for (const section of [...SECTIONS].reverse()) {
         await mainPage.section(section).evaluate((el) => el.scrollIntoView());
-        await expectCurrentSection(mainPage, section);
+        await mainPage.expectCurrentSection(section);
       }
       await expect(page).toHaveURL("/#citation");
     });
     await test.step("Direct section links initialize the active item", async () => {
       await mainPage.goto("acknowledgments");
-      await expectCurrentSection(mainPage, "acknowledgments");
+      await mainPage.expectCurrentSection("acknowledgments");
     });
   });
 }
@@ -118,48 +93,50 @@ test("content fits the viewport across mobile and desktop widths", async ({ page
   };
   for (const width of widths) await expectFits(width);
 
-  const demo = new MethodDemo(page);
+  const demo = mainPage.methodDemo;
   await demo.button("Next step").click();
   await demo.button("Next step").click();
   await expect(demo.source).toBeVisible();
   for (const width of [...widths].reverse()) await expectFits(width);
 });
 
-test("native carousel controls and mobile table scrolling work together on the page", async ({
-  page,
-}) => {
-  test.slow();
-  await page.setViewportSize({ width: 390, height: 844 });
-  await page.emulateMedia({ reducedMotion: "reduce" });
-  await page.goto("/#experiments");
-  const results = new Experiments(page);
-  const first = `1 / ${prompts.length}`;
-  const second = `${(1 % prompts.length) + 1} / ${prompts.length}`;
-  const last = `${prompts.length} / ${prompts.length}`;
+test(
+  "native carousel controls and mobile table scrolling work together on the page",
+  { tag: "@a11y" },
+  async ({ page, mainPage }) => {
+    test.slow();
+    await page.setViewportSize({ width: 390, height: 844 });
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await mainPage.goto("experiments");
+    const { experiments } = mainPage;
+    const position = (n: number) => `${n} / ${prompts.length}`;
 
-  const baseline = results.viewers.first();
-  await expect(baseline).toHaveAttribute("aria-busy", "false", { timeout: 60_000 });
-  await results.drag(baseline);
-  await expect(results.progress).toHaveText(first);
-  await results.drag(results.prompt);
-  await expect(results.progress).toHaveText(second);
-  await results.drag(results.prompt, "right");
-  await expect(results.progress).toHaveText(first);
-  await results.drag(results.prompt, "right");
-  await expect(results.progress).toHaveText(last);
-  await results.next.click();
-  await expect(results.progress).toHaveText(first);
-  await results.previous.focus();
-  await page.keyboard.press("Enter");
-  await expect(results.progress).toHaveText(last);
+    await experiments.viewer.waitUntilLoaded();
+    await experiments.drag(experiments.viewer.figure);
+    await expect(experiments.progress).toHaveText(position(1));
+    await experiments.drag(experiments.prompt);
+    await expect(experiments.progress).toHaveText(position(2));
+    await experiments.drag(experiments.prompt, "right");
+    await expect(experiments.progress).toHaveText(position(1));
+    await experiments.drag(experiments.prompt, "right");
+    await expect(experiments.progress).toHaveText(position(prompts.length));
+    await experiments.next.click();
+    await expect(experiments.progress).toHaveText(position(1));
+    await experiments.previous.focus();
+    await page.keyboard.press("Enter");
+    await expect(experiments.progress).toHaveText(position(prompts.length));
 
-  await results.tableScroller.focus();
-  await expect(results.tableScroller).toBeFocused();
-  await results.tableScroller.hover();
-  await page.mouse.wheel(600, 0);
-  await expect.poll(() => results.tableScroller.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
-  expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth)).toBe(
-    true,
-  );
-  expect((await new AxeBuilder({ page }).include("#experiments").analyze()).violations).toEqual([]);
-});
+    const { tableScroller } = experiments;
+    await tableScroller.focus();
+    await expect(tableScroller).toBeFocused();
+    await tableScroller.hover();
+    await page.mouse.wheel(600, 0);
+    await expect.poll(() => tableScroller.evaluate((el) => el.scrollLeft)).toBeGreaterThan(0);
+    expect(
+      await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth),
+    ).toBe(true);
+    expect((await new AxeBuilder({ page }).include("#experiments").analyze()).violations).toEqual(
+      [],
+    );
+  },
+);

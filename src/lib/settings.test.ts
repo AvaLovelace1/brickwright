@@ -1,32 +1,32 @@
 import { afterEach, expect, test, vi } from "vitest";
-import { readSetting, saveSetting } from "./settings.svelte";
 
 afterEach(() => {
   vi.unstubAllGlobals();
 });
 
-test("saved settings can be read back", () => {
+async function loadSettings(storage: Pick<Storage, "getItem" | "setItem">) {
+  vi.stubGlobal("localStorage", storage);
+  vi.resetModules();
+  return (await import("./settings.svelte")).viewerSettings;
+}
+
+test("the rotation preference persists across page loads", async () => {
   const values = new Map<string, string>();
-  vi.stubGlobal("localStorage", {
+  const storage = {
     getItem: (key: string) => values.get(key) ?? null,
-    setItem: (key: string, value: string) => values.set(key, value),
-  });
-  saveSetting("brickwright-test", "on");
-  expect(readSetting("brickwright-test")).toBe("on");
+    setItem: (key: string, value: string) => void values.set(key, value),
+  };
+  for (const enabled of [true, false]) {
+    (await loadSettings(storage)).rotateModels = enabled;
+    expect((await loadSettings(storage)).rotateModels).toBe(enabled);
+  }
 });
 
-test("settings tolerate unavailable browser storage", () => {
+test("the rotation preference works when browser storage is unavailable", async () => {
   const unavailable = () => {
     throw new DOMException("Storage is disabled", "SecurityError");
   };
-  vi.stubGlobal("localStorage", { getItem: unavailable, setItem: unavailable });
-  expect(() => saveSetting("brickwright-test", "on")).not.toThrow();
-  expect(readSetting("brickwright-test")).toBeNull();
-});
-
-test("rotation follows the saved preference as soon as settings load", async () => {
-  vi.stubGlobal("localStorage", { getItem: () => "false", setItem: () => {} });
-  vi.resetModules();
-  const { viewerSettings } = await import("./settings.svelte");
-  expect(viewerSettings.rotateModels).toBe(false);
+  const settings = await loadSettings({ getItem: unavailable, setItem: unavailable });
+  settings.rotateModels = false;
+  expect(settings.rotateModels).toBe(false);
 });

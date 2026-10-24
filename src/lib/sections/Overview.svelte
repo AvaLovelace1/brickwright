@@ -43,7 +43,7 @@
             <span>
               <ExternalLink
                 href={a.href}
-                class="font-medium underline hover:text-primary dark:hover:text-primary-deep"
+                class="underline hover:text-primary dark:hover:text-primary-deep"
               >
                 {a.name}
               </ExternalLink>&#8239;<sup class="font-normal">{a.aff}</sup

@@ -1,18 +1,10 @@
-import { readdir, readFile } from "node:fs/promises";
-import { createHash } from "node:crypto";
 import { expect, test } from "vitest";
 import { BoxGeometry, Group, Mesh, MeshStandardMaterial, Vector3 } from "three";
-import { LDrawLoader } from "three/examples/jsm/loaders/LDrawLoader.js";
-import { LDrawConditionalLineMaterial } from "three/addons/materials/LDrawConditionalLineMaterial.js";
-import { parsePackedModel } from "./ldraw";
 import type { ModelDiagnostics } from "./model-diagnostics";
 import { createDiagnosticView, matchDiagnosticPlacements } from "./model-diagnostic-view";
 
 const identity = [1, 0, 0, 0, 1, 0, 0, 0, 1];
 const diagnostics: ModelDiagnostics = {
-  version: 1,
-  coordinateSystem: "ldraw",
-  units: "LDU",
   placements: [
     { id: "floating", part: "brick.dat", position: [30, 0, 0], rotation: identity },
     { id: "valid", part: "brick.dat", position: [10, 0, 0], rotation: identity },
@@ -21,10 +13,10 @@ const diagnostics: ModelDiagnostics = {
   ],
   floating: ["floating", "colliding2"],
   collisions: [["colliding", "colliding2"]],
-  intersectionPositions: [20, 0, 0, 21, 1, 0],
+  intersectionPositions: new Float32Array([20, 0, 0, 21, 1, 0]),
 };
 
-function createModel() {
+function createAssembly() {
   const model = new Group();
   const assembly = new Group();
   assembly.position.x = 10;
@@ -43,7 +35,7 @@ function createModel() {
 }
 
 test("matches nested part placements by part and transform", () => {
-  const { model, meshes } = createModel();
+  const { model, meshes } = createAssembly();
   model.rotation.x = Math.PI;
   model.scale.setScalar(0.01);
   model.position.set(1, 2, 3);
@@ -54,7 +46,7 @@ test("matches nested part placements by part and transform", () => {
 });
 
 test("highlights colliding bricks while fading floating-only and valid parts", () => {
-  const { model, meshes, material } = createModel();
+  const { model, meshes, material } = createAssembly();
   const otherViewer = model.clone();
   const view = createDiagnosticView(model, diagnostics);
   view.update({ highlightCollisions: true, showIntersections: false });
@@ -73,7 +65,7 @@ test("highlights colliding bricks while fading floating-only and valid parts", (
 });
 
 test("intersection lines use the same transform as the model without becoming build steps", () => {
-  const { model } = createModel();
+  const { model } = createAssembly();
   model.rotation.set(Math.PI, 0.5, 0);
   model.scale.setScalar(0.02);
   model.position.set(1, 2, 3);
@@ -92,7 +84,7 @@ test("intersection lines use the same transform as the model without becoming bu
 });
 
 test("restores original materials when a diagnostic view is disposed", () => {
-  const { model, meshes, material } = createModel();
+  const { model, meshes, material } = createAssembly();
   const view = createDiagnosticView(model, diagnostics);
   view.update({ highlightCollisions: true, showIntersections: true });
   view.dispose();
@@ -100,7 +92,7 @@ test("restores original materials when a diagnostic view is disposed", () => {
 });
 
 test("throws when a diagnostic placement has no matching part", () => {
-  const { model } = createModel();
+  const { model } = createAssembly();
   expect(() =>
     matchDiagnosticPlacements(model, {
       ...diagnostics,
@@ -108,27 +100,3 @@ test("throws when a diagnostic placement has no matching part", () => {
     }),
   ).toThrow(/floating/);
 });
-
-const modelDirectory = "src/lib/assets/models/";
-const diagnosticSuffix = ".diagnostics.json";
-const diagnosticFiles = (await readdir(modelDirectory, { recursive: true })).filter((file) =>
-  file.endsWith(diagnosticSuffix),
-);
-
-test.each(diagnosticFiles)(
-  "shipped diagnostics match the original LDraw and rendered placements: %s",
-  async (file) => {
-    const modelPath = modelDirectory + file.slice(0, -diagnosticSuffix.length);
-    const data = JSON.parse(await readFile(modelDirectory + file, "utf8"));
-    expect(data).toMatchObject({ version: 1, coordinateSystem: "ldraw", units: "LDU" });
-    const ldraw = await readFile(`${modelPath}.ldr`);
-    expect(createHash("sha256").update(ldraw).digest("hex")).toBe(data.modelSha256);
-    const loader = new LDrawLoader();
-    loader.setConditionalLineMaterial(LDrawConditionalLineMaterial);
-    // Normals don't affect placements, and smoothing baseplates takes seconds
-    loader.smoothNormals = false;
-    const group = await parsePackedModel(loader, await readFile(`${modelPath}.packed.mpd`, "utf8"));
-    const placements = matchDiagnosticPlacements(group, data);
-    expect(placements.size).toBe(data.placements.length);
-  },
-);

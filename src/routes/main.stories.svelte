@@ -2,20 +2,14 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Page from "./+page.svelte";
   import { expect, within } from "storybook/test";
-  import { Tooltip as BitsTooltip } from "bits-ui";
 
   const { Story } = defineMeta({
     title: "Pages/Main Page",
     component: Page,
     tags: ["autodocs"],
-    render: template,
     parameters: { layout: "fullscreen" },
   });
 </script>
-
-{#snippet template()}
-  <BitsTooltip.Provider><Page /></BitsTooltip.Provider>
-{/snippet}
 
 <Story
   name="Default"

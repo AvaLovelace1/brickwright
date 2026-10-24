@@ -9,8 +9,8 @@ export interface ModelView {
   maxSteps: number;
   window?: HTMLElement;
   status: "idle" | "loading" | "loaded" | "error";
-  inViewport?: boolean;
-  expanded?: boolean;
+  inViewport: boolean;
+  expanded: boolean;
   diagnosticsUrl?: string;
   diagnostics?: ModelDiagnostics;
   diagnosticsError?: boolean;
@@ -26,16 +26,24 @@ const urls = import.meta.glob<string>(
   { eager: true, query: "?url&no-inline", import: "default" },
 );
 
-export function createModel(name: string, caption: string): ModelView {
+export function modelFiles(name: string): Pick<ModelView, "ldr" | "ldrPacked" | "diagnosticsUrl"> {
   const path = `./assets/models/${name}`;
   return {
     ldr: urls[`${path}.ldr`],
     ldrPacked: urls[`${path}.packed.mpd`],
     diagnosticsUrl: urls[`${path}.diagnostics.json`],
+  };
+}
+
+export function createModel(name: string, caption: string): ModelView {
+  return {
+    ...modelFiles(name),
     caption,
     stepsShown: 1,
     maxSteps: 1,
     status: "idle",
+    inViewport: false,
+    expanded: false,
   };
 }
 
@@ -43,5 +51,5 @@ export function createModel(name: string, caption: string): ModelView {
 export function activeView(model: ModelView): "inline" | "expanded" | undefined {
   if (!isPageVisible()) return undefined;
   if (model.expanded) return "expanded";
-  return model.inViewport === false ? undefined : "inline";
+  return model.inViewport ? "inline" : undefined;
 }

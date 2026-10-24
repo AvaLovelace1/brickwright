@@ -1,9 +1,9 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { Tooltip } from "bits-ui";
   import { expect, waitFor, within } from "storybook/test";
-  import { loadDiagnostics } from "#lib/model-diagnostics.js";
-  import { createModel } from "#lib/models.js";
+  import { isPhysicallyValid, loadDiagnostics } from "#lib/model-diagnostics.js";
+  import { modelFiles } from "#lib/models.js";
+  import { waitForModel } from "#lib/story-helpers.js";
   import ExistingMethods from "./ExistingMethods.svelte";
 
   const { Story } = defineMeta({
@@ -16,11 +16,7 @@
 </script>
 
 {#snippet template()}
-  <Tooltip.Provider>
-    <div class="mx-auto max-w-7xl p-4 sm:p-8">
-      <ExistingMethods />
-    </div>
-  </Tooltip.Provider>
+  <div class="mx-auto max-w-7xl p-4 sm:p-8"><ExistingMethods /></div>
 {/snippet}
 
 <Story
@@ -38,18 +34,16 @@
       ]) {
         const viewer = figure.getByRole("figure", { name: `${name} build` });
         const model = within(viewer);
-        viewer.scrollIntoView({ block: "center" });
-        await waitFor(() => expect(model.getByRole("button", { name: "Rewind" })).toBeVisible(), {
-          timeout: 45_000,
-        });
-        const download = model.getByRole("link", { name: "Download LDraw" });
-        await expect(download).toBeVisible();
+        await waitForModel(viewer);
+        await expect(model.getByRole("button", { name: "Rewind" })).toBeVisible();
+        await expect(model.getByRole("link", { name: "Download LDraw" })).toBeVisible();
         const diagnostics = await loadDiagnostics(
-          createModel(`existing-methods/truck-${run}`, name).diagnosticsUrl!,
+          modelFiles(`existing-methods/truck-${run}`).diagnosticsUrl!,
         );
-        const valid = diagnostics.collisions.length === 0 && diagnostics.floating.length === 0;
         await waitFor(() =>
-          expect(model.getByRole("status")).toHaveTextContent(valid ? /^Valid$/ : /^Invalid$/),
+          expect(model.getByRole("status")).toHaveTextContent(
+            isPhysicallyValid(diagnostics) ? /^Valid$/ : /^Invalid$/,
+          ),
         );
         const hasIntersections = diagnostics.intersectionPositions.length > 0;
         await waitFor(() =>

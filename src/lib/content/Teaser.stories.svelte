@@ -1,9 +1,8 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, screen, waitFor } from "storybook/test";
-  import { Tooltip } from "bits-ui";
   import Teaser from "./Teaser.svelte";
-  import { createModel } from "#lib/models.js";
+  import { modelFiles } from "#lib/models.js";
   import referenceImageUrl from "#lib/assets/models/teaser/combine-harvester-reference.png";
 
   const { Story } = defineMeta({
@@ -23,13 +22,11 @@
 </script>
 
 {#snippet template()}
-  <Tooltip.Provider>
-    <div class="min-h-screen bg-text p-4 text-bg sm:p-8">
-      <div class="mx-auto max-w-4xl">
-        <Teaser />
-      </div>
+  <div class="min-h-screen bg-text p-4 text-bg sm:p-8">
+    <div class="mx-auto max-w-4xl">
+      <Teaser />
     </div>
-  </Tooltip.Provider>
+  </div>
 {/snippet}
 
 <Story
@@ -52,9 +49,7 @@
     await step("The selected model starts building once it loads", async () => {
       await waitFor(
         () => expect(canvas.getByRole("button", { name: /^(Pause|Rewind)$/ })).toBeVisible(),
-        {
-          timeout: 45_000,
-        },
+        { timeout: 45_000 },
       );
     });
   }}
@@ -64,11 +59,11 @@
   name="Select a Prompt"
   play={async ({ canvas, userEvent, step }) => {
     const trigger = canvas.getByRole("combobox", { name: /^Help me build…/ });
-    for (const [prompt, filename] of [
-      ["A combine harvester from an image", "combine-harvester"],
-      ["Hong Kong’s Victoria Harbour", "victoria-harbour"],
-      ["A poseable crab", "poseable-crab"],
-      ["A lighthouse besieged by a sea serpent", "lighthouse-sea-serpent"],
+    for (const [prompt, model] of [
+      ["A combine harvester from an image", "teaser/combine-harvester"],
+      ["Hong Kong’s Victoria Harbour", "teaser/victoria-harbour"],
+      ["A poseable crab", "teaser/poseable-crab"],
+      ["A lighthouse besieged by a sea serpent", "teaser/lighthouse-sea-serpent"],
     ]) {
       await step(`Select ${prompt}`, async () => {
         await userEvent.click(trigger);
@@ -80,12 +75,12 @@
         await expect(canvas.getAllByRole("figure")).toHaveLength(1);
         await expect(canvas.getByRole("link", { name: "Download LDraw" })).toHaveAttribute(
           "href",
-          createModel(`teaser/${filename}`, prompt).ldr,
+          modelFiles(model).ldr,
         );
         const referenceImage = canvas.queryByRole("img", {
           name: /combine harvester/,
         });
-        if (filename === "combine-harvester") {
+        if (model === "teaser/combine-harvester") {
           await expect(referenceImage).toBeVisible();
           await expect(canvas.getByRole("link", { name: "View reference image" })).toHaveAttribute(
             "href",

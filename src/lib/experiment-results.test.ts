@@ -7,7 +7,10 @@ import {
   results,
   metricColumns,
   fullAgentName,
+  metricEmphasis,
   resultModelName,
+  type AgentId,
+  type MetricKey,
 } from "./experiment-results";
 
 const resultDirectory = "src/lib/assets/models/results";
@@ -47,7 +50,6 @@ test("displayed comparisons have distinct filenames, all assets, and matching pr
         for (const extension of ["ldr", "packed.mpd", "diagnostics.json"])
           expect(existsSync(`${modelPath}.${extension}`), `${modelPath}.${extension}`).toBe(true);
 
-        // Provenance may also retain archived comparisons that are no longer displayed.
         const records = provenance.models.filter(
           (model) =>
             model.prompt === prompt.id && model.agent === agent.value && model.method === method,
@@ -55,7 +57,6 @@ test("displayed comparisons have distinct filenames, all assets, and matching pr
         expect(records, name).toHaveLength(1);
         expect(records[0].file, name).toBe(`${name}.ldr`);
         const diagnostics = JSON.parse(readFileSync(`${modelPath}.diagnostics.json`, "utf8"));
-        // Shared diagnostic tests check the file hash and every rendered placement.
         expect(records[0].modelSha256, name).toBe(diagnostics.modelSha256);
       }
     }
@@ -63,47 +64,40 @@ test("displayed comparisons have distinct filenames, all assets, and matching pr
   expect(new Set(filenames).size, "Duplicate download filenames").toBe(filenames.length);
 });
 
-test("table rows reference configured agents and provide usable values for every column", () => {
-  const agentIds = new Set(agents.map((agent) => agent.value));
+test("table rows are unique and provide a value for every column", () => {
   const rowIds = results.map((row) => JSON.stringify([row.agent, row.method]));
   expect(results.length).toBeGreaterThan(0);
   expect(new Set(rowIds).size, "Duplicate agent/method rows").toBe(rowIds.length);
-
   for (const row of results) {
-    if (row.agent !== null)
-      expect(agentIds.has(row.agent), `Unknown agent: ${row.agent}`).toBe(true);
     expect(row.method.trim()).not.toBe("");
-    for (const column of metricColumns) {
-      const context = `${row.agent ?? "standalone"} / ${row.method} / ${column.key}`;
-      const cell = row.metrics[column.key];
-      expect(cell, context).toBeDefined();
-      expect(cell.value.trim(), context).not.toBe("");
-    }
+    for (const column of metricColumns)
+      expect(row.metrics[column.key].trim(), `${row.method} / ${column.key}`).not.toBe("");
   }
 });
 
-test("bold and underline mark the best and second-best ranked metrics within each agent", () => {
-  const ranked = metricColumns.filter((column) => column.ranked);
-  for (const agent of agents) {
-    const group = results.filter((row) => row.agent === agent.value);
-    for (const column of ranked) {
-      const scores = [
-        ...new Set(
-          group.map((row) => Number(row.metrics[column.key].value)).filter(Number.isFinite),
-        ),
-      ].sort((a, b) => (column.direction === "higher" ? b - a : a - b));
-      for (const row of group) {
-        const rank = scores.indexOf(Number(row.metrics[column.key].value));
-        const expected = rank === 0 ? "bold" : rank === 1 ? "underline" : undefined;
-        expect(
-          row.metrics[column.key].emphasis,
-          `${agent.value} / ${row.method} / ${column.key}`,
-        ).toBe(expected);
-      }
-    }
-  }
-  for (const row of results)
-    for (const column of metricColumns)
-      if (row.agent === null || !column.ranked)
-        expect(row.metrics[column.key].emphasis, `${row.method} / ${column.key}`).toBeUndefined();
+const emphasis = (agent: AgentId | null, method: string, key: MetricKey) =>
+  metricEmphasis(
+    results.find((row) => row.agent === agent && row.method === method)!,
+    metricColumns.find((column) => column.key === key)!,
+  );
+
+test("bold and underline mark the best and second-best ranked scores within each agent", () => {
+  expect(emphasis("haiku", "BrickWright", "valid")).toBe("bold");
+  expect(emphasis("haiku", "BrickWright w/o assembly API", "valid")).toBe("underline");
+  expect(emphasis("haiku", "Claude Code", "valid")).toBeUndefined();
+  expect(emphasis("haiku", "BrickWright", "components")).toBe("bold");
+  expect(emphasis("haiku", "BrickWright w/o assembly API", "components")).toBe("underline");
+  expect(emphasis("haiku", "BrickWright w/o validator", "components")).toBeUndefined();
+});
+
+test("tied scores share a mark, and the next distinct score is second best", () => {
+  expect(emphasis("luna", "BrickWright", "noCollisions")).toBe("bold");
+  expect(emphasis("luna", "BrickWright w/o assembly API", "noCollisions")).toBe("bold");
+  expect(emphasis("luna", "BrickWright w/o validator", "noCollisions")).toBe("underline");
+});
+
+test("standalone methods, unranked columns, and missing scores are unmarked", () => {
+  expect(emphasis(null, "BrickNet", "vqa")).toBeUndefined();
+  expect(emphasis("haiku", "BrickWright", "parts")).toBeUndefined();
+  expect(emphasis("haiku", "Claude Code", "checks")).toBeUndefined();
 });
