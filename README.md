@@ -19,7 +19,11 @@
 
 ---
 
-**BrickWright** is a framework for automatically creating *physically feasible* LEGO® builds with AI agents.
+**BrickWright** enables pre-trained coding agents to generate high-fidelity, _physically feasible_ LEGO® builds from
+text or image prompts by writing code with **BrickLayer**, a Python toolkit for build creation and validation. Whereas
+baseline agents achieve physical validity rates ranging from only 9% (GPT-6 Luna) to 69% (GPT-6 Astra),
+BrickWright-guided agents achieve **100% validity** on a sample of 512 prompts, while improving prompt adherence for
+lightweight agents and maintaining it for stronger agents.
 
 This repository contains two packages:
 
