@@ -1,9 +1,20 @@
 [project]
-name = "bricklayer"
+name = "bricklayer-sdk"
 version = "0.1.0"
 description = "An SDK for programmatically creating and validating LEGO® builds."
 readme = "README.md"
-license = "MIT"
+license = "MIT AND CC-BY-2.0 AND CC-BY-4.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "BrickWright Authors" }]
+keywords = ["lego", "ldraw", "cad"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Multimedia :: Graphics :: 3D Modeling",
+    "Typing :: Typed",
+]
 requires-python = ">=3.11"
 dependencies = [
     "bm25s",
@@ -13,12 +24,19 @@ dependencies = [
     "python-fcl",
 ]
 
+[project.urls]
+Homepage = "https://avalovelace1.github.io/brickwright/"
+Repository = "https://github.com/AvaLovelace1/brickwright"
+
 [project.scripts]
 extract-part-data = "bricklayer.ldraw.scripts.run_all:main"
 
 [build-system]
 requires = ["uv_build>=0.11.2,<0.12.0"]
 build-backend = "uv_build"
+
+[tool.uv.build-backend]
+module-name = "bricklayer"
 
 [dependency-groups]
 dev = [

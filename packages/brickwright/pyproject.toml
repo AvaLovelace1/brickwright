@@ -4,9 +4,20 @@ version = "0.1.0"
 description = "Agentic LEGO® build generation."
 readme = "README.md"
 license = "MIT"
+license-files = ["LICENSE"]
+authors = [{ name = "BrickWright Authors" }]
+keywords = ["lego", "ldraw", "agents", "llm"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Typing :: Typed",
+]
 requires-python = ">=3.11"
 dependencies = [
-    "bricklayer",
+    "bricklayer-sdk",
     "gltflib",
     "ldraw2mesh",
     "litellm",
@@ -20,7 +31,11 @@ dependencies = [
 ]
 
 [tool.uv.sources]
-bricklayer = { workspace = true }
+bricklayer-sdk = { workspace = true }
+
+[project.urls]
+Homepage = "https://avalovelace1.github.io/brickwright/"
+Repository = "https://github.com/AvaLovelace1/brickwright"
 
 [project.scripts]
 brickwright = "brickwright.cli:main"

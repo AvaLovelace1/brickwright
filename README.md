@@ -32,7 +32,7 @@ This repository contains two packages:
 | Package                                 | Description                                                                                                                                                                       |
 |-----------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | [**bricklayer**](packages/bricklayer)   | An SDK for programmatically creating and validating LEGO builds. Assemble builds from real catalog parts, check them for validity, and export to [LDraw](https://www.ldraw.org/). |
-| [**brickwright**](packages/brickwright) | An framework that guides an LLM agent to generate LEGO builds with BrickLayer.                                                                                                    |
+| [**brickwright**](packages/brickwright) | A framework that guides an LLM agent to generate LEGO builds with BrickLayer.                                                                                                     |
 
 ## Quickstart
 
