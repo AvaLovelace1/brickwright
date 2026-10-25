@@ -31,7 +31,7 @@
     aria-labelledby="{uid}-label {uid}-value"
     class={[
       "flex w-full cursor-pointer items-center justify-between gap-3 px-3 py-2",
-      "bb-border bg-surface",
+      "bb-border bg-surface active:bg-bg",
       "text-left text-text",
       "focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-line",
       className,

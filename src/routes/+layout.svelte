@@ -40,7 +40,7 @@
 <Tooltip.Provider>
   <a
     href="#main-content"
-    class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bb-border focus:bg-surface focus:px-4 focus:py-2 focus:text-text"
+    class="sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-[100] focus:bb-border focus:bg-surface focus:px-4 focus:py-2 focus:text-text active:bg-primary active:text-ink"
     >Skip to content</a
   >
   <Header />

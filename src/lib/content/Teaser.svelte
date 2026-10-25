@@ -61,7 +61,7 @@
             target="_blank"
             rel="external noopener"
             aria-label="View reference image"
-            class="mt-1 block w-48 max-w-full rounded-(--bb-border-radius) focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-line"
+            class="mt-1 block w-48 max-w-full rounded-(--bb-border-radius) focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-line active:outline-2 active:outline-offset-3 active:outline-primary"
           >
             <img
               src={prompt.image}

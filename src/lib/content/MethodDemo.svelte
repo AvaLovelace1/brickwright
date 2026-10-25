@@ -120,7 +120,7 @@
                     <span
                       aria-hidden="true"
                       class={[
-                        "h-2 w-full border border-line group-hover:bg-primary-bright",
+                        "h-2 w-full border border-line group-hover:bg-primary-bright group-active:bg-primary-deep",
                         i <= index ? "bg-primary" : "bg-bg",
                       ]}
                     ></span>

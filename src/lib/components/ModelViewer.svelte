@@ -226,7 +226,7 @@
     {#snippet child({ props })}
       <BitsButton.Root
         {...props}
-        class="flex min-h-6 min-w-6 cursor-pointer items-center justify-center text-text outline-link hover:text-link focus-visible:text-link focus-visible:outline-2"
+        class="flex min-h-6 min-w-6 cursor-pointer items-center justify-center rounded-(--bb-border-radius) text-text outline-link hover:bg-bg hover:text-link focus-visible:text-link focus-visible:outline-2 active:bg-primary active:text-ink"
         {href}
         {download}
       >

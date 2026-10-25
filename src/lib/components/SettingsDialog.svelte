@@ -34,8 +34,8 @@
       <BitsDialog.Close
         aria-label="Close settings"
         class="absolute top-2 right-2 flex size-8 cursor-pointer items-center justify-center
-               rounded-(--bb-border-radius) hover:text-link
-               focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line"
+               rounded-(--bb-border-radius) hover:bg-bg hover:text-link focus-visible:outline-2 focus-visible:outline-offset-2
+               focus-visible:outline-line active:bg-primary active:text-ink"
       >
         <span class="iconify text-xl tdesign--close" aria-hidden="true"></span>
       </BitsDialog.Close>

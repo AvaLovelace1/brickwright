@@ -57,7 +57,7 @@
               {...props}
               href={methodBuilds[revision].download}
               download="build.py"
-              class="flex cursor-pointer items-center text-base text-text outline-link hover:text-link focus-visible:text-link focus-visible:outline-2"
+              class="flex cursor-pointer items-center rounded-(--bb-border-radius) text-xl text-text outline-link hover:text-link focus-visible:text-link focus-visible:outline-2 active:bg-primary active:text-ink"
             >
               <span class="iconify tdesign--download" aria-hidden="true"></span>
               <span class="sr-only">Download code</span>

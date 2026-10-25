@@ -22,7 +22,7 @@
   <table
     aria-labelledby="{uid}-heading"
     aria-describedby="{uid}-notes"
-    class="w-full border-collapse bg-surface text-sm tabular-nums [&_a]:text-link [&_a]:underline [&_a:hover]:text-link-hover"
+    class="w-full border-collapse bg-surface text-sm tabular-nums [&_a]:text-link [&_a]:underline [&_a]:hover:text-link-hover [&_a]:focus-visible:outline-2 [&_a]:focus-visible:outline-offset-2 [&_a]:focus-visible:outline-line [&_a]:active:bg-primary [&_a]:active:text-ink"
   >
     <thead class="border-b-2 border-line bg-bg whitespace-nowrap">
       <tr>

@@ -21,10 +21,10 @@
         <HardShadow bgClass={isCurrent ? "bg-primary-deep" : "bg-transparent"}>
           <a
             class={[
-              "flex items-center gap-1 bb-border px-3 py-2",
+              "flex items-center gap-1 bb-border px-3 py-2 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-line",
               isCurrent
                 ? "bg-primary text-ink"
-                : "border-transparent hover:border-line hover:bg-bg",
+                : "border-transparent hover:border-line hover:bg-bg active:border-line active:bg-primary active:text-ink",
             ]}
             href={resolve(`/${href}`)}
             aria-current={isCurrent ? "location" : undefined}
