@@ -2,8 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import type { Props as ModelViewerProps } from "./ModelViewer.svelte";
   import ModelViewer from "./ModelViewer.svelte";
-  import SharedCanvas from "./SharedCanvas.svelte";
-  import { expect, screen, spyOn, waitFor, within } from "storybook/test";
+  import { expect, screen, spyOn, waitFor, within, type MockInstance } from "storybook/test";
   import { flushSync } from "svelte";
   import { createModel, type ModelView } from "#lib/models.js";
   import { FEASIBILITY_CHECKS } from "#lib/model-diagnostics.js";
@@ -21,6 +20,7 @@
   let retryModel = $state(cruiseShip("A cruise ship that fails to download once"));
   // A fragment gives the model its own cache entry without changing the file that is fetched.
   retryModel.ldrPacked += "#retry";
+  let consoleWarn: MockInstance<Console["warn"]>;
 
   function createDiagnosticModel() {
     return createModel(
@@ -34,6 +34,94 @@
   let combinedModel = $state(createDiagnosticModel());
   const diagnosticArgs = { class: "size-80" } satisfies Partial<ModelViewerProps>;
 
+  let blockedModel = $state(cruiseShip("A cruise ship without WebGL"));
+  let recoveringModels = $state([
+    cruiseShip("A cruise ship waiting for WebGL"),
+    cruiseShip("Another cruise ship waiting for WebGL"),
+  ]);
+  let mismatchedModel = $state(createMismatchedModel());
+  let healthyModel = $state(cruiseShip("A cruise ship beside a build that fails to draw"));
+  let expandedMismatchedModel = $state(createMismatchedModel());
+  expandedMismatchedModel.ldrPacked += "#stalled";
+  let reopenedModel = $state(cruiseShip("A cruise ship expanded again and again"));
+
+  function createMismatchedModel() {
+    const model = createDiagnosticModel();
+    model.diagnosticsUrl += "#mismatch";
+    return model;
+  }
+
+  let webGLAvailable = true;
+  /** Makes WebGL unavailable until the story sets `webGLAvailable`. */
+  function blockWebGL() {
+    const getContext = HTMLCanvasElement.prototype.getContext;
+    webGLAvailable = false;
+    HTMLCanvasElement.prototype.getContext = function (
+      this: HTMLCanvasElement,
+      contextId: string,
+      options?: unknown,
+    ) {
+      if (contextId.includes("webgl") && !webGLAvailable) return null;
+      return getContext.call(this, contextId as "2d", options);
+    } as typeof getContext;
+    return () => {
+      HTMLCanvasElement.prototype.getContext = getContext;
+    };
+  }
+
+  let delayedModel = $state(cruiseShip("A cruise ship on a busy page"));
+
+  /** Delivers each viewport change together with an older one, as a busy page can. */
+  function delayViewportChanges() {
+    const RealObserver = window.IntersectionObserver;
+    window.IntersectionObserver = class extends RealObserver {
+      constructor(callback: IntersectionObserverCallback, options?: IntersectionObserverInit) {
+        super((entries, observer) => {
+          const older = entries.map(
+            (entry) =>
+              ({
+                target: entry.target,
+                time: entry.time - 1,
+                isIntersecting: false,
+                intersectionRatio: 0,
+                boundingClientRect: entry.boundingClientRect,
+                intersectionRect: new DOMRectReadOnly(),
+                rootBounds: entry.rootBounds,
+              }) satisfies IntersectionObserverEntry,
+          );
+          callback([...older, ...entries], observer);
+        }, options);
+      }
+    };
+    return () => {
+      window.IntersectionObserver = RealObserver;
+    };
+  }
+
+  let releaseStalled = () => {};
+  /**
+   * Serves diagnostics for a moved part, which cannot be matched to the model, for URLs ending in
+   * `#mismatch`, and holds downloads ending in `#stalled` until the story releases them.
+   */
+  function interceptModelFiles() {
+    const realFetch = globalThis.fetch;
+    const stalled = Promise.withResolvers<void>();
+    releaseStalled = stalled.resolve;
+    const fetch = spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
+      const url = String(input);
+      if (url.endsWith("#stalled")) await stalled.promise;
+      const response = await realFetch(input, init);
+      if (!url.endsWith("#mismatch")) return response;
+      const diagnostics = await response.json();
+      diagnostics.placements[0].position[0] += 1000;
+      return Response.json(diagnostics);
+    });
+    return () => {
+      stalled.resolve();
+      fetch.mockRestore();
+    };
+  }
+
   async function expectDiagnosticsLoaded(model: ModelView) {
     await waitFor(
       () => {
@@ -46,14 +134,7 @@
 </script>
 
 {#snippet template(args: ModelViewerProps)}
-  <div class="relative">
-    <ModelViewer {...args} bind:model={args.model} />
-    <SharedCanvas
-      models={[args.model]}
-      highlightCollisions={args.highlightCollisions}
-      showIntersections={args.showIntersections}
-    />
-  </div>
+  <ModelViewer {...args} bind:model={args.model} />
 {/snippet}
 
 <Story
@@ -244,7 +325,11 @@
       failed = true;
       return Promise.resolve(new Response(null, { status: 503 }));
     });
-    return () => fetch.mockRestore();
+    consoleWarn = spyOn(console, "warn");
+    return () => {
+      fetch.mockRestore();
+      consoleWarn.mockRestore();
+    };
   }}
   play={async ({ canvas, userEvent }) => {
     await expect(await canvas.findByRole("alert", {}, { timeout: 45_000 })).toHaveTextContent(
@@ -255,6 +340,10 @@
     await expect(
       await canvas.findByRole("slider", { name: "Steps shown" }, { timeout: 45_000 }),
     ).toBeVisible();
+    // Only the viewer that owns the model records its loading and failure.
+    await expect(consoleWarn.mock.calls.flat().join("\n")).not.toContain(
+      "ownership_invalid_mutation",
+    );
   }}
 />
 
@@ -336,5 +425,114 @@
     await expectDiagnosticsLoaded(args.model);
     await expect(canvas.getByRole("status")).toHaveTextContent(/^Invalid$/);
     await expect(canvas.getByText("Intersections", { exact: true })).toBeVisible();
+  }}
+/>
+
+<Story
+  name="WebGL Unavailable"
+  args={{ model: blockedModel, class: "size-64" }}
+  parameters={{ a11y: { context: "body" } }}
+  beforeEach={blockWebGL}
+  play={async ({ canvas, userEvent }) => {
+    await expect(await canvas.findByRole("alert")).toHaveTextContent(
+      "Unable to load the 3D viewer.",
+    );
+    await expect(canvas.getByRole("figure")).toHaveAttribute("aria-busy", "false");
+    await userEvent.click(canvas.getByRole("button", { name: "Expand view" }));
+    // Leave the dialog open for the accessibility audit.
+    const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
+    await expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+      "Unable to load the 3D viewer.",
+    );
+  }}
+/>
+
+<Story
+  name="Retry 3D Viewer"
+  asChild
+  beforeEach={blockWebGL}
+  play={async ({ canvas, userEvent }) => {
+    const figures = canvas.getAllByRole("figure");
+    for (const figure of figures) {
+      await expect(await within(figure).findByRole("alert")).toHaveTextContent(
+        "Unable to load the 3D viewer.",
+      );
+    }
+    webGLAvailable = true;
+    await userEvent.click(within(figures[1]).getByRole("button", { name: "Retry viewer" }));
+    for (const figure of figures) {
+      await expect(
+        await within(figure).findByRole("slider", { name: "Steps shown" }, { timeout: 45_000 }),
+      ).toBeVisible();
+      await expect(within(figure).queryByRole("alert")).toBeNull();
+    }
+  }}
+>
+  <ModelViewer bind:model={recoveringModels[0]} class="size-48" />
+  <ModelViewer bind:model={recoveringModels[1]} class="size-48" />
+</Story>
+
+<Story
+  name="Model That Fails to Draw"
+  asChild
+  beforeEach={interceptModelFiles}
+  play={async ({ canvas }) => {
+    const [failing, healthy] = canvas.getAllByRole("figure");
+    await expect(
+      await within(failing).findByRole("alert", {}, { timeout: 45_000 }),
+    ).toHaveTextContent("Unable to load the 3D model.");
+    await expect(
+      await within(healthy).findByRole("slider", { name: "Steps shown" }, { timeout: 45_000 }),
+    ).toBeVisible();
+    await expect(within(healthy).queryByRole("alert")).toBeNull();
+  }}
+>
+  <ModelViewer bind:model={mismatchedModel} class="size-48" />
+  <ModelViewer bind:model={healthyModel} class="size-48" />
+</Story>
+
+<Story
+  name="Expanded Model That Fails to Draw"
+  args={{ model: expandedMismatchedModel, class: "size-64" }}
+  parameters={{ a11y: { context: "body" } }}
+  beforeEach={interceptModelFiles}
+  play={async ({ canvas, userEvent }) => {
+    await userEvent.click(canvas.getByRole("button", { name: "Expand view" }));
+    const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
+    await waitFor(() => expect(dialog.querySelector("canvas")).not.toBeNull());
+    releaseStalled();
+    await expect(
+      await within(dialog).findByRole("alert", {}, { timeout: 45_000 }),
+    ).toHaveTextContent("Unable to load the 3D model.");
+  }}
+/>
+
+<Story
+  name="Reopened Expanded View"
+  args={{ model: reopenedModel, class: "size-64" }}
+  play={async ({ canvas, userEvent }) => {
+    let first: HTMLCanvasElement | undefined;
+    for (let open = 0; open < 3; open++) {
+      await userEvent.click(canvas.getByRole("button", { name: "Expand view" }));
+      const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
+      await waitFor(() => expect(dialog.querySelector("canvas")).not.toBeNull());
+      const current = dialog.querySelector("canvas")!;
+      first ??= current;
+      // Every expanded view draws on one canvas, keeping its WebGL context.
+      await expect(current).toBe(first);
+      await userEvent.click(within(dialog).getByRole("button", { name: "Close view" }));
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    }
+  }}
+/>
+
+<Story
+  name="Delayed Viewport Changes"
+  args={{ model: delayedModel, class: "size-64" }}
+  beforeEach={delayViewportChanges}
+  play={async ({ canvas }) => {
+    await expect(
+      await canvas.findByRole("slider", { name: "Steps shown" }, { timeout: 45_000 }),
+    ).toBeVisible();
   }}
 />

@@ -3,7 +3,6 @@
   import type { ModelView } from "#lib/models.js";
   import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
   import ModelViewer from "#lib/components/ModelViewer.svelte";
-  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
 
   interface Props {
     title: string;
@@ -14,12 +13,11 @@
 
   let { title, prompt, groups = $bindable(), caption }: Props = $props();
   const uid = $props.id();
-  const models = $derived(groups.flatMap((group) => group.models));
   let showIntersections = $state(true);
   let highlightCollisions = $state(false);
 </script>
 
-<figure aria-labelledby="{uid}-title" aria-describedby="{uid}-caption" class="relative">
+<figure aria-labelledby="{uid}-title" aria-describedby="{uid}-caption">
   <div class="mb-3 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
     <p id="{uid}-title" class="font-display text-2xl font-extrabold">{title}</p>
     <ModelDiagnosticControls bind:showIntersections bind:highlightCollisions />
@@ -50,7 +48,6 @@
       </div>
     {/each}
   </div>
-  <SharedCanvas {models} {highlightCollisions} {showIntersections} />
   <figcaption id="{uid}-caption" class="mt-6 text-sm text-pretty">
     {@render caption()}
   </figcaption>

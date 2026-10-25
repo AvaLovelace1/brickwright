@@ -2,7 +2,6 @@
   import { createModel } from "#lib/models.js";
   import Select from "#lib/components/Select.svelte";
   import ModelViewer from "#lib/components/ModelViewer.svelte";
-  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import SpeechBubble from "#lib/components/SpeechBubble.svelte";
   import { FEASIBILITY_CHECKS } from "#lib/model-diagnostics.js";
 
@@ -77,19 +76,16 @@
     </div>
   </SpeechBubble>
   <SpeechBubble speaker="robot" {...BUBBLE_SIZES}>
-    <div class="relative">
-      {#key selected}
-        <ModelViewer
-          bind:model={models[index]}
-          class="aspect-4/3 sm:aspect-3/2 lg:aspect-video"
-          autoplay
-          badge={{
-            text: "Physically feasible",
-            description: FEASIBILITY_CHECKS,
-          }}
-        />
-        <SharedCanvas models={[models[index]]} />
-      {/key}
-    </div>
+    {#key selected}
+      <ModelViewer
+        bind:model={models[index]}
+        class="aspect-4/3 sm:aspect-3/2 lg:aspect-video"
+        autoplay
+        badge={{
+          text: "Physically feasible",
+          description: FEASIBILITY_CHECKS,
+        }}
+      />
+    {/key}
   </SpeechBubble>
 </section>

@@ -1,23 +1,22 @@
 <script lang="ts">
   import { Canvas } from "@threlte/core";
-  import LegoModel from "./LegoModel.svelte";
-  import { View } from "@threlte/extras";
-  import RenderOnScroll from "./RenderOnScroll.svelte";
-  import type { ModelView } from "#lib/models.js";
-  import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
+  import ElementView from "./ElementView.svelte";
+  import FollowViewport from "./FollowViewport.svelte";
+  import ViewerModel from "./ViewerModel.svelte";
+  import type { Viewer } from "#lib/viewers.svelte.js";
 
-  let { models = $bindable(), ...display }: { models: ModelView[] } & Partial<DiagnosticDisplay> =
-    $props();
+  let { viewers }: { viewers: Viewer[] } = $props();
 </script>
 
-<div class="pointer-events-none absolute inset-0">
+<!-- The canvas lies beneath viewer controls, the header, and dialogs. -->
+<div class="pointer-events-none absolute inset-x-0 top-0 z-1 h-[200lvh]">
   <Canvas renderMode="manual" dpr={Math.min(window.devicePixelRatio, 2)}>
-    <RenderOnScroll />
-    {#each models as model, index (model.caption)}
-      {#if model.status !== "idle"}
-        <View dom={model.window}>
-          <LegoModel bind:model={models[index]} {...display} />
-        </View>
+    <FollowViewport />
+    {#each viewers as viewer (viewer)}
+      {#if viewer.window}
+        <ElementView dom={viewer.window}>
+          <ViewerModel {viewer} />
+        </ElementView>
       {/if}
     {/each}
   </Canvas>

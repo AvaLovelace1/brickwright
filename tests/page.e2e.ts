@@ -109,22 +109,21 @@ test(
     await page.emulateMedia({ reducedMotion: "reduce" });
     await mainPage.goto("experiments");
     const { experiments } = mainPage;
-    const position = (n: number) => `${n} / ${prompts.length}`;
 
     await experiments.viewer.waitUntilLoaded();
     await experiments.drag(experiments.viewer.figure);
-    await expect(experiments.progress).toHaveText(position(1));
+    await expect(experiments.progress).toHaveText(experiments.position(1));
     await experiments.drag(experiments.prompt);
-    await expect(experiments.progress).toHaveText(position(2));
+    await expect(experiments.progress).toHaveText(experiments.position(2));
     await experiments.drag(experiments.prompt, "right");
-    await expect(experiments.progress).toHaveText(position(1));
+    await expect(experiments.progress).toHaveText(experiments.position(1));
     await experiments.drag(experiments.prompt, "right");
-    await expect(experiments.progress).toHaveText(position(prompts.length));
+    await expect(experiments.progress).toHaveText(experiments.position(prompts.length));
     await experiments.next.click();
-    await expect(experiments.progress).toHaveText(position(1));
+    await expect(experiments.progress).toHaveText(experiments.position(1));
     await experiments.previous.focus();
     await page.keyboard.press("Enter");
-    await expect(experiments.progress).toHaveText(position(prompts.length));
+    await expect(experiments.progress).toHaveText(experiments.position(prompts.length));
 
     const { tableScroller } = experiments;
     await tableScroller.focus();

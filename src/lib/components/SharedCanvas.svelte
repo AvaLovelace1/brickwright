@@ -1,24 +1,51 @@
 <script lang="ts">
-  import type { ModelView } from "#lib/models.js";
-  import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
+  import { onDestroy, type Snippet } from "svelte";
+  import { expandedView, inlineCanvas, viewers, type CanvasState } from "#lib/viewers.svelte.js";
 
-  let { models, ...display }: { models: ModelView[] } & Partial<DiagnosticDisplay> = $props();
+  let { children }: { children?: Snippet } = $props();
+  const drawn = $derived([...viewers].filter((viewer) => viewer.model.status !== "idle"));
+  // Each canvas loads with its first viewer and stays, keeping its WebGL context for the next ones.
+  let inlineOpened = $state(false);
+  let expandedOpened = $state(false);
+
+  $effect(() => {
+    if (drawn.length) inlineOpened = true;
+  });
+
+  $effect(() => {
+    if (expandedView.window) expandedOpened = true;
+  });
+
+  // The canvases leave with this host, so a later host starts without their failures.
+  onDestroy(() => {
+    inlineCanvas.retry = undefined;
+    expandedView.retry = undefined;
+  });
+
+  function offerRetry(canvas: CanvasState) {
+    return (_: unknown, reset: () => void) => {
+      canvas.retry = () => {
+        canvas.retry = undefined;
+        reset();
+      };
+    };
+  }
 </script>
 
-{#if models.some((model) => model.status !== "idle")}
-  <!-- Rebuilding the canvas when models enter or leave the error state lets Retry recover from a canvas that failed to start. -->
-  {#key models.some((model) => model.status === "error")}
-    <svelte:boundary
-      onerror={() => {
-        for (const model of models) {
-          if (model.status !== "idle") model.status = "error";
-        }
-      }}
-    >
-      {#await import("./ModelCanvas.svelte") then { default: ModelCanvas }}
-        <ModelCanvas {models} {...display} />
+{@render children?.()}
+{#if inlineOpened}
+  <svelte:boundary onerror={offerRetry(inlineCanvas)}>
+    {#await import("./ModelCanvas.svelte") then { default: ModelCanvas }}
+      <ModelCanvas viewers={drawn} />
+    {/await}
+  </svelte:boundary>
+{/if}
+{#if expandedOpened}
+  <div hidden>
+    <svelte:boundary onerror={offerRetry(expandedView)}>
+      {#await import("./ExpandedModel.svelte") then { default: ExpandedModel }}
+        <ExpandedModel />
       {/await}
-      {#snippet failed()}<span class="sr-only">3D viewer unavailable</span>{/snippet}
     </svelte:boundary>
-  {/key}
+  </div>
 {/if}

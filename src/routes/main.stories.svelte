@@ -2,6 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import Page from "./+page.svelte";
   import { expect, within } from "storybook/test";
+  import { expectControlsAboveCanvas, waitForView } from "#lib/story-helpers.js";
 
   const { Story } = defineMeta({
     title: "Pages/Main Page",
@@ -41,5 +42,15 @@
         motivation.getByRole("checkbox", { name: "Highlight colliding bricks" }),
       ).toBeChecked();
     });
+  }}
+/>
+
+<Story
+  name="Viewer Controls"
+  play={async ({ canvasElement }) => {
+    for (const figure of canvasElement.querySelectorAll<HTMLElement>("figure[aria-busy]")) {
+      await waitForView(figure);
+      expectControlsAboveCanvas(figure);
+    }
   }}
 />

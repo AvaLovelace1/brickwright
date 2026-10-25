@@ -14,6 +14,13 @@
     type DiagnosticDisplay,
   } from "#lib/model-diagnostics.js";
   import { activeView, type ModelView } from "#lib/models.js";
+  import {
+    expandedView,
+    inlineCanvas,
+    viewers,
+    type CanvasState,
+    type Viewer,
+  } from "#lib/viewers.svelte.js";
 
   interface ViewerBadge {
     text: string;
@@ -51,6 +58,7 @@
   );
 
   let dialogContent: HTMLElement | null = $state(null);
+  let inlineWindow = $state<HTMLElement>();
   let paused = $state(true);
   let initialized = false;
 
@@ -144,14 +152,53 @@
 
   function trackViewport(figure: HTMLElement) {
     const observer = new IntersectionObserver(
-      ([entry]) => {
-        model.inViewport = entry.isIntersecting;
-        if (entry.isIntersecting) requestLoad();
+      (entries) => {
+        // A busy page can deliver several changes at once; the last is current.
+        const { isIntersecting } = entries.at(-1)!;
+        model.inViewport = isIntersecting;
+        if (isIntersecting) requestLoad();
       },
       { rootMargin: "200px" },
     );
     observer.observe(figure);
     return () => observer.disconnect();
+  }
+
+  const viewer: Viewer = {
+    get model() {
+      return model;
+    },
+    get window() {
+      return inlineWindow;
+    },
+    get highlightCollisions() {
+      return highlightCollisions;
+    },
+    get showIntersections() {
+      return showIntersections;
+    },
+    loaded(steps) {
+      model.maxSteps = steps;
+      model.status = "loaded";
+    },
+    failed() {
+      model.status = "error";
+    },
+  };
+
+  $effect(() => {
+    viewers.add(viewer);
+    return () => viewers.delete(viewer);
+  });
+
+  function showExpandedCanvas(target: HTMLElement) {
+    expandedView.viewer = viewer;
+    expandedView.window = target;
+    return () => {
+      if (expandedView.window !== target) return;
+      expandedView.viewer = undefined;
+      expandedView.window = undefined;
+    };
   }
 
   // The outline sits outside the canvas, so a zoomed model can't cover it.
@@ -191,14 +238,24 @@
   </Tooltip>
 {/snippet}
 
-{#snippet loadStatus()}
-  {#if model.status === "error"}
-    <div
-      class="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center text-sm text-text"
-    >
-      <p role="alert">Unable to load the 3D model.</p>
-      <Button text="Retry model" action={() => (model.status = "loading")} />
-    </div>
+{#snippet failure(message: string, retryText: string, retry: () => void)}
+  <div
+    class="absolute inset-0 flex flex-col items-center justify-center gap-2 p-4 text-center text-sm text-text"
+  >
+    <p role="alert">{message}</p>
+    <Button text={retryText} action={retry} />
+  </div>
+{/snippet}
+
+{#snippet loadStatus(canvas: CanvasState)}
+  {#if canvas.retry}
+    {@render failure("Unable to load the 3D viewer.", "Retry viewer", canvas.retry)}
+  {:else if model.status === "error"}
+    {@render failure(
+      "Unable to load the 3D model.",
+      "Retry model",
+      () => (model.status = "loading"),
+    )}
   {:else if model.status !== "loaded"}
     <p
       aria-live="polite"
@@ -232,14 +289,14 @@
 
 <figure
   {@attach trackViewport}
-  aria-busy={model.status === "idle" || model.status === "loading"}
+  aria-busy={!inlineCanvas.retry && (model.status === "idle" || model.status === "loading")}
   class={["@container relative", className]}
   aria-label={model.caption}
 >
   <HardShadow class="size-full">
-    <div class={WINDOW_CLASS} bind:this={model.window}></div>
+    <div class={WINDOW_CLASS} bind:this={inlineWindow}></div>
   </HardShadow>
-  {@render loadStatus()}
+  {@render loadStatus(inlineCanvas)}
   {#if badge || model.diagnosticsError}
     <div
       class="pointer-events-none absolute top-1 right-2 left-1 z-10 flex flex-wrap items-center gap-x-3 gap-y-1 p-1 text-text"
@@ -287,19 +344,8 @@
     aria-label="Expanded model view"
   >
     <HardShadow class="size-full">
-      <div class={WINDOW_CLASS}>
-        <svelte:boundary>
-          {#await import("./ExpandedModel.svelte") then { default: ExpandedModel }}
-            <ExpandedModel {model} {highlightCollisions} {showIntersections} />
-          {/await}
-          {#snippet failed()}
-            <p role="alert" class="p-4 text-text">
-              3D viewer unavailable. You can still download the LDraw file.
-            </p>
-          {/snippet}
-        </svelte:boundary>
-      </div>
-      {@render loadStatus()}
+      <div class={WINDOW_CLASS} {@attach showExpandedCanvas}></div>
+      {@render loadStatus(expandedView)}
       {@render toolbar(true)}
     </HardShadow>
   </Dialog>

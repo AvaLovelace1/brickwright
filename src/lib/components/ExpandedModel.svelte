@@ -1,12 +1,23 @@
 <script lang="ts">
   import { Canvas } from "@threlte/core";
-  import LegoModel from "./LegoModel.svelte";
-  import type { ModelView } from "#lib/models.js";
-  import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
+  import ViewerModel from "./ViewerModel.svelte";
+  import { expandedView } from "#lib/viewers.svelte.js";
 
-  let { model, ...display }: { model: ModelView } & DiagnosticDisplay = $props();
+  // Every expanded dialog borrows this canvas while open, so they share one WebGL context.
+  function moveIntoDialog(element: HTMLElement) {
+    const target = expandedView.window;
+    if (!target) return;
+    target.append(element);
+    return () => element.remove();
+  }
 </script>
 
-<Canvas dpr={Math.min(window.devicePixelRatio, 2)}>
-  <LegoModel {model} {...display} view="expanded" />
-</Canvas>
+<div class="size-full" {@attach moveIntoDialog}>
+  <Canvas dpr={Math.min(window.devicePixelRatio, 2)}>
+    {#key expandedView.viewer}
+      {#if expandedView.viewer}
+        <ViewerModel viewer={expandedView.viewer} view="expanded" />
+      {/if}
+    {/key}
+  </Canvas>
+</div>

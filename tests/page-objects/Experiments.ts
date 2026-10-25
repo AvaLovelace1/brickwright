@@ -1,5 +1,6 @@
 import type { Locator, Page } from "@playwright/test";
 import { ModelViewer } from "./ModelViewer";
+import { prompts } from "../../src/lib/experiment-results";
 
 export class Experiments {
   readonly section: Locator;
@@ -7,6 +8,7 @@ export class Experiments {
   readonly progress: Locator;
   readonly previous: Locator;
   readonly next: Locator;
+  readonly activeSlide: Locator;
   readonly prompt: Locator;
   readonly viewer: ModelViewer;
   readonly tableScroller: Locator;
@@ -18,10 +20,15 @@ export class Experiments {
     this.previous = this.carousel.getByRole("button", { name: "Previous prompt" });
     this.next = this.carousel.getByRole("button", { name: "Next prompt" });
     // Swiper marks the active slide with a class.
-    const activeSlide = this.carousel.locator(".swiper-slide-active");
-    this.prompt = activeSlide.locator("p").first();
-    this.viewer = new ModelViewer(activeSlide.getByRole("figure").first());
+    this.activeSlide = this.carousel.locator(".swiper-slide-active");
+    this.prompt = this.activeSlide.locator("p").first();
+    this.viewer = new ModelViewer(this.activeSlide.getByRole("figure").first());
     this.tableScroller = this.section.getByRole("region", { name: "Quantitative results" });
+  }
+
+  /** The carousel's position text for prompt `n`, counting from 1. */
+  position(n: number) {
+    return `${n} / ${prompts.length}`;
   }
 
   async drag(target: Locator, direction: "left" | "right" = "left") {

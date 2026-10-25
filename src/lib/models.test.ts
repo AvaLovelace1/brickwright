@@ -41,7 +41,7 @@ test.each(models)(
   "committed model has a packed copy with nonempty bounds and matching diagnostics: %s",
   async (model) => {
     const path = MODEL_DIRECTORY + model;
-    // Placements and bounds ignore normals, and smoothing baseplates takes seconds.
+    // Placements and bounds ignore normals.
     const loader = createLoader({ smoothNormals: false });
     const group = await parsePackedModel(loader, await readFile(`${path}.packed.mpd`, "utf8"));
     const size = Math.max(...new Box3().setFromObject(group).getSize(new Vector3()).toArray());

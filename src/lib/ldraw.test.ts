@@ -103,6 +103,17 @@ test("retries a failed download without blocking subsequent models", async () =>
   }
 });
 
+test("later models load even if timers pending after an earlier load are discarded", async () => {
+  const url = (name: string) => `data:text/plain,${encodeURIComponent(NESTED_MODEL)}#${name}`;
+  vi.useFakeTimers({ toFake: ["setTimeout"] });
+  try {
+    await loadModel(url("fake-timers"));
+  } finally {
+    vi.useRealTimers();
+  }
+  await expect(loadModel(url("real-timers"))).resolves.toHaveProperty("children.length", 3);
+});
+
 test("warm-up contains one instance of each part reachable through nested submodels", async () => {
   const warmupText = createPartWarmup(NESTED_MODEL)!;
   const warmup = await new Promise<Group>((resolve, reject) =>

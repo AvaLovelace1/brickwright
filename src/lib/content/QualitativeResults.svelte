@@ -28,11 +28,17 @@
           autoHeight: true,
           loop: true,
           spaceBetween: 24,
+          // A transform or z-index would stack the slides' viewer controls beneath the page's
+          // 3D canvas, so the wrapper moves by its left offset and the classes below unset both.
+          virtualTranslate: true,
           a11y: {
             slideLabelMessage: "{{index}} of {{slidesLength}}",
             wrapperLiveRegion: false,
           },
           on: {
+            setTranslate({ wrapperEl }, translate) {
+              wrapperEl.style.left = `${translate}px`;
+            },
             // Swiper reorders slides when looping; realIndex still follows the prompt order.
             realIndexChange({ realIndex }) {
               outgoingPromptIndex = activePromptIndex;
@@ -67,13 +73,13 @@
     </div>
     <ModelDiagnosticControls bind:showIntersections bind:highlightCollisions />
   </div>
-  <div class="swiper min-w-0" {@attach carousel}>
-    <div class="swiper-wrapper">
+  <div class="swiper z-auto! min-w-0" {@attach carousel}>
+    <div class="swiper-wrapper left-0 z-auto! transform-none! [transition-property:left,height]!">
       {#each prompts as prompt, index (prompt.id)}
         <!-- Keep the outgoing pair mounted until the slide animation ends. -->
         {@const showModels = index === activePromptIndex || index === outgoingPromptIndex}
         <div
-          class="swiper-slide p-1"
+          class="swiper-slide transform-none! p-1"
           inert={index !== activePromptIndex}
           aria-hidden={index !== activePromptIndex}
         >

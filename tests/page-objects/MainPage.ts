@@ -7,7 +7,9 @@ export class MainPage {
   readonly header: Locator;
   readonly nav: Locator;
   readonly main: Locator;
+  readonly viewers: Locator;
   readonly settings: Locator;
+  readonly expandedView: Locator;
   readonly themeSelect: Locator;
   readonly rotationCheckbox: Locator;
   readonly methodDemo: MethodDemo;
@@ -17,7 +19,9 @@ export class MainPage {
     this.header = page.getByRole("banner");
     this.nav = page.getByRole("navigation");
     this.main = page.getByRole("main");
+    this.viewers = this.main.locator("figure[aria-busy]");
     this.settings = page.getByRole("dialog", { name: "Settings", exact: true });
+    this.expandedView = page.getByRole("dialog", { name: "Expanded model view" });
     this.themeSelect = this.settings.getByRole("combobox", { name: /^Theme / });
     this.rotationCheckbox = this.settings.getByRole("checkbox", {
       name: "Automatically rotate models",

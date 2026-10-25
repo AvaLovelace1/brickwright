@@ -1,7 +1,9 @@
 import type { Page } from "@playwright/test";
 import { expect, test } from "./fixtures";
+import { ModelViewer } from "./page-objects/ModelViewer";
 
 const COMPARISON = "GPT-6 Astra build without BrickWright";
+const PACKED_MODEL = /\.packed\.[\w-]+\.mpd$/;
 
 async function countDraws(page: Page, selector = "canvas") {
   return page.evaluate(async (selector) => {
@@ -69,8 +71,7 @@ test("comparison models load as their viewers approach the viewport", async ({
 }) => {
   const requestedModels: string[] = [];
   page.on("request", (request) => {
-    if (/\.packed\.[\w-]+\.mpd$/.test(request.url()))
-      requestedModels.push(new URL(request.url()).pathname);
+    if (PACKED_MODEL.test(request.url())) requestedModels.push(new URL(request.url()).pathname);
   });
   await mainPage.goto();
   await expect(mainPage.viewer().button(/^(Pause|Rewind)$/)).toBeVisible({ timeout: 60_000 });
@@ -86,7 +87,7 @@ test("comparison models load as their viewers approach the viewport", async ({
 
 test("every model viewer links an LDraw file the site serves", async ({ page, mainPage }) => {
   await mainPage.goto();
-  const viewers = page.locator("figure[aria-busy]");
+  const viewers = mainPage.viewers;
   const hrefs = await viewers
     .getByRole("link", { name: "Download LDraw" })
     .evaluateAll((links) => links.map((link) => link.getAttribute("href")!));
@@ -103,6 +104,41 @@ test("offscreen sections do not allocate WebGL canvases", async ({ page, mainPag
   await expect(page.locator("canvas")).toHaveCount(1);
 });
 
+test("a dragged carousel build stays inside the carousel", async ({ page, mainPage }) => {
+  await page.emulateMedia({ reducedMotion: "reduce" });
+  await mainPage.goto("experiments");
+  const { experiments } = mainPage;
+  const slide = experiments.activeSlide;
+  for (const figure of await slide.getByRole("figure").all())
+    await new ModelViewer(figure).waitUntilLoaded();
+  await slide.evaluate((el) => el.scrollIntoView({ block: "center", behavior: "instant" }));
+  const carousel = (await experiments.carousel.locator(".swiper").boundingBox())!;
+  const build = (await slide.getByRole("figure").last().boundingBox())!;
+  // The strip skips the pixel the carousel's edge falls within.
+  const outside = {
+    x: Math.ceil(carousel.x + carousel.width) + 1,
+    y: build.y,
+    width: 16,
+    height: build.height,
+  };
+  const before = await page.screenshot({ clip: outside });
+
+  // Dragging right moves the right-hand build partly past the carousel's edge.
+  const prompt = (await experiments.prompt.boundingBox())!;
+  const y = prompt.y + prompt.height / 2;
+  await page.mouse.move(prompt.x + prompt.width * 0.2, y);
+  await page.mouse.down();
+  try {
+    await page.mouse.move(prompt.x + prompt.width * 0.6, y, { steps: 12 });
+    await page.evaluate(async () => {
+      for (let frame = 0; frame < 2; frame++) await new Promise(requestAnimationFrame);
+    });
+    expect((await page.screenshot({ clip: outside })).equals(before)).toBe(true);
+  } finally {
+    await page.mouse.up();
+  }
+});
+
 test("a stationary viewer redraws for keyboard camera input without rendering continuously", async ({
   page,
   mainPage,
@@ -111,7 +147,7 @@ test("a stationary viewer redraws for keyboard camera input without rendering co
   await mainPage.goto();
   const viewer = mainPage.viewer();
   await viewer.waitUntilLoaded();
-  await viewer.figure.getByRole("group", { name: /interactive 3D view/ }).focus();
+  await viewer.view.focus();
   await expect.poll(() => countDraws(page)).toBe(0);
   const canvas = page.locator("canvas").first();
   const before = await canvas.screenshot();
@@ -137,7 +173,7 @@ test("global rotation respects reduced motion, persists, and controls newly load
   await expect.poll(() => countDraws(page)).toBeGreaterThan(0);
 
   await viewer.button("Expand view").click();
-  await expect(page.getByRole("dialog", { name: "Expanded model view" })).toBeVisible();
+  await expect(mainPage.expandedView).toBeVisible();
   await expect.poll(() => countDraws(page, "main canvas")).toBe(0);
   await expect.poll(() => countDraws(page, '[role="dialog"] canvas')).toBeGreaterThan(0);
   await page.keyboard.press("Escape");

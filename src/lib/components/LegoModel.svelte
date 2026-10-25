@@ -35,9 +35,13 @@
   interface Props extends Partial<DiagnosticDisplay> {
     model: ModelView;
     view?: "inline" | "expanded";
+    onload: (steps: number) => void;
+    onerror: () => void;
   }
   let {
-    model = $bindable(),
+    model,
+    onload,
+    onerror,
     highlightCollisions = false,
     showIntersections = false,
     view = "inline",
@@ -86,11 +90,10 @@
       (group) => {
         if (disposed) return;
         ldrawGroup = group;
-        model.maxSteps = group.children.length;
-        model.status = "loaded";
+        onload(group.children.length);
       },
       () => {
-        if (!disposed) model.status = "error";
+        if (!disposed) onerror();
       },
     );
     return () => {

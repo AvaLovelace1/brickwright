@@ -1,8 +1,13 @@
 import type { Preview, SvelteRenderer } from "@storybook/sveltekit";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { Tooltip } from "bits-ui";
+import { configure } from "storybook/test";
+import SharedCanvas from "../src/lib/components/SharedCanvas.svelte";
 
 import "../src/app.css";
+
+// Transitions and async updates can take over a second while other tests share the machine.
+configure({ asyncUtilTimeout: 5_000 });
 
 const preview: Preview = {
   parameters: {
@@ -35,6 +40,7 @@ const preview: Preview = {
   },
   decorators: [
     () => ({ Component: Tooltip.Provider }),
+    () => ({ Component: SharedCanvas }),
     withThemeByDataAttribute<SvelteRenderer>({
       themes: {
         light: "light",

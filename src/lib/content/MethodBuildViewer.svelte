@@ -2,7 +2,6 @@
   import { createModel } from "#lib/models.js";
   import ModelViewer from "#lib/components/ModelViewer.svelte";
   import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
-  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import PythonCode from "#lib/components/PythonCode.svelte";
   import Tooltip from "#lib/components/Tooltip.svelte";
   import { methodBuilds, type BuildRevision } from "#lib/method.js";
@@ -32,16 +31,13 @@
   <p class="mb-3 text-sm font-semibold">Build so far</p>
   {#if revision}
     {#key revision}
-      <div class="relative mb-4">
-        <ModelViewer
-          bind:model={models[revision]}
-          class="h-64"
-          showBuildControls={false}
-          {highlightCollisions}
-          {showIntersections}
-        />
-        <SharedCanvas models={[models[revision]]} {highlightCollisions} {showIntersections} />
-      </div>
+      <ModelViewer
+        bind:model={models[revision]}
+        class="mb-4 h-64"
+        showBuildControls={false}
+        {highlightCollisions}
+        {showIntersections}
+      />
     {/key}
     <ModelDiagnosticControls bind:highlightCollisions bind:showIntersections />
   {:else}

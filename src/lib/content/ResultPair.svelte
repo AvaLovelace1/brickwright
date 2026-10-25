@@ -1,7 +1,6 @@
 <script lang="ts">
   import { createModel } from "#lib/models.js";
   import ModelViewer from "#lib/components/ModelViewer.svelte";
-  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
   import { resultModelName, type Agent, type ResultPrompt } from "#lib/experiment-results.js";
   import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
 
@@ -25,9 +24,7 @@
   );
 </script>
 
-<div
-  class="swiper-no-swiping relative grid grid-cols-2 grid-rows-[auto_1fr] gap-x-3 gap-y-2 sm:gap-x-6"
->
+<div class="swiper-no-swiping grid grid-cols-2 grid-rows-[auto_1fr] gap-x-3 gap-y-2 sm:gap-x-6">
   {#each models as model, side (model.ldr)}
     <div
       role="group"
@@ -47,7 +44,4 @@
       {/if}
     </div>
   {/each}
-  {#if showModels}
-    <SharedCanvas {models} {...display} />
-  {/if}
 </div>

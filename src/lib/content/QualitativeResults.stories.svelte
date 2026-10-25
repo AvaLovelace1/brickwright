@@ -14,6 +14,12 @@
     render: template,
     parameters: { layout: "fullscreen" },
   });
+
+  /** The drawn 3D views on the carousel's current slide. */
+  function activeViews(canvasElement: HTMLElement) {
+    const slide = canvasElement.querySelector<HTMLElement>(".swiper-slide-active")!;
+    return within(slide).queryAllByRole("group", { name: /interactive 3D view/ });
+  }
 </script>
 
 {#snippet template()}
@@ -74,5 +80,55 @@
         }
       },
     );
+  }}
+/>
+
+<Story
+  name="Slide Animation"
+  play={async ({ canvas, canvasElement }) => {
+    const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
+    await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
+    const wrapper = carousel.querySelector<HTMLElement>(".swiper-wrapper")!;
+    const positions = [wrapper.getBoundingClientRect().left];
+    canvas.getByRole("button", { name: "Next prompt" }).click();
+    for (let frame = 0; frame < 30; frame++) {
+      await new Promise(requestAnimationFrame);
+      positions.push(wrapper.getBoundingClientRect().left);
+    }
+    // The first slide animates through the positions between its start and end.
+    const [start, end] = [positions[0], positions.at(-1)];
+    await expect(positions.some((position) => position !== start && position !== end)).toBe(true);
+  }}
+/>
+
+<Story
+  name="Next Prompt"
+  play={async ({ canvas, canvasElement, userEvent }) => {
+    await waitFor(() => expect(activeViews(canvasElement)).toHaveLength(2), { timeout: 15_000 });
+    await userEvent.click(canvas.getByRole("button", { name: "Next prompt" }));
+    // Both incoming builds load, even while the outgoing ones keep the page busy.
+    await waitFor(() => expect(activeViews(canvasElement)).toHaveLength(2), { timeout: 15_000 });
+  }}
+/>
+
+<Story
+  name="Browsing Keeps the 3D Canvas"
+  play={async ({ canvas, canvasElement }) => {
+    const progress = canvas.getByRole("status", { name: "Prompt position" });
+    const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
+    await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
+    await waitFor(() => expect(activeViews(canvasElement)).toHaveLength(2), { timeout: 15_000 });
+    const webGLCanvas = document.querySelector("canvas");
+    for (let promptIndex = 1; promptIndex <= 3; promptIndex++) {
+      carousel.swiper.slideToLoop(promptIndex, 0);
+      await waitFor(() =>
+        expect(progress).toHaveTextContent(`${promptIndex + 1} / ${prompts.length}`),
+      );
+      await waitFor(() => expect(activeViews(canvasElement)).toHaveLength(2), {
+        timeout: 15_000,
+      });
+    }
+    // Every slide's viewers draw on one canvas, keeping its WebGL context.
+    await expect(document.querySelector("canvas")).toBe(webGLCanvas);
   }}
 />

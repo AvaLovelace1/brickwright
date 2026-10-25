@@ -3,6 +3,7 @@
   import { expect, screen, waitFor } from "storybook/test";
   import Teaser from "./Teaser.svelte";
   import { modelFiles } from "#lib/models.js";
+  import { waitForView } from "#lib/story-helpers.js";
   import referenceImageUrl from "#lib/assets/models/teaser/combine-harvester-reference.png";
 
   const { Story } = defineMeta({
@@ -59,6 +60,8 @@
   name="Select a Prompt"
   play={async ({ canvas, userEvent, step }) => {
     const trigger = canvas.getByRole("combobox", { name: /^Help me build…/ });
+    await waitForView(canvas.getByRole("figure"));
+    const webGLCanvas = document.querySelector("canvas");
     for (const [prompt, model] of [
       ["A combine harvester from an image", "teaser/combine-harvester"],
       ["Hong Kong’s Victoria Harbour", "teaser/victoria-harbour"],
@@ -91,6 +94,10 @@
         }
       });
     }
+    await step("Every prompt's viewer draws on the same canvas", async () => {
+      await waitForView(canvas.getByRole("figure"));
+      await expect(document.querySelector("canvas")).toBe(webGLCanvas);
+    });
   }}
 />
 

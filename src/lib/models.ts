@@ -7,7 +7,6 @@ export interface ModelView {
   caption: string;
   stepsShown: number;
   maxSteps: number;
-  window?: HTMLElement;
   status: "idle" | "loading" | "loaded" | "error";
   inViewport: boolean;
   expanded: boolean;

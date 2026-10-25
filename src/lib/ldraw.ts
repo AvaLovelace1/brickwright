@@ -12,7 +12,16 @@ export function createLoader({ smoothNormals = true } = {}) {
 
 const loader = createLoader();
 let queue: Promise<unknown> = Promise.resolve();
-const yieldToBrowser = () => new Promise((resolve) => setTimeout(resolve));
+// A message task yields like setTimeout(0), without timer throttling or fake timers delaying it.
+const yieldToBrowser = () =>
+  new Promise<void>((resolve) => {
+    const { port1, port2 } = new MessageChannel();
+    port1.onmessage = () => {
+      port1.close();
+      resolve();
+    };
+    port2.postMessage(null);
+  });
 
 const loadCenteredModel = cached((url) => {
   const model = queue.then(async () => {
