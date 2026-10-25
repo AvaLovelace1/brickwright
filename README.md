@@ -15,6 +15,7 @@
 
 [![Paper](https://img.shields.io/badge/arXiv-2610.31651-b5212f.svg?logo=arxiv)](https://arxiv.org/abs/2610.31651)
 [![Project Page](https://img.shields.io/badge/Website-Project%20Page-0369a1?logo=googlechrome&logoColor=white)](https://avalovelace1.github.io/brickwright/)
+[![PyPI](https://img.shields.io/pypi/v/brickwright?color=a16207&logo=pypi&logoColor=white)](https://pypi.org/project/brickwright/)
 [![Licence](https://img.shields.io/github/license/AvaLovelace1/brickwright?color=15803d&label=%F0%9F%93%84%20License)](https://github.com/AvaLovelace1/brickwright/blob/main/LICENSE)
 
 ---
