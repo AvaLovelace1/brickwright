@@ -5,13 +5,9 @@ on:
 jobs:
   ci:
     uses: ./.github/workflows/ci.yml
-  publish:
+  build:
     needs: ci
     runs-on: ubuntu-latest
-    environment: pypi
-    permissions:
-      id-token: write  # PyPI trusted publishing
-      contents: read
     steps:
       - uses: actions/checkout@v7
       - uses: astral-sh/setup-uv@v7
@@ -29,5 +25,33 @@ jobs:
           model.stack(bl.brick(2, 2, color=bl.Color.RED), on=base)
           assert model.is_valid()
           "
-      - name: Publish
-        run: uv publish
+      - uses: actions/upload-artifact@v7
+        with:
+          name: dist
+          path: dist/
+  publish-bricklayer-sdk:
+    needs: build
+    runs-on: ubuntu-latest
+    environment: pypi-bricklayer-sdk
+    permissions:
+      id-token: write  # PyPI trusted publishing
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+      - uses: astral-sh/setup-uv@v7
+      - run: uv publish dist/bricklayer_sdk-*
+  publish-brickwright:
+    needs: publish-bricklayer-sdk
+    runs-on: ubuntu-latest
+    environment: pypi-brickwright
+    permissions:
+      id-token: write  # PyPI trusted publishing
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          name: dist
+          path: dist/
+      - uses: astral-sh/setup-uv@v7
+      - run: uv publish dist/brickwright-*
