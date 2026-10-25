@@ -1,0 +1,3 @@
+# Diagnostics record a SHA-256 of each model file, so git keeps their exact bytes.
+*.ldr -text
+*.mpd -text
