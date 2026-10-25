@@ -19,6 +19,8 @@
 
 ---
 
+![An agent builds a lighthouse, Van Gogh's The Starry Night, and a crab from real LEGO® parts, with no collisions or floaters, fully connected](assets/video-thumbnail.webp)
+
 **BrickWright** enables pre-trained coding agents to generate high-fidelity, _physically feasible_ LEGO® builds from
 text or image prompts by writing code with **BrickLayer**, a Python toolkit for build creation and validation. Whereas
 baseline agents achieve physical validity rates ranging from only 9% (GPT-6 Luna) to 69% (GPT-6 Astra),
