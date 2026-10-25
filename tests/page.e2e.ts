@@ -2,6 +2,7 @@ import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "./fixtures";
 import { prompts } from "../src/lib/experiment-results";
 
+const SITE_URL = "https://avalovelace1.github.io/brickwright/";
 const SECTIONS = ["overview", "motivation", "method", "experiments", "acknowledgments", "citation"];
 
 test(
@@ -15,6 +16,26 @@ test(
     expect((await new AxeBuilder({ page }).analyze()).violations).toEqual([]);
   },
 );
+
+test("page describes itself to search engines and link previews", async ({ page, mainPage }) => {
+  await mainPage.goto();
+  const meta = (selector: string) => page.locator(`head meta[${selector}]`);
+  const description = await meta('name="description"').getAttribute("content");
+  expect(description).toContain("physically feasible");
+  await expect(meta('property="og:title"')).toHaveAttribute("content", await page.title());
+  await expect(meta('property="og:description"')).toHaveAttribute("content", description!);
+  await expect(meta('property="og:type"')).toHaveAttribute("content", "website");
+  await expect(meta('name="twitter:card"')).toHaveAttribute("content", "summary_large_image");
+  await expect(meta('name="author"')).toHaveAttribute("content", /^Ava Pun, .*Jun-Yan Zhu$/);
+  await expect(page.locator('head link[rel="canonical"]')).toHaveAttribute("href", SITE_URL);
+  await expect(meta('property="og:url"')).toHaveAttribute("content", SITE_URL);
+  const image = await meta('property="og:image"').getAttribute("content");
+  expect(image).toMatch(new RegExp(`^${SITE_URL}`));
+  // The site deploys under SITE_URL, so the image's path within it is served locally too.
+  const response = await page.request.get(image!.slice(SITE_URL.length - 1));
+  expect(response.headers()["content-type"]).toBe("image/png");
+  await expect(meta('property="og:image:alt"')).toHaveAttribute("content", /lighthouse/);
+});
 
 test(
   "the narrow mobile page has no detectable WCAG accessibility violations",

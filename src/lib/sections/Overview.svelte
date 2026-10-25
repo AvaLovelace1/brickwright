@@ -1,13 +1,5 @@
-<script lang="ts">
-  import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
-  import Container from "#lib/components/Container.svelte";
-  import Teaser from "#lib/content/Teaser.svelte";
-  import Prose from "#lib/components/Prose.svelte";
-  import AgentComparison from "#lib/content/AgentComparison.svelte";
-  import ExternalLink from "#lib/components/ExternalLink.svelte";
-  import Bullet from "#lib/components/Bullet.svelte";
-
-  const AUTHORS = [
+<script lang="ts" module>
+  export const AUTHORS = [
     { name: "Ava\u00A0Pun", aff: 1, href: "https://avapun.com/" },
     { name: "Kevin\u00A0Dai", aff: 1, href: "https://github.com/K1ngHungry" },
     { name: "Sally\u00A0Chen", aff: 1, href: "https://sally-chen.github.io/" },
@@ -19,6 +11,17 @@
     { name: "Deva\u00A0Ramanan", aff: 1, href: "https://www.cs.cmu.edu/~deva/" },
     { name: "Jun\u2011Yan\u00A0Zhu", aff: 1, href: "https://www.cs.cmu.edu/~junyanz/" },
   ];
+</script>
+
+<script lang="ts">
+  import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
+  import Container from "#lib/components/Container.svelte";
+  import Teaser from "#lib/content/Teaser.svelte";
+  import Prose from "#lib/components/Prose.svelte";
+  import AgentComparison from "#lib/content/AgentComparison.svelte";
+  import ExternalLink from "#lib/components/ExternalLink.svelte";
+  import Bullet from "#lib/components/Bullet.svelte";
+
   const AFFILIATIONS = [
     "Carnegie\u00A0Mellon\u00A0University",
     "Independent researcher",
