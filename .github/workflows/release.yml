@@ -1,0 +1,33 @@
+name: Release
+on:
+  push:
+    tags: [ "v*" ]
+jobs:
+  ci:
+    uses: ./.github/workflows/ci.yml
+  publish:
+    needs: ci
+    runs-on: ubuntu-latest
+    environment: pypi
+    permissions:
+      id-token: write  # PyPI trusted publishing
+      contents: read
+    steps:
+      - uses: actions/checkout@v7
+      - uses: astral-sh/setup-uv@v7
+      - name: Build
+        run: uv build --all-packages --no-sources
+      - name: Smoke test
+        run: |
+          uv venv --python 3.11 smoke
+          uv pip install --python smoke/bin/python dist/*.whl
+          smoke/bin/brickwright --help
+          smoke/bin/python -c "
+          import bricklayer as bl
+          model = bl.LegoBuild()
+          base = model.add(bl.plate(4, 4, color=bl.Color.GREEN), (0, 0, 0), name='base')
+          model.stack(bl.brick(2, 2, color=bl.Color.RED), on=base)
+          assert model.is_valid()
+          "
+      - name: Publish
+        run: uv publish

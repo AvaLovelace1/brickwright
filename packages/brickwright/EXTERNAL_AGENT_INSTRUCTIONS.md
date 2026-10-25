@@ -9,7 +9,7 @@ You are an external agent authoring LEGO builds in this repository. You create a
 Generate the authoring instructions and API reference once per session, saving the file outside any record directory:
 
 ```bash
-uv run brickwright external instructions > INSTRUCTIONS.md
+brickwright external instructions > INSTRUCTIONS.md
 ```
 
 Then, read the file. As it is quite long, you may have to read it in several segments.
@@ -19,7 +19,7 @@ Then, read the file. As it is quite long, you may have to read it in several seg
 After reading the instructions, initialize a new record with the following command:
 
 ```bash
-uv run brickwright external init <text_prompt>
+brickwright external init <text_prompt>
 ```
 
 where `<text_prompt>` is the prompt provided by the user (or a summary thereof).
@@ -43,7 +43,7 @@ build_path=[...]/build.py
 To modify an existing build, fork it rather than copying directories:
 
 ```bash
-uv run brickwright external init --from <record_id> <text_prompt>
+brickwright external init --from <record_id> <text_prompt>
 ```
 
 ## Step 2. Validate the build
@@ -51,7 +51,7 @@ uv run brickwright external init --from <record_id> <text_prompt>
 When you have finished editing `build.py`, run checks on it with:
 
 ```bash
-uv run brickwright external validate <record_id>
+brickwright external validate <record_id>
 ```
 
 This creates the build and runs `run_tests()` in a fresh process, then independently checks the same build for floating
@@ -84,7 +84,7 @@ Validation checks structure but does not show you what the build *looks* like. T
 image:
 
 ```bash
-uv run brickwright external render <record_id>
+brickwright external render <record_id>
 ```
 
 This creates the build and writes `out/build.png`—a single contact sheet with front, side, top, and isometric
@@ -95,13 +95,13 @@ colors, and proportions match the prompt. If the build does not satisfy the prom
 You may also render the build from a specific camera angle:
 
 ```bash
-uv run brickwright external render-angle <record_id> --azimuth A --elevation E
+brickwright external render-angle <record_id> --azimuth A --elevation E
 ```
 
 By default, this writes `out/viewpoint.png`.
 
 For an image prompt, compare the build against the reference by running
-`uv run brickwright external critique-instructions <record_id>` and following the playbook it prints.
+`brickwright external critique-instructions <record_id>` and following the playbook it prints.
 
 > [!note]
 > Rendering requires an LDraw parts library. If no library is found, `brickwright external render` reports it—skip this
@@ -113,7 +113,7 @@ Once `validate` reports `ok: true` and the build is aesthetically appealing and 
 the finished build:
 
 ```bash
-uv run brickwright external finalize <record_id>
+brickwright external finalize <record_id>
 ```
 
 This creates the build one last time and writes `out/build.ldr` (the LDraw file) for human inspection. Run it when you
@@ -132,7 +132,8 @@ You must:
 You may:
 
 - run `brickwright external render <record_id>` or
-  `brickwright external render-angle <record_id> --azimuth A --elevation E` at any point to preview the build as an image
+  `brickwright external render-angle <record_id> --azimuth A --elevation E` at any point to preview the build as an
+  image
   and check it against the prompt
 
 You must not:

@@ -1,5 +1,5 @@
 [tool.uv.sources]
-bricklayer = { workspace = true }
+bricklayer-sdk = { workspace = true }
 brickwright = { workspace = true }
 
 [tool.uv.workspace]

@@ -18,7 +18,7 @@ resolution-markers = [
 
 [manifest]
 members = [
-    "bricklayer",
+    "bricklayer-sdk",
     "brickwright",
 ]
 
@@ -286,7 +286,7 @@ wheels = [
 ]
 
 [[package]]
-name = "bricklayer"
+name = "bricklayer-sdk"
 version = "0.1.0"
 source = { editable = "packages/bricklayer" }
 dependencies = [
@@ -334,7 +334,7 @@ name = "brickwright"
 version = "0.1.0"
 source = { editable = "packages/brickwright" }
 dependencies = [
-    { name = "bricklayer" },
+    { name = "bricklayer-sdk" },
     { name = "gltflib" },
     { name = "ldraw2mesh" },
     { name = "litellm" },
@@ -360,7 +360,7 @@ dev = [
 
 [package.metadata]
 requires-dist = [
-    { name = "bricklayer", editable = "packages/bricklayer" },
+    { name = "bricklayer-sdk", editable = "packages/bricklayer" },
     { name = "gltflib" },
     { name = "ldraw2mesh" },
     { name = "litellm" },
