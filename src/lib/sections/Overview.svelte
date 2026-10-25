@@ -79,7 +79,7 @@
           higher-quality builds with fewer physical violations than agents with general tools.
           Additionally, they outperform specialized models on the text-to-brick task. BrickWright is
           especially useful for lightweight agents: on a sample of 512 prompts, it improves GPT-6
-          Luna's performance from 7% to 100% physically valid builds while boosting prompt
+          Luna's performance from 9% to 100% physically valid builds while boosting prompt
           adherence, at 2% the price of frontier models. BrickWright works with any agent backend;
           <ExternalLink href="https://github.com/AvaLovelace1/brickwright"
             >code is available on GitHub.</ExternalLink
