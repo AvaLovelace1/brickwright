@@ -1,0 +1,17 @@
+[tool.uv.sources]
+bricklayer = { workspace = true }
+brickwright = { workspace = true }
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[tool.pytest.ini_options]
+testpaths = ["packages/*/tests/", "skill/tests/"]
+addopts = "--import-mode=importlib"
+markers = [
+    "integration: drives the full agent loop (run_agent), the CLI, or a real subprocess",
+    "real_agent: runs a real AI agent with an API key",
+]
+filterwarnings = [
+    "ignore::DeprecationWarning:pygfx",
+]

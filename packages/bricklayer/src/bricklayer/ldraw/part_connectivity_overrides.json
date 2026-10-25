@@ -1,0 +1,26 @@
+{
+ "note": "Authored connectors for parts BrickNet does not cover. These add to a part's generated connectors rather than replacing them (partdata.py's _raw_records() accumulates them into 'extra_connectors'), so an entry names only what it contributes. 'pos' is raw LDraw-frame LDU, matching the generated file, but 'axis'/'side' are unit vectors in the stud frame (LDraw's axes remapped to BrickLayer's by LDRAW_TO_STUD, before the part's seating pose) -- what the generated file's pitch/roll/yaw decode to. An insert's tab sits at its own bounding-box centre; a frame's slot sits where that centre must land, which no part datum records, so it was measured by sweeping the insert through the frame and keeping the collision-free pose nearest the frame's centre. A corner frame's insert faces the corner and, seating FIXED, carries that turn in its connector rather than in a target pose. A frame whose insert already carries a BrickNet subtype gets that subtype's counterpart, keeping the pair subtype-exact; only where neither side has anything do both get the authored frame_slot/pane_tab pair. '_part' names the piece for the reader.",
+ "parts": {
+  "28327": {"_part": "door frame 4x4x6 corner", "connectors": [{"type": "frame_slot", "pos": [6.0, 70.0008, -6.0], "axis": [-0.707107, 0.707107, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "38320": {"_part": "window 1x2x2 pane lattice", "connectors": [{"type": "pane_tab", "pos": [0.0, 21.5, -5.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "4035": {"_part": "window 1x2x3 train frame", "connectors": [{"type": "frame_slot", "pos": [0.0, 33.504, -12.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "5032": {"_part": "door 1x4x6 fence", "connectors": [{"type": "pane_tab", "pos": [32.5, 70.0, 0.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "51239": {"_part": "window 1x3x3 frame", "connectors": [{"type": "frame_slot", "pos": [0.0, 33.744, 4.0], "axis": [0.0, -1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "51266": {"_part": "glass for window 1x3x3", "connectors": [{"type": "pane_tab", "pos": [0.0, 29.75, 0.0], "axis": [0.0, -1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "57894": {"_part": "window 1x4x6 frame with 3 panes", "connectors": [{"type": "frame_slot", "pos": [0.0, 69.744, -12.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "57895": {"_part": "glass for window 1x4x6", "connectors": [{"type": "pane_tab", "pos": [0.0, 65.75, 0.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "60032": {"_part": "window 1x2x2 airplane frame", "connectors": [{"type": "frame_slot", "pos": [0.0, 21.504, -5.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "60592": {"_part": "window 1x2x2 frame without sill", "connectors": [{"type": "frame_slot", "pos": [0.0, 21.504, -5.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "60593": {"_part": "window 1x2x3 frame", "connectors": [{"type": "frame_slot", "pos": [0.0, 33.504, -5.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "60594": {"_part": "window 1x4x3 frame without shutter tabs", "connectors": [{"type": "hinge_18_on", "pos": [-0.025, 8.008, 4.0], "axis": [-1.0, 0.0, 0.0], "side": [0.0, 0.0, -1.0]}]},
+  "60596": {"_part": "door 1x4x6 frame", "connectors": [{"type": "frame_slot", "pos": [0.0, 69.744, 4.0], "axis": [0.0, -1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "60598": {"_part": "window 2x4x3 frame with square holes", "connectors": [{"type": "hinge_18_on", "pos": [0.025, 8.008, -15.0], "axis": [1.0, -0.0, 0.0], "side": [0.0, 0.0, -1.0]}]},
+  "60599": {"_part": "door 2x4x6 frame", "connectors": [{"type": "frame_slot", "pos": [0.0, 69.744, -15.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "60601": {"_part": "glass for window 1x2x2", "connectors": [{"type": "pane_tab", "pos": [0.0, 21.5, -5.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "60602": {"_part": "glass for window 1x2x3", "connectors": [{"type": "pane_tab", "pos": [0.0, 33.5, -5.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "61345": {"_part": "window 1x4x2 airplane frame", "connectors": [{"type": "frame_slot", "pos": [0.0, 21.504, -12.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "73878": {"_part": "window 3x3x2 round corner frame", "connectors": [{"type": "frame_slot", "pos": [30.0, 21.504, -55.0], "axis": [-0.707107, 0.707107, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "90195": {"_part": "window 1x2x2 arched frame", "connectors": [{"type": "frame_slot", "pos": [0.0, 21.504, -12.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]},
+  "92589": {"_part": "door 1x4x6 lattice", "connectors": [{"type": "pane_tab", "pos": [32.0, 70.0, 0.0], "axis": [0.0, 1.0, 0.0], "side": [0.0, 0.0, 1.0]}]}
+ }
+}

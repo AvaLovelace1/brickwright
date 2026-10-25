@@ -1,0 +1,25 @@
+{
+  "_note": "Which PartShape class an LDraw category reads as. `keywords` overrides the default when the subcategory contains one as a substring, in the order listed -- first match wins, so a keyword meant to exclude a false positive on a later one (Technic's `Cross Block`, Brick/Tile's `Corner`) is listed first. A keyword's value can itself be `null` (no shape at all, e.g. Cross Block) rather than a class name. A row naming no `default` (Technic) yields no shape at all outside its keywords -- most of what LDraw calls Technic (a gear's tooth count, a connector's part number) is not a length. A keyword naming Disc or Rod that only partially matches the subcategory (`Round` inside `Round Half Circle`) is not rejected here: derivation.py's _classify flags it 'qualified', and _measured_reading confirms or clears it against the part's own measured footprint -- name and geometry together, since neither alone tells a partial round shape ('Round Half Circle', 'Rounded') from a fully round one with a descriptive qualifier ('Round Sphere', 'Round Reinforced'). Cone/Dish/Turntable are round by category rather than by keyword, so that check never applies to them; a qualifier that disqualifies a category-default round reading (Cone's `Half`) needs its own keyword row instead, the same as any other exclusion.",
+  "categories": {
+    "Brick":     {"default": "Box",       "keywords": {"Corner": "Box", "Round": "Rod"}},
+    "Plate":     {"default": "Footprint", "keywords": {"Round": "Disc"}},
+    "Tile":      {"default": "Footprint", "keywords": {"Corner": "Footprint", "Round": "Disc"}},
+    "Door":      {"default": "Pane",      "keywords": {"Frame": "Box"}},
+    "Panel":     {"default": "Pane",      "keywords": {"Hollow Stud": "Box"}},
+    "Window":    {"default": "Box",       "keywords": {"Pane": "Pane"}},
+    "Train":     {"default": "Pane",      "keywords": {"Window": "Box"}},
+    "Slope":     {"default": "Box"},
+    "Wing":      {"default": "Footprint"},
+    "Baseplate": {"default": "Footprint"},
+    "Bracket":   {"default": "Ell"},
+    "Glass":     {"default": "Pane"},
+    "Bar":       {"default": "Pane"},
+    "Arch":      {"default": "Box"},
+    "Fence":     {"default": "Box"},
+    "Support":   {"default": "Box"},
+    "Cone":      {"default": "Rod",       "keywords": {"Half": null}},
+    "Dish":      {"default": "Disc"},
+    "Turntable": {"default": "Disc"},
+    "Technic":   {"keywords": {"Cross Block": null, "Beam": "Length", "Axle": "Length", "Liftarm": "Length"}}
+  }
+}

@@ -1,0 +1,4 @@
+{
+  "_note": "Hand-maintained geometry overrides. Fields here win over part_geometry.json on a field-by-field basis (see partdata.py).",
+  "parts": {}
+}

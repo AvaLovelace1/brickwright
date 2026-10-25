@@ -1,0 +1,37 @@
+{
+  "_note": "Hand-authored shapes for parts whose LDraw name cannot give one. A shape names its PartShape class in \"type\" and its remaining fields by name; heights and lengths are written as strings so they stay exact fractions. Wins over derivation (see parts/derivation.py).",
+  "parts": {
+    "3673": {
+      "shape": {"type": "Length", "length": "2"},
+      "_reason": "\"Technic Pin\" carries no dimension run; 2 studs long"
+    },
+    "2780": {
+      "shape": {"type": "Length", "length": "2"},
+      "_reason": "as 3673, with friction"
+    },
+    "32556a": {
+      "shape": {"type": "Length", "length": "3"},
+      "_reason": "\"Technic Pin Long\" carries no run; 3 studs long"
+    },
+    "6558": {
+      "shape": {"type": "Length", "length": "3"},
+      "_reason": "as 32556a, with friction"
+    },
+    "4274": {
+      "shape": {"type": "Length", "length": "1"},
+      "_reason": "named \"1/2\" for its half-stud collar; occupies 1 stud"
+    },
+    "89678": {
+      "shape": {"type": "Length", "length": "1"},
+      "_reason": "as 4274, with friction"
+    },
+    "32002": {
+      "shape": {"type": "Length", "length": "3/2"},
+      "_reason": "named \"3/4\"; occupies 3/2 studs"
+    },
+    "85975": {
+      "shape": {"type": "Rod", "diameter": 1, "height": "2/3"},
+      "_reason": "\"Minifig Hat Fez\" carries no run"
+    }
+  }
+}

@@ -1,0 +1,90 @@
+
+──────────────────────────────────────────── lifecycle ─────────────────────────────────────────────
+
+╭─ 🧱 BrickWright ─────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                  │
+│  Build a 4×2 red brick wall, two courses high.                                                   │
+│                                                                                                  │
+│  model anthropic/claude-opus-4-8 · effort high · max 10 validations · max 30 turns · max cost    │
+│  $5.00                                                                                           │
+│                                                                                                  │
+╰────────────────────────────────────────────────────────────────────── rec_3f9a2b-red-brick-wall ─╯
+turn 1 ─────────────────────────────────────────────────────────────────────────────────────────────
+I'll lay a 4×2 footprint and stack two courses of red brick.
+⚠ the cost limit cannot be enforced for this provider
+
+─────────────────────────────────────── tool calls & results ───────────────────────────────────────
+
+→ read
+  ✓ 8 lines
+→ write  8 lines
+  ✓ build.py written
+  ✗ write failed: missing argument 'content'
+→ insert  build.stack(bl.tile(4, 2, color=bl.Color.WHITE), on=bas…
+  ✓ build.py edited. Edited region:
+  ✗ insert failed: invalid insert_line 99: must be in 0..12 (0 inserts at the top of the file; N 
+inserts after line N)
+→ edit  bl.brick(4, 2, color=bl.Color.BLUE), name=
+  ✓ build.py edited
+  ✗ edit failed: old_str not found
+→ multi-edit  2 edits
+  ✓ applied 2 edits to build.py
+  ✗ multi-edit failed (build.py unchanged): edit 2 of 2: old_str not found
+→ validate
+  4×2×2 · 8 parts
+  ✓ connected
+  ✓ no_collisions
+  4×2×2 · 8 parts
+  ✓ connected
+  ✗ no_collisions — 2 bricks overlap at (2, 0)
+  ✗ build failed
+    NameError: name 'Color' is not defined
+→ explore  print(bricklayer.search_parts('brick', limit=5))
+  ✓ Brick 2x2
+  ✓ 3 lines of output
+  ✗ ValueError: no part matches id '9999'
+→ render
+  ✓ rendered the build to a multi-view contact sheet; the image follows.
+  ✗ ValueError: no part matches id '9999'
+→ finalize
+  ✓ build compiled to out/build.ldr
+  ✗ ValueError: no part matches id '9999'
+→ dispatch  2 subagents
+  ✓ 2 subagents returned
+  ✗ 1/2 subagents failed — subagent produced no final answer
+
+─────────────────────────────────────────── run summary ────────────────────────────────────────────
+
+╭─ summary ────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                  │
+│      outcome   ✓ finished — build valid                                                          │
+│  validations   3                                                                                 │
+│        turns   11                                                                                │
+│       tokens   20,993 (18,432 in / 2,561 out)                                                    │
+│         cost   $0.2317                                                                           │
+│      elapsed   42.8s (llm 31.2 · tools 11.0 · other 0.6)                                         │
+│   output dir   records/rec_3f9a2b-red-brick-wall                                                 │
+│                                                                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ summary ────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                  │
+│      outcome   finished — build invalid                                                          │
+│  validations   5                                                                                 │
+│        turns   14                                                                                │
+│       tokens   20,993 (18,432 in / 2,561 out)                                                    │
+│         cost   $0.2317                                                                           │
+│      elapsed   42.8s (llm 31.2 · tools 11.0 · other 0.6)                                         │
+│   output dir   records/rec_3f9a2b-red-brick-wall                                                 │
+│                                                                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯
+╭─ summary ────────────────────────────────────────────────────────────────────────────────────────╮
+│                                                                                                  │
+│      outcome   ⚠ stalled before finalizing                                                       │
+│  validations   2                                                                                 │
+│        turns   30                                                                                │
+│       tokens   20,993 (18,432 in / 2,561 out)                                                    │
+│         cost   $0.2317                                                                           │
+│      elapsed   42.8s (llm 31.2 · tools 11.0 · other 0.6)                                         │
+│   output dir   records/rec_3f9a2b-red-brick-wall                                                 │
+│                                                                                                  │
+╰──────────────────────────────────────────────────────────────────────────────────────────────────╯

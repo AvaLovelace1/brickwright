@@ -1,0 +1,9 @@
+{
+  "_note": "Hand-maintained extra rotations for window and door factory frames whose default pose differs between LDraw and BrickLayer. Each value names a Rotation member (see partdata.py).",
+  "parts": {
+    "51239": {"offset_rotation": "DEG_180"},
+    "60594": {"offset_rotation": "DEG_180"},
+    "60596": {"offset_rotation": "DEG_180"},
+    "42205": {"offset_rotation": "DEG_180"}
+  }
+}
