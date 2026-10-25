@@ -9,6 +9,7 @@
   title = {BrickWright: Agentic Creation of Physically Feasible Brick Builds},
   author = {Pun, Ava and Dai, Kevin and Chen, Sally and Jones, Maxwell and Liu, Ruixuan and Deng, Kangle and Liu, Changliu and Agrawala, Maneesh and Ramanan, Deva and Zhu, Jun-Yan},
   year = {2026},
+  eprint = {2610.31651},
   archivePrefix = {arXiv},
 }`;
   const COPY_STATES = {
