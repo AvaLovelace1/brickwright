@@ -1,0 +1,28 @@
+0 Name: Red open-top sports car
+0 Author: Claude
+0 !LDRAW_ORG Unofficial_Model
+0 // Chassis plates (red)
+1 4 -40 0 -20 1 0 0 0 1 0 0 0 1 3020.dat
+1 4 40 0 -20 1 0 0 0 1 0 0 0 1 3020.dat
+1 4 -40 0 20 1 0 0 0 1 0 0 0 1 3020.dat
+1 4 40 0 20 1 0 0 0 1 0 0 0 1 3020.dat
+0 // Body walls and cockpit floor (red)
+1 4 -40 -24 -30 1 0 0 0 1 0 0 0 1 3010.dat
+1 4 40 -24 -30 1 0 0 0 1 0 0 0 1 3010.dat
+1 4 -40 -24 30 1 0 0 0 1 0 0 0 1 3010.dat
+1 4 40 -24 30 1 0 0 0 1 0 0 0 1 3010.dat
+1 4 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat
+0 // Front accents: yellow bumper and translucent orange headlights
+1 14 -50 -24 -10 1 0 0 0 1 0 0 0 1 3005.dat
+1 14 -50 -24 10 1 0 0 0 1 0 0 0 1 3005.dat
+1 57 -70 -24 -10 0 0 -1 0 1 0 1 0 0 4070.dat
+1 57 -70 -24 10 0 0 -1 0 1 0 1 0 0 4070.dat
+0 // Rear accent: yellow
+1 14 60 -24 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 // Black racing stripes
+1 0 -60 -32 -10 1 0 0 0 1 0 0 0 1 3069b.dat
+1 0 -60 -32 10 1 0 0 0 1 0 0 0 1 3069b.dat
+1 0 0 -32 -10 1 0 0 0 1 0 0 0 1 2431.dat
+1 0 0 -32 10 1 0 0 0 1 0 0 0 1 2431.dat
+1 0 60 -32 -10 1 0 0 0 1 0 0 0 1 3069b.dat
+1 0 60 -32 10 1 0 0 0 1 0 0 0 1 3069b.dat

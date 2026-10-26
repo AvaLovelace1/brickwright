@@ -112,6 +112,28 @@
 />
 
 <Story
+  name="Navigating Right After a Resize"
+  play={async ({ canvas, canvasElement }) => {
+    const progress = canvas.getByRole("status", { name: "Prompt position" });
+    const next = canvas.getByRole("button", { name: "Next prompt" });
+    const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
+    await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
+    // Instant slides, as with reduced motion, let each click land within frames of the resize.
+    carousel.swiper.params.speed = 0;
+    const frames = async (count: number) => {
+      for (let frame = 0; frame < count; frame++) await new Promise(requestAnimationFrame);
+    };
+    for (let delay = 0; delay < 5; delay++) {
+      carousel.style.minHeight = delay % 2 ? "" : `${carousel.offsetHeight + 100}px`;
+      await frames(delay);
+      next.click();
+      await frames(5);
+      await expect(progress).toHaveTextContent(`${delay + 2} / ${prompts.length}`);
+    }
+  }}
+/>
+
+<Story
   name="Browsing Keeps the 3D Canvas"
   play={async ({ canvas, canvasElement }) => {
     const progress = canvas.getByRole("status", { name: "Prompt position" });

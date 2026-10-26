@@ -1,0 +1,94 @@
+0 White Medical Research Station
+0 Name: model.ldr
+0 Author: Codex
+0 !LDRAW_ORG Model
+0 // Dimensions use 20 LDU stud spacing, 24 LDU bricks and 8 LDU plates.
+0 // Front of the station faces negative Z. All elements are catalogue parts.
+0 // Foundation: two 6 x 8 plates joined by two transverse white 4 x 12 plates.
+1 72 -60 0 0 0 0 1 0 1 0 -1 0 0 3036.dat
+1 72 60 0 0 0 0 1 0 1 0 -1 0 0 3036.dat
+1 15 0 -8 -40 1 0 0 0 1 0 0 0 1 3029.dat
+1 15 0 -8 40 1 0 0 0 1 0 0 0 1 3029.dat
+0 STEP
+0 // Tiled front threshold and rear edge.
+1 15 -80 -16 -70 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 0 -16 -70 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 80 -16 -70 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 -80 -16 -50 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 0 -16 -50 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 80 -16 -50 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 -80 -16 70 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 0 -16 70 1 0 0 0 1 0 0 0 1 2431.dat
+1 15 80 -16 70 1 0 0 0 1 0 0 0 1 2431.dat
+0 STEP
+0 // Two four-brick-high white piers support the working level.
+1 15 -80 -32 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 0 -32 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -80 -56 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 0 -56 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -80 -80 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 0 -80 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -80 -104 -20 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 0 -104 -20 1 0 0 0 1 0 0 0 1 3003.dat
+0 // Real 2 x 3 x 4 cupboard with its matching yellow hinged door, closed.
+1 15 50 -104 -20 1 0 0 0 1 0 0 0 1 4534.dat
+1 14 26 -100 -37 0 0 1 0 1 0 -1 0 0 4535.dat
+0 STEP
+0 // Continuous white worktop engages both piers and the cupboard top studs.
+1 15 0 -112 -20 1 0 0 0 1 0 0 0 1 3029.dat
+0 // Printed instrument panel, specimen work surface, and lamp mounting plinth.
+1 15 -80 -136 -10 1 0 0 0 1 0 0 0 1 3039p32.dat
+1 15 -80 -144 -10 1 0 0 0 1 0 0 0 1 3069b.dat
+1 15 0 -120 -20 1 0 0 0 1 0 0 0 1 3020.dat
+1 71 -20 -128 -20 1 0 0 0 1 0 0 0 1 3068b.dat
+1 15 20 -128 -20 1 0 0 0 1 0 0 0 1 3068bp52.dat
+1 15 100 -136 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 STEP
+0 // The upper storage level stands on two six-brick piers with plate caps.
+1 15 -100 -32 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 100 -32 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -100 -56 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 100 -56 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -100 -80 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 100 -80 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -100 -104 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 100 -104 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -100 -128 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 100 -128 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -100 -152 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 100 -152 40 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -100 -160 40 1 0 0 0 1 0 0 0 1 3022.dat
+1 15 100 -160 40 1 0 0 0 1 0 0 0 1 3022.dat
+1 15 0 -168 40 1 0 0 0 1 0 0 0 1 2445.dat
+0 STEP
+0 // Three stud-mounted translucent specimen vessels with white caps.
+1 43 -70 -192 30 1 0 0 0 1 0 0 0 1 3062b.dat
+1 15 -70 -200 30 1 0 0 0 1 0 0 0 1 98138.dat
+1 46 -30 -192 30 1 0 0 0 1 0 0 0 1 3062b.dat
+1 15 -30 -200 30 1 0 0 0 1 0 0 0 1 98138.dat
+1 47 10 -192 30 1 0 0 0 1 0 0 0 1 3062b.dat
+1 15 10 -200 30 1 0 0 0 1 0 0 0 1 98138.dat
+0 // Raised medical identification block with printed red cross.
+1 15 60 -216 50 1 0 0 0 1 0 0 0 1 3245bp05.dat
+1 15 60 -224 50 1 0 0 0 1 0 0 0 1 3069b.dat
+1 15 -100 -176 30 1 0 0 0 1 0 0 0 1 3069b.dat
+1 15 -100 -176 50 1 0 0 0 1 0 0 0 1 3069b.dat
+1 15 100 -176 30 1 0 0 0 1 0 0 0 1 3069b.dat
+1 15 100 -176 50 1 0 0 0 1 0 0 0 1 3069b.dat
+0 STEP
+0 // Articulated examination lamp: two real locking hinge pairs.
+0 // First hinge axle: (70,-142,-10). Lower arm is raised 67.5 degrees.
+1 15 100 -144 -10 -1 0 0 0 1 0 0 0 -1 44302a.dat
+1 15 60.367256 -170.481753 -10 0.382683 -0.92388 0 0.92388 0.382683 0 0 0 1 44301a.dat
+1 15 60.104624 -192.020811 -10 0.382683 -0.92388 0 0.92388 0.382683 0 0 0 1 3710.dat
+1 15 59.841991 -213.559869 -10 -0.382683 -0.92388 0 -0.92388 0.382683 0 0 0 -1 44302a.dat
+0 // Upper arm is horizontal, with studs facing down toward the lamp shade.
+1 15 16.513729 -238.510888 -10 1 0 0 0 -1 0 0 0 -1 44301a.dat
+1 15 -3.486271 -230.510888 -10 1 0 0 0 -1 0 0 0 -1 3710.dat
+1 15 -23.486271 -222.510888 -20 1 0 0 0 -1 0 0 0 -1 18674.dat
+0 // Round jumper holds a white 4 x 4 shade; yellow 2 x 2 lens and centre cap.
+1 15 -23.486271 -206.510888 -20 1 0 0 0 -1 0 0 0 -1 3960.dat
+1 46 -23.486271 -198.510888 -20 1 0 0 0 -1 0 0 0 -1 4740.dat
+1 46 -23.486271 -190.510888 -20 1 0 0 0 -1 0 0 0 -1 98138.dat
+0 STEP
+0 // All stud, cupboard-door and locking-hinge connections are retained in this pose.

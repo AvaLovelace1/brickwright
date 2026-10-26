@@ -1,0 +1,27 @@
+0 Name: Black Squirrel
+0 Author: Claude
+0 Description: Standing squirrel with dark grey body, bushy tail, white eyes, holding two round nuts
+0 Base
+1 71 0 0 0 1 0 0 0 1 0 0 0 1 3036.dat
+0 Body
+1 72 0 -24 0 1 0 0 0 1 0 0 0 1 3001.dat
+1 72 0 -48 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 Head
+1 72 0 -72 0 1 0 0 0 1 0 0 0 1 3003.dat
+0 Ears
+1 72 -10 -96 -10 1 0 0 0 1 0 0 0 1 3005.dat
+1 72 10 -96 -10 1 0 0 0 1 0 0 0 1 3005.dat
+0 Eyes
+1 15 -10 -75 10 1 0 0 0 1 0 0 0 1 6141.dat
+1 15 10 -75 10 1 0 0 0 1 0 0 0 1 6141.dat
+0 Arms
+1 71 -30 -48 10 1 0 0 0 1 0 0 0 1 3005.dat
+1 71 30 -48 10 1 0 0 0 1 0 0 0 1 3005.dat
+0 Nuts
+1 71 -30 -51 10 1 0 0 0 1 0 0 0 1 6141.dat
+1 71 30 -51 10 1 0 0 0 1 0 0 0 1 6141.dat
+0 Tail
+1 72 0 -24 -40 1 0 0 0 1 0 0 0 1 3001.dat
+1 72 0 -48 -60 1 0 0 0 1 0 0 0 1 3001.dat
+1 72 0 -72 -80 1 0 0 0 1 0 0 0 1 3001.dat
+1 72 0 -96 -80 1 0 0 0 1 0 0 0 1 3001.dat

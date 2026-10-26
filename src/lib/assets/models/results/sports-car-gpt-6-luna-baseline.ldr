@@ -1,0 +1,68 @@
+0 Open Top Sports Car
+0 Name: model.ldr
+0 Author: OpenAI
+0 !LICENSE Redistributable under CCAL version 2.0 : see CAreadme.txt
+0 // Red open-top sports car with black racing stripes, yellow trim, and orange lamps.
+
+0 // Main chassis and body floor
+1 4 0 -8 0 1 0 0 0 1 0 0 0 1 3028.dat
+
+0 // Red lower side rails and wheel arch surround
+1 4 -40 -32 -40 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 -40 -32 0 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 -40 -32 40 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 40 -32 -40 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 40 -32 0 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 40 -32 40 1 0 0 0 1 0 0 0 1 3004.dat
+
+0 // Hood and rear deck
+1 4 0 -32 -80 1 0 0 0 1 0 0 0 1 3001.dat
+1 4 0 -32 80 1 0 0 0 1 0 0 0 1 3001.dat
+
+0 // Black twin racing stripes on hood and rear deck
+1 0 -10 -40 -80 1 0 0 0 1 0 0 0 1 3023b.dat
+1 0 10 -40 -80 1 0 0 0 1 0 0 0 1 3023b.dat
+1 0 -10 -40 80 1 0 0 0 1 0 0 0 1 3023b.dat
+1 0 10 -40 80 1 0 0 0 1 0 0 0 1 3023b.dat
+
+0 // Open cabin, side sills and rear quarter panels
+1 4 -40 -56 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 40 -56 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 -40 -56 20 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 40 -56 20 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 -40 -56 60 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 40 -56 60 1 0 0 0 1 0 0 0 1 3004.dat
+1 4 0 -16 -20 1 0 0 0 1 0 0 0 1 3022.dat
+1 4 0 -16 40 1 0 0 0 1 0 0 0 1 3022.dat
+
+0 // Black stripes continue along the side sills
+1 0 -40 -64 0 1 0 0 0 1 0 0 0 1 3069b.dat
+1 0 40 -64 0 1 0 0 0 1 0 0 0 1 3069b.dat
+
+0 // Yellow front and rear bumpers with orange headlights
+1 14 0 -16 -100 1 0 0 0 1 0 0 0 1 3020.dat
+1 14 0 -16 100 1 0 0 0 1 0 0 0 1 3020.dat
+1 14 -40 -16 -100 1 0 0 0 1 0 0 0 1 3024.dat
+1 14 40 -16 -100 1 0 0 0 1 0 0 0 1 3024.dat
+1 14 -40 -16 100 1 0 0 0 1 0 0 0 1 3024.dat
+1 14 40 -16 100 1 0 0 0 1 0 0 0 1 3024.dat
+1 57 -40 -40 -100 1 0 0 0 1 0 0 0 1 3062b.dat
+1 57 40 -40 -100 1 0 0 0 1 0 0 0 1 3062b.dat
+
+0 // Low open windscreen frame and black cockpit details
+1 4 -40 -64 -40 1 0 0 0 1 0 0 0 1 3005.dat
+1 4 40 -64 -40 1 0 0 0 1 0 0 0 1 3005.dat
+1 4 0 -56 -40 1 0 0 0 1 0 0 0 1 3022.dat
+1 0 0 -64 -10 1 0 0 0 1 0 0 0 1 3005.dat
+1 0 -20 -64 -10 1 0 0 0 1 0 0 0 1 3068b.dat
+1 0 20 -64 -10 1 0 0 0 1 0 0 0 1 3068b.dat
+
+0 // Four black tires and yellow wheel hubs
+1 0 -60 4 -50 0 0 1 0 1 0 -1 0 0 3641.dat
+1 0 60 4 -50 0 0 -1 0 1 0 1 0 0 3641.dat
+1 0 -60 4 50 0 0 1 0 1 0 -1 0 0 3641.dat
+1 0 60 4 50 0 0 -1 0 1 0 1 0 0 3641.dat
+1 14 -60 4 -50 0 0 1 0 1 0 -1 0 0 4624.dat
+1 14 60 4 -50 0 0 -1 0 1 0 1 0 0 4624.dat
+1 14 -60 4 50 0 0 1 0 1 0 -1 0 0 4624.dat
+1 14 60 4 50 0 0 -1 0 1 0 1 0 0 4624.dat

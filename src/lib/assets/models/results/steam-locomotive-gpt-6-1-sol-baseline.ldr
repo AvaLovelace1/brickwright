@@ -1,0 +1,64 @@
+0 Golden Puff - small yellow and black steam locomotive
+0 Name: model.ldr
+0 Author: Codex
+0 !LDRAW_ORG Model
+0 !KEYWORDS steam locomotive, yellow, black, six wheels
+0 // All dimensions are LDU. Up is -Y; the locomotive faces -Z.
+0 // Three complete catalogue wheelsets; the top studs engage the black chassis.
+1 0 0 8 -80 1 0 0 0 1 0 0 0 1 2878c01.dat
+1 0 0 8 0 1 0 0 0 1 0 0 0 1 2878c01.dat
+1 0 0 8 80 1 0 0 0 1 0 0 0 1 2878c01.dat
+1 0 0 0 0 0 0 1 0 1 0 -1 0 0 3028.dat
+1 14 0 -8 0 0 0 1 0 1 0 -1 0 0 3028.dat
+0 STEP
+0 // Two jumper plates centre the three-stud-wide boiler on the six-wide deck.
+1 0 0 -16 -10 1 0 0 0 1 0 0 0 1 3794b.dat
+1 0 0 -16 10 1 0 0 0 1 0 0 0 1 3794b.dat
+1 14 0 -50 -40 1 0 0 0 1 0 0 0 1 30360.dat
+0 // The front round brick fits inside the boiler and engages its four axial studs.
+1 0 0 -50 -100 1 0 0 0 0 -1 0 1 0 6143.dat
+1 0 0 -50 -108 1 0 0 0 0 -1 0 1 0 4150.dat
+0 STEP
+0 // The internal 1 x 2 brick rises through the boiler top opening to support the stack.
+1 0 0 -80 -40 0 0 1 0 1 0 -1 0 0 3004.dat
+1 0 0 -104 -50 1 0 0 0 1 0 0 0 1 3062b.dat
+1 0 0 -152 -50 1 0 0 0 1 0 0 0 1 49309.dat
+1 0 0 -160 -50 1 0 0 0 1 0 0 0 1 15535.dat
+0 // Small yellow steam dome on the boiler rear top stud.
+1 14 0 -104 -10 1 0 0 0 1 0 0 0 1 3062b.dat
+1 14 0 -112 -10 1 0 0 0 1 0 0 0 1 98138.dat
+0 STEP
+0 // Yellow cab sill: a four-wide, four-long hollow enclosure.
+1 14 0 -32 50 1 0 0 0 1 0 0 0 1 3010.dat
+1 14 0 -32 110 1 0 0 0 1 0 0 0 1 3010.dat
+1 14 -30 -32 80 0 0 1 0 1 0 -1 0 0 3004.dat
+1 14 30 -32 80 0 0 1 0 1 0 -1 0 0 3004.dat
+0 // Window frames with catalogue-fitted clear glass.
+1 14 -20 -80 50 -1 0 0 0 1 0 0 0 -1 60592c01.dat
+1 14 -20 -80 110 1 0 0 0 1 0 0 0 1 60592c01.dat
+1 14 20 -80 50 -1 0 0 0 1 0 0 0 -1 60592c01.dat
+1 14 20 -80 110 1 0 0 0 1 0 0 0 1 60592c01.dat
+1 14 -30 -80 80 0 0 -1 0 1 0 1 0 0 60592c01.dat
+1 14 30 -80 80 0 0 1 0 1 0 -1 0 0 60592c01.dat
+0 // Yellow lintels tie the windows together and carry the roof.
+1 14 0 -104 50 1 0 0 0 1 0 0 0 1 3010.dat
+1 14 0 -104 110 1 0 0 0 1 0 0 0 1 3010.dat
+1 14 -30 -104 80 0 0 1 0 1 0 -1 0 0 3004.dat
+1 14 30 -104 80 0 0 1 0 1 0 -1 0 0 3004.dat
+0 STEP
+0 // Black roof overhang, finished with three smooth tiles.
+1 0 0 -112 80 1 0 0 0 1 0 0 0 1 3958.dat
+1 0 -40 -120 80 0 0 1 0 1 0 -1 0 0 69729.dat
+1 0 0 -120 80 0 0 1 0 1 0 -1 0 0 69729.dat
+1 0 40 -120 80 0 0 1 0 1 0 -1 0 0 69729.dat
+0 STEP
+0 // Two forward-facing lamps and a low centre buffer between them.
+1 0 -30 -32 -110 1 0 0 0 1 0 0 0 1 87087.dat
+1 0 -30 -40 -110 1 0 0 0 1 0 0 0 1 3070b.dat
+1 47 -30 -20 -128 1 0 0 0 0 -1 0 1 0 98138.dat
+1 0 30 -32 -110 1 0 0 0 1 0 0 0 1 87087.dat
+1 0 30 -40 -110 1 0 0 0 1 0 0 0 1 3070b.dat
+1 47 30 -20 -128 1 0 0 0 0 -1 0 1 0 98138.dat
+1 14 0 -16 -110 1 0 0 0 1 0 0 0 1 3023b.dat
+1 0 0 -24 -110 1 0 0 0 1 0 0 0 1 3069b.dat
+0 STEP

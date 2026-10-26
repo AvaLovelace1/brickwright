@@ -1,0 +1,95 @@
+0 Scarlet Sprint - Open-Top Sports Car
+0 Name: model.ldr
+0 Author: Codex
+0 !LDRAW_ORG Unofficial_Model
+0 // Six-stud red roadster; front is negative Z; Y increases downward.
+0 // All elements are unmodified official LDraw catalogue parts.
+0 // Axle carriers and a continuous two-stud chassis spine.
+1 0 0 0 -100 1 0 0 0 1 0 0 0 1 6157.dat
+1 0 0 0 100 1 0 0 0 1 0 0 0 1 6157.dat
+1 0 0 0 0 0 0 1 0 1 0 -1 0 0 4282.dat
+1 0 0 -8 0 0 0 1 0 1 0 -1 0 0 4282.dat
+1 0 0 -16 -80 0 0 1 0 1 0 -1 0 0 3034.dat
+1 0 0 -16 80 0 0 1 0 1 0 -1 0 0 3034.dat
+1 0 0 -24 -80 0 0 1 0 1 0 -1 0 0 3034.dat
+1 0 0 -24 80 0 0 1 0 1 0 -1 0 0 3034.dat
+0 STEP
+0 // Four pin-mounted wheels. Catalogue shortcut includes the correctly seated tyre.
+1 72 -40 5 -100 0 0 1 0 1 0 -1 0 0 6014bc01.dat
+1 72 40 5 -100 0 0 -1 0 1 0 1 0 0 6014bc01.dat
+1 72 -40 5 100 0 0 1 0 1 0 -1 0 0 6014bc01.dat
+1 72 40 5 100 0 0 -1 0 1 0 1 0 0 6014bc01.dat
+0 STEP
+0 // Six-stud body floor clears the tyre crowns. Low side sills stay between the axles.
+1 4 0 -32 -80 0 0 1 0 1 0 -1 0 0 3036.dat
+1 4 0 -32 80 0 0 1 0 1 0 -1 0 0 3036.dat
+1 4 -50 -24 0 0 0 1 0 1 0 -1 0 0 3009.dat
+1 4 50 -24 0 0 0 1 0 1 0 -1 0 0 3009.dat
+1 14 0 -24 -150 1 0 0 0 1 0 0 0 1 3666.dat
+1 4 0 -16 -150 1 0 0 0 1 0 0 0 1 3666.dat
+1 14 0 -24 150 1 0 0 0 1 0 0 0 1 3666.dat
+1 4 0 -16 150 1 0 0 0 1 0 0 0 1 3666.dat
+0 STEP
+0 // Sculpted hood: two separate black racing stripes flank the red centre.
+1 0 -30 -56 -110 1 0 0 0 1 0 0 0 1 50950.dat
+1 4 -10 -56 -110 1 0 0 0 1 0 0 0 1 50950.dat
+1 4 10 -56 -110 1 0 0 0 1 0 0 0 1 50950.dat
+1 0 30 -56 -110 1 0 0 0 1 0 0 0 1 50950.dat
+1 4 -50 -56 -90 1 0 0 0 1 0 0 0 1 3040b.dat
+1 4 50 -56 -90 1 0 0 0 1 0 0 0 1 3040b.dat
+1 4 0 -56 -60 1 0 0 0 1 0 0 0 1 2456.dat
+1 4 -50 -64 -70 1 0 0 0 1 0 0 0 1 3070b.dat
+1 0 -30 -64 -70 1 0 0 0 1 0 0 0 1 3070b.dat
+1 4 -10 -64 -70 1 0 0 0 1 0 0 0 1 3070b.dat
+1 4 10 -64 -70 1 0 0 0 1 0 0 0 1 3070b.dat
+1 0 30 -64 -70 1 0 0 0 1 0 0 0 1 3070b.dat
+1 4 50 -64 -70 1 0 0 0 1 0 0 0 1 3070b.dat
+1 14 0 -40 -150 1 0 0 0 1 0 0 0 1 3666.dat
+1 14 0 -48 -150 1 0 0 0 1 0 0 0 1 2431.dat
+0 STEP
+0 // Front lights are attached to forward-facing studs; clear orange lenses sit above the bumper.
+1 4 -50 -40 -130 1 0 0 0 1 0 0 0 1 3024.dat
+1 4 -50 -64 -130 1 0 0 0 1 0 0 0 1 87087.dat
+1 57 -50 -54 -148 1 0 0 0 0 -1 0 1 0 98138.dat
+1 4 -50 -72 -130 1 0 0 0 1 0 0 0 1 3070b.dat
+1 4 50 -40 -130 1 0 0 0 1 0 0 0 1 3024.dat
+1 4 50 -64 -130 1 0 0 0 1 0 0 0 1 87087.dat
+1 57 50 -54 -148 1 0 0 0 0 -1 0 1 0 98138.dat
+1 4 50 -72 -130 1 0 0 0 1 0 0 0 1 3070b.dat
+0 STEP
+0 // Open cockpit, red side rails and a low transparent curved windscreen.
+1 4 -50 -56 20 0 0 1 0 1 0 -1 0 0 3009.dat
+1 4 -50 -64 40 0 0 1 0 1 0 -1 0 0 2431.dat
+1 4 50 -56 20 0 0 1 0 1 0 -1 0 0 3009.dat
+1 4 50 -64 40 0 0 1 0 1 0 -1 0 0 2431.dat
+1 43 0 -80 -10 1 0 0 0 1 0 0 0 1 62360.dat
+1 0 -20 -40 -10 1 0 0 0 1 0 0 0 1 3829c01.dat
+1 0 -20 -40 10 1 0 0 0 1 0 0 0 1 3069b.dat
+1 0 -20 -40 40 1 0 0 0 1 0 0 0 1 3068b.dat
+1 0 -20 -56 70 1 0 0 0 1 0 0 0 1 3004.dat
+1 0 -20 -64 70 1 0 0 0 1 0 0 0 1 3069b.dat
+1 0 20 -40 10 1 0 0 0 1 0 0 0 1 3069b.dat
+1 0 20 -40 40 1 0 0 0 1 0 0 0 1 3068b.dat
+1 0 20 -56 70 1 0 0 0 1 0 0 0 1 3004.dat
+1 0 20 -64 70 1 0 0 0 1 0 0 0 1 3069b.dat
+0 STEP
+0 // Rear deck continues the matching twin stripes and leaves both seats exposed.
+1 4 -50 -56 110 -1 0 0 0 1 0 0 0 -1 50950.dat
+1 0 -30 -56 110 -1 0 0 0 1 0 0 0 -1 50950.dat
+1 4 -10 -56 110 -1 0 0 0 1 0 0 0 -1 50950.dat
+1 4 10 -56 110 -1 0 0 0 1 0 0 0 -1 50950.dat
+1 0 30 -56 110 -1 0 0 0 1 0 0 0 -1 50950.dat
+1 4 50 -56 110 -1 0 0 0 1 0 0 0 -1 50950.dat
+0 STEP
+0 // Rear fascia with yellow accent strip and outward-facing red tail lights.
+1 4 0 -56 150 1 0 0 0 1 0 0 0 1 3010.dat
+1 14 0 -64 150 1 0 0 0 1 0 0 0 1 2431.dat
+1 4 -50 -40 150 1 0 0 0 1 0 0 0 1 3024.dat
+1 4 -50 -64 150 -1 0 0 0 1 0 0 0 -1 87087.dat
+1 36 -50 -54 168 1 0 0 0 0 1 0 -1 0 98138.dat
+1 4 -50 -72 150 1 0 0 0 1 0 0 0 1 3070b.dat
+1 4 50 -40 150 1 0 0 0 1 0 0 0 1 3024.dat
+1 4 50 -64 150 -1 0 0 0 1 0 0 0 -1 87087.dat
+1 36 50 -54 168 1 0 0 0 0 1 0 -1 0 98138.dat
+1 4 50 -72 150 1 0 0 0 1 0 0 0 1 3070b.dat
+0 STEP

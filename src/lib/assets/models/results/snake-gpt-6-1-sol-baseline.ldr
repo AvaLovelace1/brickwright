@@ -1,0 +1,124 @@
+0 FILE model.ldr
+0 Articulated Dark Green Serpent
+0 Name: model.ldr
+0 Author: Codex
+0 !LDRAW_ORG Unofficial_Model
+0 // 14 repeated scales, a shaped head, and a two-stage articulated tail.
+0 // Dark Green = 288; Tan = 19; concealed friction joints = 72.
+0 // Every joint is a real 8 mm LEGO ball/socket connection.
+0 // All y=4 joint centres coincide; maximum relative yaw is 20 degrees.
+0 // Pose by rotating complete segments around their shared ball centres.
+0 // Each body segment has incoming ball (-30,4,0) and socket (30,4,0).
+0 // Set all segment yaw angles to zero and centres 60 LDU apart for a straight pose.
+1 288 0 0 0 1 0 0 0 1 0 0 0 1 serpent_head.ldr
+0 STEP
+0 // Articulated segment 1; yaw 20 degrees.
+1 288 58.19077862 0 -10.2606043 0.93969262 0 0.34202014 0 1 0 -0.34202014 0 0.93969262 serpent_body.ldr
+0 STEP
+0 // Articulated segment 2; yaw 40 degrees.
+1 288 109.36289054 0 -39.80483689 0.76604444 0 0.64278761 0 1 0 -0.64278761 0 0.76604444 serpent_body.ldr
+0 STEP
+0 // Articulated segment 3; yaw 55 degrees.
+1 288 149.55151692 0 -83.66302651 0.57357644 0 0.81915204 0 1 0 -0.81915204 0 0.57357644 serpent_body.ldr
+0 STEP
+0 // Articulated segment 4; yaw 55 degrees.
+1 288 183.96610311 0 -132.81214917 0.57357644 0 0.81915204 0 1 0 -0.81915204 0 0.57357644 serpent_body.ldr
+0 STEP
+0 // Articulated segment 5; yaw 40 degrees.
+1 288 224.15472949 0 -176.67033879 0.76604444 0 0.64278761 0 1 0 -0.64278761 0 0.76604444 serpent_body.ldr
+0 STEP
+0 // Articulated segment 6; yaw 20 degrees.
+1 288 275.32684141 0 -206.21457138 0.93969262 0 0.34202014 0 1 0 -0.34202014 0 0.93969262 serpent_body.ldr
+0 STEP
+0 // Articulated segment 7; yaw 0 degrees.
+1 288 333.51762003 0 -216.47517568 1 0 0 0 1 0 0 0 1 serpent_body.ldr
+0 STEP
+0 // Articulated segment 8; yaw -20 degrees.
+1 288 391.70839865 0 -206.21457138 0.93969262 0 -0.34202014 0 1 0 0.34202014 0 0.93969262 serpent_body.ldr
+0 STEP
+0 // Articulated segment 9; yaw -40 degrees.
+1 288 442.88051057 0 -176.67033879 0.76604444 0 -0.64278761 0 1 0 0.64278761 0 0.76604444 serpent_body.ldr
+0 STEP
+0 // Articulated segment 10; yaw -55 degrees.
+1 288 483.06913696 0 -132.81214917 0.57357644 0 -0.81915204 0 1 0 0.81915204 0 0.57357644 serpent_body.ldr
+0 STEP
+0 // Articulated segment 11; yaw -55 degrees.
+1 288 517.48372314 0 -83.66302651 0.57357644 0 -0.81915204 0 1 0 0.81915204 0 0.57357644 serpent_body.ldr
+0 STEP
+0 // Articulated segment 12; yaw -40 degrees.
+1 288 557.67234952 0 -39.80483689 0.76604444 0 -0.64278761 0 1 0 0.64278761 0 0.76604444 serpent_body.ldr
+0 STEP
+0 // Articulated segment 13; yaw -20 degrees.
+1 288 608.84446144 0 -10.2606043 0.93969262 0 -0.34202014 0 1 0 0.34202014 0 0.93969262 serpent_body.ldr
+0 STEP
+0 // Articulated segment 14; yaw 0 degrees.
+1 288 667.03524006 0 0 1 0 0 0 1 0 0 0 1 serpent_body.ldr
+0 STEP
+0 // Articulated segment 15; yaw 15 degrees.
+1 288 726.01301485 0 -7.76457135 0.96592583 0 0.25881905 0 1 0 -0.25881905 0 0.96592583 serpent_tail_link.ldr
+0 STEP
+0 // Articulated segment 16; yaw 25 degrees.
+1 288 782.18002325 0 -28.20769056 0.90630779 0 0.42261826 0 1 0 -0.42261826 0 0.90630779 serpent_tail_tip.ldr
+0 STEP
+0 NOFILE
+
+0 FILE serpent_body.ldr
+0 Rounded dark green body scale with tan belly
+0 Name: serpent_body.ldr
+0 !LDRAW_ORG Unofficial_Model
+0 // Bottom-up: belly plate, joint and filler, tying plate, curved scale.
+1 19 0 8 10 1 0 0 0 1 0 0 0 1 3022.dat
+1 72 0 0 0 1 0 0 0 1 0 0 0 1 14419.dat
+1 16 0 0 20 1 0 0 0 1 0 0 0 1 3023b.dat
+1 16 0 -8 10 1 0 0 0 1 0 0 0 1 3022.dat
+1 16 0 -8 10 0 0 1 0 1 0 -1 0 0 15068.dat
+0 NOFILE
+
+0 FILE serpent_head.ldr
+0 Wide serpent head with yellow reptile eyes and a red tongue
+0 Name: serpent_head.ldr
+0 !LDRAW_ORG Unofficial_Model
+1 19 -10 8 0 1 0 0 0 1 0 0 0 1 11212.dat
+1 72 0 0 0 1 0 0 0 1 0 0 0 1 14418.dat
+1 16 -10 0 -20 1 0 0 0 1 0 0 0 1 3623.dat
+1 16 -10 0 20 1 0 0 0 1 0 0 0 1 3623.dat
+1 4 -40 0 0 1 0 0 0 1 0 0 0 1 2412b.dat
+1 16 -10 -8 0 1 0 0 0 1 0 0 0 1 11212.dat
+0 STEP
+1 16 -30 -8 -20 0 0 1 0 1 0 -1 0 0 54200.dat
+1 16 -10 -32 -20 1 0 0 0 1 0 0 0 1 87087.dat
+1 16 10 -32 -20 1 0 0 0 1 0 0 0 1 3005.dat
+1 16 0 -32 -20 0 0 1 0 1 0 -1 0 0 11477.dat
+1 16 -30 -8 0 0 0 1 0 1 0 -1 0 0 54200.dat
+1 16 -10 -32 0 1 0 0 0 1 0 0 0 1 3005.dat
+1 16 10 -32 0 1 0 0 0 1 0 0 0 1 3005.dat
+1 16 0 -32 0 0 0 1 0 1 0 -1 0 0 11477.dat
+1 16 -30 -8 20 0 0 1 0 1 0 -1 0 0 54200.dat
+1 16 -10 -32 20 -1 0 0 0 1 0 0 0 -1 87087.dat
+1 16 10 -32 20 1 0 0 0 1 0 0 0 1 3005.dat
+1 16 0 -32 20 0 0 1 0 1 0 -1 0 0 11477.dat
+1 14 -10 -22 -38 1 0 0 0 0 -1 0 1 0 98138pa2.dat
+1 14 -10 -22 38 1 0 0 0 0 1 0 -1 0 98138pa2.dat
+0 NOFILE
+
+0 FILE serpent_tail_link.ldr
+0 Narrow articulated tail scale
+0 Name: serpent_tail_link.ldr
+0 !LDRAW_ORG Unofficial_Model
+1 19 0 8 0 1 0 0 0 1 0 0 0 1 3023b.dat
+1 72 0 0 0 1 0 0 0 1 0 0 0 1 14419.dat
+1 16 0 -8 0 1 0 0 0 1 0 0 0 1 3023b.dat
+1 16 0 -8 0 0 0 -1 0 1 0 1 0 0 11477.dat
+0 NOFILE
+
+0 FILE serpent_tail_tip.ldr
+0 Slender tapering tail tip with terminal ball
+0 Name: serpent_tail_tip.ldr
+0 !LDRAW_ORG Unofficial_Model
+1 19 10 8 0 1 0 0 0 1 0 0 0 1 3623.dat
+1 72 0 0 0 -1 0 0 0 1 0 0 0 -1 22890.dat
+1 16 30 0 0 1 0 0 0 1 0 0 0 1 3024.dat
+1 16 10 -8 0 1 0 0 0 1 0 0 0 1 3623.dat
+1 16 0 -8 0 0 0 -1 0 1 0 1 0 0 11477.dat
+1 16 30 -8 0 0 0 -1 0 1 0 1 0 0 54200.dat
+0 NOFILE

@@ -1,0 +1,13 @@
+0 Name: model.ldr
+0 Author: Claude Code
+0 Description: White multi-level station with articulated yellow-lens lamp, control panel and cabinet with yellow door
+0 Unofficial model
+1 15 0 0 0 1 0 0 0 1 0 0 0 1 3001.dat
+1 15 -20 -24 -10 1 0 0 0 1 0 0 0 1 3004.dat
+1 14 -20 -24 10 1 0 0 0 1 0 0 0 1 3004.dat
+1 15 20 -24 0 1 0 0 0 1 0 0 0 1 3039.dat
+1 15 -20 -48 0 1 0 0 0 1 0 0 0 1 3003.dat
+1 15 -30 -72 -10 1 0 0 0 1 0 0 0 1 3005.dat
+1 15 -30 -96 -10 1 0 0 0 1 0 0 0 1 3005.dat
+1 15 0 -120 -10 1 0 0 0 1 0 0 0 1 3010.dat
+1 14 30 -144 -10 1 0 0 0 1 0 0 0 1 3062b.dat

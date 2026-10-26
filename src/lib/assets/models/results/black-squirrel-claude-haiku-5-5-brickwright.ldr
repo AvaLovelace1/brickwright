@@ -1,0 +1,97 @@
+0 FILE main.ldr
+0 main
+0 Name: main
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_2.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_3.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_4.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_5.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_6.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_7.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_8.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_9.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_10.ldr
+1 15 30 -168 10 1 0 0 0 1 0 0 0 1 3005.dat
+1 15 90 -168 10 1 0 0 0 1 0 0 0 1 3005.dat
+1 72 30 -192 30 1 0 0 0 1 0 0 0 1 3005.dat
+1 72 90 -192 30 1 0 0 0 1 0 0 0 1 3005.dat
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_11.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_12.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 submodel_13.ldr
+1 70 30 -48 10 1 0 0 0 1 0 0 0 1 3062b.dat
+1 70 90 -48 10 1 0 0 0 1 0 0 0 1 3062b.dat
+0 FILE submodel.ldr
+0 submodel
+0 Name: submodel
+1 71 60 -24 20 1 0 0 0 1 0 0 0 1 3001.dat
+0 FILE submodel_2.ldr
+0 submodel_2
+0 Name: submodel_2
+1 72 60 -8 60 1 0 0 0 1 0 0 0 1 3020.dat
+1 72 60 -8 90 1 0 0 0 1 0 0 0 1 3710.dat
+1 72 30 -16 50 1 0 0 0 1 0 0 0 1 3024.dat
+1 72 70 -16 50 1 0 0 0 1 0 0 0 1 3623.dat
+1 72 30 -16 80 0 0 -1 0 1 0 1 0 0 3023b.dat
+1 72 70 -16 80 1 0 0 0 1 0 0 0 1 3021.dat
+1 72 60 -24 60 1 0 0 0 1 0 0 0 1 3020.dat
+1 72 60 -24 90 1 0 0 0 1 0 0 0 1 3710.dat
+0 FILE submodel_3.ldr
+0 submodel_3
+0 Name: submodel_3
+1 72 60 -32 40 1 0 0 0 1 0 0 0 1 3020.dat
+1 72 60 -32 80 1 0 0 0 1 0 0 0 1 3020.dat
+1 72 30 -40 30 1 0 0 0 1 0 0 0 1 3024.dat
+1 72 70 -40 30 1 0 0 0 1 0 0 0 1 3623.dat
+1 72 30 -40 60 0 0 -1 0 1 0 1 0 0 3023b.dat
+1 72 30 -40 90 1 0 0 0 1 0 0 0 1 3024.dat
+1 72 70 -40 60 1 0 0 0 1 0 0 0 1 3021.dat
+1 72 70 -40 90 1 0 0 0 1 0 0 0 1 3623.dat
+1 72 60 -48 40 1 0 0 0 1 0 0 0 1 3020.dat
+1 72 60 -48 80 1 0 0 0 1 0 0 0 1 3020.dat
+0 FILE submodel_4.ldr
+0 submodel_4
+0 Name: submodel_4
+1 72 60 -72 40 0 0 -1 0 1 0 1 0 0 3001.dat
+1 72 60 -96 30 0 0 -1 0 1 0 1 0 0 3002.dat
+1 72 60 -96 70 -1 0 0 0 1 0 0 0 -1 3004.dat
+1 72 60 -120 40 0 0 -1 0 1 0 1 0 0 3001.dat
+0 FILE submodel_5.ldr
+0 submodel_5
+0 Name: submodel_5
+1 71 60 -144 10 1 0 0 0 1 0 0 0 1 3004.dat
+0 FILE submodel_6.ldr
+0 submodel_6
+0 Name: submodel_6
+1 72 30 -144 30 0 0 -1 0 1 0 1 0 0 3622.dat
+0 FILE submodel_7.ldr
+0 submodel_7
+0 Name: submodel_7
+1 72 90 -144 30 0 0 -1 0 1 0 1 0 0 3622.dat
+0 FILE submodel_8.ldr
+0 submodel_8
+0 Name: submodel_8
+1 72 60 -144 40 1 0 0 0 1 0 0 0 1 3003.dat
+0 FILE submodel_9.ldr
+0 submodel_9
+0 Name: submodel_9
+1 72 60 -168 10 1 0 0 0 1 0 0 0 1 3004.dat
+0 FILE submodel_10.ldr
+0 submodel_10
+0 Name: submodel_10
+1 72 60 -168 40 1 0 0 0 1 0 0 0 1 3001.dat
+0 FILE submodel_11.ldr
+0 submodel_11
+0 Name: submodel_11
+1 72 60 -72 100 1 0 0 0 1 0 0 0 1 3001.dat
+1 72 50 -96 100 1 0 0 0 1 0 0 0 1 3002.dat
+1 72 90 -96 100 0 0 -1 0 1 0 1 0 0 3004.dat
+0 FILE submodel_12.ldr
+0 submodel_12
+0 Name: submodel_12
+1 72 60 -120 100 1 0 0 0 1 0 0 0 1 3001.dat
+1 72 50 -144 100 1 0 0 0 1 0 0 0 1 3002.dat
+1 72 90 -144 100 0 0 -1 0 1 0 1 0 0 3004.dat
+0 FILE submodel_13.ldr
+0 submodel_13
+0 Name: submodel_13
+1 71 60 -168 100 1 0 0 0 1 0 0 0 1 3003.dat

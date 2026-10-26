@@ -1,0 +1,174 @@
+0 FILE model.ldr
+0 Harvest Garden - Rotating Pumpkin Patch and Roofed Well
+0 Name: model.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Model
+0 // 32 x 16 stud foundation; 24 x 16 stud rotating garden.
+0 // All geometry is provided by official catalogue parts.
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 foundation.ldr
+0 STEP
+0 // The round top and complete garden rotate together on the fixed 61485 base.
+1 16 0 -80 0 0.96592583 0 0.25881905 0 1 0 -0.25881905 0 0.96592583 garden.ldr
+0 NOFILE
+0 FILE foundation.ldr
+0 Joined Green Baseplates and Turntable Pedestal
+0 Name: foundation.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Model
+1 2 -160 0 0 1 0 0 0 1 0 0 0 1 3867.dat
+1 2 160 0 0 1 0 0 0 1 0 0 0 1 3867.dat
+0 STEP
+0 // This bridging plate clutches studs on both baseplates across their central seam.
+1 288 0 -8 0 1 0 0 0 1 0 0 0 1 3028.dat
+1 71 0 -16 0 1 0 0 0 1 0 0 0 1 3958.dat
+1 71 0 -40 -40 1 0 0 0 1 0 0 0 1 2456.dat
+1 71 0 -40 0 1 0 0 0 1 0 0 0 1 2456.dat
+1 71 0 -40 40 1 0 0 0 1 0 0 0 1 2456.dat
+1 72 0 -48 0 1 0 0 0 1 0 0 0 1 3958.dat
+0 STEP
+0 // Fixed lower turntable half; the mating 60474 is in the rotating garden.
+1 0 0 -56 0 1 0 0 0 1 0 0 0 1 61485.dat
+1 14 -270 -12 -110 1 0 0 0 1 0 0 0 1 3741ac03.dat
+1 4 -270 -12 110 1 0 0 0 1 0 0 0 1 3741ac03.dat
+1 14 270 -12 -110 1 0 0 0 1 0 0 0 1 3741ac03.dat
+1 13 270 -12 110 1 0 0 0 1 0 0 0 1 3741ac03.dat
+0 NOFILE
+0 FILE garden.ldr
+0 Rotating Garden Deck
+0 Name: garden.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Model
+0 // 60474 is snapped into the fixed turntable base, eight LDU above it.
+1 72 0 16 0 1 0 0 0 1 0 0 0 1 60474.dat
+0 // Two crossed layers of plates support and join all three green landscape plates.
+1 288 -120 8 -120 1 0 0 0 1 0 0 0 1 3029.dat
+1 288 -120 8 -40 1 0 0 0 1 0 0 0 1 3029.dat
+1 288 -120 8 40 1 0 0 0 1 0 0 0 1 3029.dat
+1 288 -120 8 120 1 0 0 0 1 0 0 0 1 3029.dat
+1 288 120 8 -120 1 0 0 0 1 0 0 0 1 3029.dat
+1 288 120 8 -40 1 0 0 0 1 0 0 0 1 3029.dat
+1 288 120 8 40 1 0 0 0 1 0 0 0 1 3029.dat
+1 288 120 8 120 1 0 0 0 1 0 0 0 1 3029.dat
+0 STEP
+1 2 -160 0 0 0 0 1 0 1 0 -1 0 0 92438.dat
+1 2 0 0 0 0 0 1 0 1 0 -1 0 0 92438.dat
+1 2 160 0 0 0 0 1 0 1 0 -1 0 0 92438.dat
+0 STEP
+0 // Raised soil bed on the left; the short extension completes its 10 x 8 stud footprint.
+1 70 -140 -8 0 1 0 0 0 1 0 0 0 1 41539.dat
+1 70 -40 -8 0 0 0 1 0 1 0 -1 0 0 3034.dat
+1 288 -190 -16 70 1 0 0 0 1 0 0 0 1 6141.dat
+1 288 -190 -19 70 1 0 0 0 1 0 0 0 1 2423.dat
+1 16 -190 -19 70 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+1 16 -190 -19 10 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+1 16 -190 -8 -50 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+1 288 -130 -16 70 1 0 0 0 1 0 0 0 1 6141.dat
+1 288 -130 -19 70 1 0 0 0 1 0 0 0 1 2423.dat
+1 16 -130 -19 70 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+1 16 -130 -19 10 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+1 16 -130 -8 -50 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+1 288 -70 -16 70 1 0 0 0 1 0 0 0 1 6141.dat
+1 288 -70 -19 70 1 0 0 0 1 0 0 0 1 2423.dat
+1 16 -70 -19 70 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+1 16 -70 -19 10 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+1 16 -70 -8 -50 1 0 0 0 1 0 0 0 1 pumpkin.ldr
+0 STEP
+0 // White picket fence along the back and the left of the pumpkin patch.
+1 15 -180 -48 -130 1 0 0 0 1 0 0 0 1 33303.dat
+1 15 -100 -48 -130 1 0 0 0 1 0 0 0 1 33303.dat
+1 15 -20 -48 -130 1 0 0 0 1 0 0 0 1 33303.dat
+1 15 -230 -48 -80 0 0 1 0 1 0 -1 0 0 33303.dat
+1 15 -230 -48 0 0 0 1 0 1 0 -1 0 0 33303.dat
+1 15 -230 -24 -130 1 0 0 0 1 0 0 0 1 3005.dat
+1 15 -230 -48 -130 1 0 0 0 1 0 0 0 1 3005.dat
+1 15 -230 -56 -130 1 0 0 0 1 0 0 0 1 3070b.dat
+0 STEP
+0 // Warm tan stepping stones lead through the patch to the ladder.
+1 19 0 -8 120 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 0 -8 80 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 0 -8 40 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 0 -8 0 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 0 -8 -40 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 0 -8 -80 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 40 -8 120 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 80 -8 120 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 120 -8 120 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 120 -8 80 1 0 0 0 1 0 0 0 1 3068b.dat
+1 19 120 -8 50 1 0 0 0 1 0 0 0 1 3069b.dat
+1 16 120 0 -40 1 0 0 0 1 0 0 0 1 well.ldr
+0 STEP
+0 // Low flowering plants stay on the garden deck and clear the roof and fence.
+1 14 -190 -12 130 1 0 0 0 1 0 0 0 1 3741ac03.dat
+1 13 -90 -12 130 1 0 0 0 1 0 0 0 1 3741ac03.dat
+1 14 190 -12 110 1 0 0 0 1 0 0 0 1 3741ac03.dat
+1 4 210 -12 -130 1 0 0 0 1 0 0 0 1 3741ac03.dat
+1 4 50 -12 70 1 0 0 0 1 0 0 0 1 3741ac03.dat
+0 // A bucket clutches one grass stud at its moulded underside recess.
+1 71 190 -38.185 70 1 0 0 0 1 0 0 0 1 95343c01.dat
+0 NOFILE
+0 FILE pumpkin.ldr
+0 Orange Pumpkin with Green Stalk
+0 Name: pumpkin.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Model
+0 // Pumpkin lower clutch plane is 32 LDU below its top stud plane.
+1 25 0 -32 0 1 0 0 0 1 0 0 0 1 51270.dat
+1 288 0 -40 0 1 0 0 0 1 0 0 0 1 6141.dat
+0 NOFILE
+0 FILE well.ldr
+0 Hollow Circular Stone Well with Ladder and Timber Roof
+0 Name: well.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Model
+0 // Four real 3 x 3 macaroni bricks make each open 6 x 6 circular course.
+1 71 0 -24 0 1 0 0 0 1 0 0 0 1 5152.dat
+1 19 0 -24 0 0 0 1 0 1 0 -1 0 0 5152.dat
+1 71 0 -24 0 -1 0 0 0 1 0 0 0 -1 5152.dat
+1 19 0 -24 0 0 0 -1 0 1 0 1 0 0 5152.dat
+1 19 0 -48 0 1 0 0 0 1 0 0 0 1 5152.dat
+1 71 0 -48 0 0 0 1 0 1 0 -1 0 0 5152.dat
+1 19 0 -48 0 -1 0 0 0 1 0 0 0 -1 5152.dat
+1 71 0 -48 0 0 0 -1 0 1 0 1 0 0 5152.dat
+0 // A blue round plate fills the inner 4 x 4 opening and clutches the garden studs.
+1 1 0 -8 0 1 0 0 0 1 0 0 0 1 32627.dat
+0 STEP
+0 // Two rear rim tiles; the front central studs carry the attached ladder plate.
+1 72 0 -56 0 1 0 0 0 1 0 0 0 1 79393.dat
+1 72 0 -56 0 0 0 1 0 1 0 -1 0 0 79393.dat
+1 72 -50 -56 10 1 0 0 0 1 0 0 0 1 98138.dat
+1 72 50 -56 10 1 0 0 0 1 0 0 0 1 98138.dat
+0 // 4175 clutches both front-rim studs; its rungs hang outside the wall.
+1 70 0 -56 50 -1 0 0 0 1 0 0 0 -1 4175.dat
+0 STEP
+0 // Timber uprights stand just outside the circular stone wall and support the roof.
+1 70 -70 -24 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 -70 -48 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 -70 -72 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 -70 -96 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 -70 -120 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 -70 -144 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 70 -24 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 70 -48 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 70 -72 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 70 -96 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 70 -120 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 70 -144 0 0 0 1 0 1 0 -1 0 0 30136.dat
+1 70 0 -152 0 1 0 0 0 1 0 0 0 1 3033.dat
+0 STEP
+0 // Opposed slopes form a pitched dark red roof; the ridge tiles join both slopes.
+1 320 -80 -176 -10 1 0 0 0 1 0 0 0 1 3298.dat
+1 320 -80 -176 10 -1 0 0 0 1 0 0 0 -1 3298.dat
+1 320 -80 -184 0 1 0 0 0 1 0 0 0 1 3068b.dat
+1 320 -40 -176 -10 1 0 0 0 1 0 0 0 1 3298.dat
+1 320 -40 -176 10 -1 0 0 0 1 0 0 0 -1 3298.dat
+1 320 -40 -184 0 1 0 0 0 1 0 0 0 1 3068b.dat
+1 320 0 -176 -10 1 0 0 0 1 0 0 0 1 3298.dat
+1 320 0 -176 10 -1 0 0 0 1 0 0 0 -1 3298.dat
+1 320 0 -184 0 1 0 0 0 1 0 0 0 1 3068b.dat
+1 320 40 -176 -10 1 0 0 0 1 0 0 0 1 3298.dat
+1 320 40 -176 10 -1 0 0 0 1 0 0 0 -1 3298.dat
+1 320 40 -184 0 1 0 0 0 1 0 0 0 1 3068b.dat
+1 320 80 -176 -10 1 0 0 0 1 0 0 0 1 3298.dat
+1 320 80 -176 10 -1 0 0 0 1 0 0 0 -1 3298.dat
+1 320 80 -184 0 1 0 0 0 1 0 0 0 1 3068b.dat
+0 NOFILE

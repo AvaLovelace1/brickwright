@@ -1,0 +1,11 @@
+0 Name: Dark Green Serpent
+0 Author: Claude
+0 Description: Zig-zag dark green serpent built from 1x4 plates in two layers, with a 2x2 slope head.
+1 288 30 0 0 1 0 0 0 1 0 0 0 1 3710.dat
+1 288 60 -8 30 0 0 1 0 1 0 -1 0 0 3710.dat
+1 288 30 0 60 1 0 0 0 1 0 0 0 1 3710.dat
+1 288 0 -8 90 0 0 1 0 1 0 -1 0 0 3710.dat
+1 288 30 0 120 1 0 0 0 1 0 0 0 1 3710.dat
+1 288 60 -8 150 0 0 1 0 1 0 -1 0 0 3710.dat
+1 288 30 0 180 1 0 0 0 1 0 0 0 1 3710.dat
+1 288 -10 -8 190 1 0 0 0 1 0 0 0 1 3039.dat

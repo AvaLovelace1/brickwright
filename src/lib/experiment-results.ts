@@ -65,6 +65,62 @@ export const prompts = [
     caption:
       "This LEGO build is a detailed, dual-grouphead espresso machine with an attached coffee grinder, all mounted on a brown baseplate.",
   },
+  {
+    id: "10",
+    slug: "sports-car",
+    title: "Car",
+    caption:
+      "This is a red, open-top LEGO sports car featuring black racing stripes, yellow accents on the front and rear, and translucent orange headlights.",
+  },
+  {
+    id: "162",
+    slug: "tugboat",
+    title: "Boat",
+    caption:
+      "This is a LEGO model of a small workboat or tugboat, featuring a red hull, an orange and white cabin with blue windows, a grey deck, and a black articulated crane on the stern.",
+  },
+  {
+    id: "70",
+    slug: "steam-locomotive",
+    title: "Train",
+    caption:
+      "This is a small, stylized LEGO model of a yellow and black steam locomotive, featuring a prominent smokestack, a curved boiler, a cab, and simple wheels, presented from multiple angles against a white background.",
+  },
+  {
+    id: "132",
+    slug: "snake",
+    title: "Snake",
+    caption:
+      "This is a modular, dark green LEGO model of a snake or serpent, constructed from multiple articulated segments that allow it to be posed in various curved and straight configurations.",
+  },
+  {
+    id: "44",
+    slug: "black-squirrel",
+    title: "Squirrel",
+    caption:
+      "This is a LEGO model of a black squirrel, constructed with dark grey and light grey bricks, featuring a large bushy tail, prominent white eyes, and holding two small, round objects in its paws.",
+  },
+  {
+    id: "197",
+    slug: "dragon",
+    title: "Dragon",
+    caption:
+      "This is a custom-built, orange LEGO model of a stylized, blocky creature resembling a dragon or dinosaur, featuring translucent flame elements at its rear and amber pieces for eyes.",
+  },
+  {
+    id: "362",
+    slug: "medical-station",
+    title: "Station",
+    caption:
+      "This LEGO model is a white, multi-level medical or scientific station featuring an articulated lamp with a yellow lens, a control panel, and a cabinet with a yellow door.",
+  },
+  {
+    id: "499",
+    slug: "garden-diorama",
+    title: "Garden",
+    caption:
+      "This LEGO model depicts a charming, rotating diorama of a small garden scene, featuring a pumpkin patch with a white fence on one side and a cylindrical well or shed with a ladder on the other, all built upon interconnected green baseplates.",
+  },
 ] as const;
 
 export type ResultPrompt = (typeof prompts)[number];

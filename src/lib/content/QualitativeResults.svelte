@@ -28,6 +28,9 @@
           autoHeight: true,
           loop: true,
           spaceBetween: 24,
+          // Window resizes re-snap the slides. The container's height follows autoHeight, and a
+          // re-snap after each height change lands a frame late, undoing a click made in that frame.
+          resizeObserver: false,
           // A transform or z-index would stack the slides' viewer controls beneath the page's
           // 3D canvas, so the wrapper moves by its left offset and the classes below unset both.
           virtualTranslate: true,

@@ -1,0 +1,103 @@
+0 FILE serpent.ldr
+0 Emerald Serpent - articulated modular LEGO snake
+0 Name: model.ldr
+0 Author: Codex
+0 !LDRAW_ORG Unofficial_Model
+0 // 15 modules joined by 14 friction ball-and-socket joints.
+0 // Dark green: LDraw 288. Saved in a gentle, flat S pose.
+0 // Repose around the shared ball centres; do not move modules apart.
+0 // Module 1: head.ldr
+1 288 0 0 0 0.906308 0 0.422618 0 1 0 -0.422618 0 0.906308 head.ldr
+0 STEP
+0 // Module 2: scale.ldr
+1 288 56.733466 0 -17.887993 0.984808 0 0.173648 0 1 0 -0.173648 0 0.984808 scale.ldr
+0 STEP
+0 // Module 3: scale.ldr
+1 288 115.821931 0 -17.887993 0.984808 0 -0.173648 0 1 0 0.173648 0 0.984808 scale.ldr
+0 STEP
+0 // Module 4: scale.ldr
+1 288 171.346926 0 2.321452 0.866025 0 -0.5 0 1 0 0.5 0 0.866025 scale.ldr
+0 STEP
+0 // Module 5: scale.ldr
+1 288 218.540892 0 38.534656 0.707107 0 -0.707107 0 1 0 0.707107 0 0.707107 scale.ldr
+0 STEP
+0 // Module 6: scale.ldr
+1 288 260.967299 0 80.961062 0.707107 0 -0.707107 0 1 0 0.707107 0 0.707107 scale.ldr
+0 STEP
+0 // Module 7: scale.ldr
+1 288 309.369736 0 114.852814 0.906308 0 -0.422618 0 1 0 0.422618 0 0.906308 scale.ldr
+0 STEP
+0 // Module 8: scale.ldr
+1 288 366.44481 0 130.146034 0.996195 0 -0.087156 0 1 0 0.087156 0 0.996195 scale.ldr
+0 STEP
+0 // Module 9: scale.ldr
+1 288 425.308426 0 124.996135 0.965926 0 0.258819 0 1 0 -0.258819 0 0.965926 scale.ldr
+0 STEP
+0 // Module 10: scale.ldr
+1 288 478.860762 0 100.02427 0.819152 0 0.573576 0 1 0 -0.573576 0 0.819152 scale.ldr
+0 STEP
+0 // Module 11: scale.ldr
+1 288 524.648527 0 61.603774 0.707107 0 0.707107 0 1 0 -0.707107 0 0.707107 scale.ldr
+0 STEP
+0 // Module 12: scale.ldr
+1 288 570.436291 0 23.183277 0.819152 0 0.573576 0 1 0 -0.573576 0 0.819152 scale.ldr
+0 STEP
+0 // Module 13: scale.ldr
+1 288 623.988628 0 -1.788587 0.965926 0 0.258819 0 1 0 -0.258819 0 0.965926 scale.ldr
+0 STEP
+0 // Module 14: tail-narrow.ldr
+1 288 682.852243 0 -6.938486 0.996195 0 -0.087156 0 1 0 0.087156 0 0.996195 tail-narrow.ldr
+0 STEP
+0 // Module 15: tail-tip.ldr
+1 288 740.928863 0 5.93679 0.939693 0 -0.34202 0 1 0 0.34202 0 0.939693 tail-tip.ldr
+0 STEP
+0 FILE scale.ldr
+0 Dark green dorsal scale and tan belly on a ball-and-socket vertebra
+0 // Ball centre (-30,4,0); socket centre (30,4,0).
+1 72 0 0 0 1 0 0 0 1 0 0 0 1 14419.dat
+1 19 0 8 0 1 0 0 0 1 0 0 0 1 3023b.dat
+1 288 0 -8 0 0 0 1 0 1 0 -1 0 0 3021.dat
+1 288 0 -8 -20 1 0 0 0 1 0 0 0 1 85984.dat
+1 288 0 -8 20 -1 0 0 0 1 0 0 0 -1 85984.dat
+1 288 0 -16 0 1 0 0 0 1 0 0 0 1 3023b.dat
+1 288 0 -24 0 1 0 0 0 1 0 0 0 1 3069b.dat
+0 FILE tail-narrow.ldr
+0 Narrow articulated tail scale
+1 72 0 0 0 1 0 0 0 1 0 0 0 1 14419.dat
+1 19 0 8 0 1 0 0 0 1 0 0 0 1 3023b.dat
+1 288 0 -8 0 1 0 0 0 1 0 0 0 1 3023b.dat
+1 288 0 -8 0 0 0 -1 0 1 0 1 0 0 11477.dat
+0 FILE tail-tip.ldr
+0 Sloping terminal tail with ball connection
+1 72 0 0 0 -1 0 0 0 1 0 0 0 -1 22890.dat
+1 19 0 8 0 1 0 0 0 1 0 0 0 1 3023b.dat
+1 288 -10 -24 0 0 0 -1 0 1 0 1 0 0 60477.dat
+1 288 -10 -32 0 1 0 0 0 1 0 0 0 1 3070b.dat
+0 FILE head.ldr
+0 Serpent head with slit-pupil eyes and red tongue
+0 // Rear socket centre (30,4,0).
+1 72 0 0 0 1 0 0 0 1 0 0 0 1 14418.dat
+1 19 0 8 0 1 0 0 0 1 0 0 0 1 3023b.dat
+1 288 -20 -8 0 1 0 0 0 1 0 0 0 1 3710.dat
+1 19 0 -16 0 0 0 1 0 1 0 -1 0 0 3021.dat
+1 19 -40 -16 0 0 0 1 0 1 0 -1 0 0 3021.dat
+1 0 0 -24 0 0 0 1 0 1 0 -1 0 0 3021.dat
+1 0 -40 -24 -20 1 0 0 0 1 0 0 0 1 3023b.dat
+1 0 -40 -24 20 1 0 0 0 1 0 0 0 1 3023b.dat
+1 4 -60 -24 0 1 0 0 0 1 0 0 0 1 3710.dat
+1 4 -80 -32 0 1 0 0 0 1 0 0 0 1 3069b.dat
+1 288 -10 -48 -20 1 0 0 0 1 0 0 0 1 87087.dat
+1 288 -10 -48 20 -1 0 0 0 1 0 0 0 -1 87087.dat
+1 288 10 -48 -20 1 0 0 0 1 0 0 0 1 3005.dat
+1 288 10 -48 20 1 0 0 0 1 0 0 0 1 3005.dat
+1 288 0 -48 0 1 0 0 0 1 0 0 0 1 3004.dat
+1 288 -30 -48 -20 0 0 1 0 1 0 -1 0 0 3040b.dat
+1 288 -30 -48 0 0 0 1 0 1 0 -1 0 0 3040b.dat
+1 288 -30 -48 20 0 0 1 0 1 0 -1 0 0 3040b.dat
+1 288 0 -56 0 0 0 1 0 1 0 -1 0 0 26603.dat
+1 288 -30 -56 0 1 0 0 0 1 0 0 0 1 3070b.dat
+1 0 -30 -56 -20 1 0 0 0 1 0 0 0 1 98138.dat
+1 0 -30 -56 20 1 0 0 0 1 0 0 0 1 98138.dat
+1 14 -10 -38 -38 1 0 0 0 0 -1 0 1 0 98138p33.dat
+1 14 -10 -38 38 -1 0 0 0 0 -1 0 -1 0 98138p33.dat
+0 NOFILE

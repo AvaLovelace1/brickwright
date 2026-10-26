@@ -1,0 +1,50 @@
+0 Small Workboat Tug
+0 Name: model.ldr
+0 Author: OpenAI
+0 !LDRAW_ORG Model
+0 !LICENSE Licensed under CC BY 4.0
+
+0 // Red floating hull and fitted deck insert
+1 4 0 0 0 1 0 0 0 1 0 0 0 1 125.dat
+1 71 0 0 0 1 0 0 0 1 0 0 0 1 126.dat
+
+0 // Raised orange wheelhouse with blue glazing
+0 // Lower orange cabin base on deck
+1 25 -20 -24 -60 1 0 0 0 1 0 0 0 1 3020.dat
+1 25 20 -24 -60 1 0 0 0 1 0 0 0 1 3020.dat
+0 // Orange window frames, port and starboard
+1 25 -40 -72 -40 0 0 1 0 1 0 -1 0 0 3081c.dat
+1 33 -40 -72 -40 0 0 1 0 1 0 -1 0 0 3082.dat
+1 25 -40 -72 -80 0 0 1 0 1 0 -1 0 0 3081c.dat
+1 33 -40 -72 -80 0 0 1 0 1 0 -1 0 0 3082.dat
+1 25 40 -72 -40 0 0 -1 0 1 0 1 0 0 3081c.dat
+1 33 40 -72 -40 0 0 -1 0 1 0 1 0 0 3082.dat
+1 25 40 -72 -80 0 0 -1 0 1 0 1 0 0 3081c.dat
+1 33 40 -72 -80 0 0 -1 0 1 0 1 0 0 3082.dat
+0 // Orange bow and stern cabin walls
+1 25 -20 -72 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 25 20 -72 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 25 -20 -72 -100 1 0 0 0 1 0 0 0 1 3004.dat
+1 25 20 -72 -100 1 0 0 0 1 0 0 0 1 3004.dat
+1 25 -20 -48 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 25 20 -48 -20 1 0 0 0 1 0 0 0 1 3004.dat
+1 25 -20 -48 -100 1 0 0 0 1 0 0 0 1 3004.dat
+1 25 20 -48 -100 1 0 0 0 1 0 0 0 1 3004.dat
+0 // White cabin roof
+1 15 -20 -72 -40 1 0 0 0 1 0 0 0 1 3020.dat
+1 15 20 -72 -40 1 0 0 0 1 0 0 0 1 3020.dat
+0 STEP
+
+0 // Grey open working deck details
+1 71 0 -8 40 1 0 0 0 1 0 0 0 1 3020.dat
+1 71 0 -8 -140 1 0 0 0 1 0 0 0 1 3020.dat
+
+0 // Black articulated stern crane: pedestal, clip joints, boom and hook
+1 0 0 -24 -230 1 0 0 0 1 0 0 0 1 3003.dat
+1 0 0 -48 -230 1 0 0 0 1 0 0 0 1 3003.dat
+1 0 0 -72 -230 1 0 0 0 1 0 0 0 1 11090.dat
+1 0 0 -72 -230 1 0 0 0 0 1 0 -1 0 30374.dat
+1 0 0 -72 -230 0 0 1 0 1 0 -1 0 0 11090.dat
+1 0 0 -72 -310 0 0 1 0 1 0 -1 0 0 11090.dat
+1 0 0 -72 -310 1 0 0 0 1 0 0 0 1 30374.dat
+1 0 0 -104 -310 1 0 0 0 1 0 0 0 1 30192.dat

@@ -1,0 +1,35 @@
+0 FILE model.ldr
+0 Name: Small Yellow and Black Steam Locomotive
+0 Author: OpenAI
+0 !LDRAW_ORG Model
+0 !LICENSE Licensed under CC BY 4.0
+0 BFC CERTIFY CCW
+0 // Front is toward negative Z; locomotive is built around a black footplate.
+1 0 -20 20 -72 1 0 0 0 1 0 0 0 1 3034.dat
+0 STEP
+0 // Four simple black driving wheels, paired on transverse axles.
+1 0 -30 40 -38 0 0 -1 0 1 0 1 0 0 2927.dat
+1 0 30 40 -38 0 0 1 0 1 0 -1 0 0 2927.dat
+1 0 -30 40 46 0 0 -1 0 1 0 1 0 0 2927.dat
+1 0 30 40 46 0 0 1 0 1 0 -1 0 0 2927.dat
+1 0 0 40 -38 1 0 0 0 1 0 0 0 1 3705.dat
+1 0 0 40 46 1 0 0 0 1 0 0 0 1 3705.dat
+0 STEP
+0 // Yellow horizontal boiler, assembled from round bricks along the length.
+1 14 0 0 -52 1 0 0 0 0 -1 0 1 0 3941.dat
+1 14 0 0 -28 1 0 0 0 0 -1 0 1 0 3941.dat
+1 14 0 0 -4 1 0 0 0 0 -1 0 1 0 3941.dat
+0 // Black smokestack mounted on the top of the front boiler section.
+1 0 0 -44 -34 1 0 0 0 1 0 0 0 1 3062b.dat
+1 0 0 -68 -34 1 0 0 0 1 0 0 0 1 3062b.dat
+1 0 0 -92 -34 1 0 0 0 1 0 0 0 1 98100.dat
+0 STEP
+0 // Yellow open cab frame and roof at the rear.
+1 14 -40 -4 28 1 0 0 0 1 0 0 0 1 3004.dat
+1 14 20 -4 28 1 0 0 0 1 0 0 0 1 3004.dat
+1 14 -40 -4 68 1 0 0 0 1 0 0 0 1 3004.dat
+1 14 20 -4 68 1 0 0 0 1 0 0 0 1 3004.dat
+1 14 -20 -4 68 0 0 1 0 1 0 -1 0 0 3003.dat
+1 14 -40 -8 18 1 0 0 0 1 0 0 0 1 3031.dat
+0 STEP
+0 NOFILE
