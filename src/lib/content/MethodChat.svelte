@@ -1,7 +1,7 @@
 <script lang="ts">
   import { prefersReducedMotion } from "svelte/motion";
   import { fly } from "svelte/transition";
-  import { stageColors, systemMessage, type DemoStep } from "#lib/method.js";
+  import { stageColors, systemMessage, type DemoStep } from "#lib/content/method.js";
   import HardShadow from "#lib/components/HardShadow.svelte";
   import draft2Render from "#lib/assets/models/method/house-draft2.webp";
   import finalRender from "#lib/assets/models/method/house-final.webp";

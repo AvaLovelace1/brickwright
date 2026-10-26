@@ -1,9 +1,9 @@
 <script lang="ts">
-  import { createModel } from "#lib/models.js";
+  import { createModel } from "#lib/viewer/models.js";
   import Select from "#lib/components/Select.svelte";
-  import ModelViewer from "#lib/components/ModelViewer.svelte";
+  import ModelViewer from "#lib/viewer/ModelViewer.svelte";
   import SpeechBubble from "#lib/components/SpeechBubble.svelte";
-  import { FEASIBILITY_CHECKS } from "#lib/model-diagnostics.js";
+  import { FEASIBILITY_CHECKS } from "#lib/viewer/model-diagnostics.js";
 
   import referenceImage from "#lib/assets/models/teaser/combine-harvester-reference.png";
 

@@ -7,9 +7,9 @@
   import "swiper/css/a11y";
   import Button from "#lib/components/Button.svelte";
   import Select from "#lib/components/Select.svelte";
-  import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
+  import ModelDiagnosticControls from "#lib/viewer/ModelDiagnosticControls.svelte";
   import ResultPair from "./ResultPair.svelte";
-  import { agents, prompts } from "#lib/experiment-results.js";
+  import { agents, prompts } from "#lib/content/experiment-results.js";
 
   let selectedAgent = $state("luna");
   const agent = $derived(agents.find((agent) => agent.value === selectedAgent)!);

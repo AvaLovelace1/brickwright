@@ -2,7 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, screen, waitFor } from "storybook/test";
   import Teaser from "./Teaser.svelte";
-  import { modelFiles } from "#lib/models.js";
+  import { modelFiles } from "#lib/viewer/models.js";
   import { waitForView } from "#lib/story-helpers.js";
   import referenceImageUrl from "#lib/assets/models/teaser/combine-harvester-reference.png";
 

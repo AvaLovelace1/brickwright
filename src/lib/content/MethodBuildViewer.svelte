@@ -1,10 +1,10 @@
 <script lang="ts">
-  import { createModel } from "#lib/models.js";
-  import ModelViewer from "#lib/components/ModelViewer.svelte";
-  import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
+  import { createModel } from "#lib/viewer/models.js";
+  import ModelViewer from "#lib/viewer/ModelViewer.svelte";
+  import ModelDiagnosticControls from "#lib/viewer/ModelDiagnosticControls.svelte";
   import PythonCode from "#lib/components/PythonCode.svelte";
   import Tooltip from "#lib/components/Tooltip.svelte";
-  import { methodBuilds, type BuildRevision } from "#lib/method.js";
+  import { methodBuilds, type BuildRevision } from "#lib/content/method.js";
 
   let { revision }: { revision: BuildRevision | null } = $props();
 

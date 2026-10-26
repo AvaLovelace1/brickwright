@@ -1,18 +1,3 @@
-<script lang="ts" module>
-  export const AUTHORS = [
-    { name: "Ava\u00A0Pun", aff: 1, href: "https://avapun.com/" },
-    { name: "Kevin\u00A0Dai", aff: 1, href: "https://github.com/K1ngHungry" },
-    { name: "Sally\u00A0Chen", aff: 1, href: "https://sally-chen.github.io/" },
-    { name: "Maxwell\u00A0Jones", aff: 1, href: "https://maxwelljon.es/" },
-    { name: "Ruixuan\u00A0Liu", aff: 1, href: "https://waynekyrie.github.io/" },
-    { name: "Kangle\u00A0Deng", aff: 2, href: "https://dunbar12138.github.io/" },
-    { name: "Changliu\u00A0Liu", aff: 1, href: "https://www.ri.cmu.edu/ri-faculty/changliu-liu/" },
-    { name: "Maneesh\u00A0Agrawala", aff: 3, href: "https://graphics.stanford.edu/~maneesh/" },
-    { name: "Deva\u00A0Ramanan", aff: 1, href: "https://www.cs.cmu.edu/~deva/" },
-    { name: "Jun\u2011Yan\u00A0Zhu", aff: 1, href: "https://www.cs.cmu.edu/~junyanz/" },
-  ];
-</script>
-
 <script lang="ts">
   import BrickWrightLogo from "#lib/components/BrickWrightLogo.svelte";
   import Container from "#lib/components/Container.svelte";
@@ -21,6 +6,7 @@
   import AgentComparison from "#lib/content/AgentComparison.svelte";
   import ExternalLink from "#lib/components/ExternalLink.svelte";
   import Bullet from "#lib/components/Bullet.svelte";
+  import { AUTHORS, SUBTITLE } from "#lib/paper.js";
 
   const AFFILIATIONS = [
     "Carnegie\u00A0Mellon\u00A0University",
@@ -39,7 +25,7 @@
           <BrickWrightLogo />
         </h1>
         <p class="mb-4 text-2xl font-semibold text-balance sm:text-3xl">
-          Agentic Creation of Physically Feasible Brick Builds
+          {SUBTITLE}
         </p>
         <p class="mb-1 font-medium sm:text-lg">
           {#each AUTHORS as a, i (a.name)}

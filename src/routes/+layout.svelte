@@ -6,7 +6,7 @@
   import Header from "#lib/components/Header.svelte";
   import Navbar from "#lib/components/Navbar.svelte";
   import Footer from "#lib/components/Footer.svelte";
-  import SharedCanvas from "#lib/components/SharedCanvas.svelte";
+  import SharedCanvas from "#lib/viewer/SharedCanvas.svelte";
 
   let { children } = $props();
   let current = $state("#overview");
@@ -67,8 +67,9 @@
       {@attach trackSections}
       class="relative mt-15 min-w-0 flex-1 scroll-mt-32 md:mt-0 md:scroll-mt-17 [&>section]:scroll-mt-32 md:[&>section]:scroll-mt-17"
     >
-      {@render children()}
-      <SharedCanvas />
+      <SharedCanvas>
+        {@render children()}
+      </SharedCanvas>
     </main>
   </div>
   <Footer />

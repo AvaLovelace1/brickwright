@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createModel } from "#lib/models.js";
+  import { createModel } from "#lib/viewer/models.js";
   import ModelComparison from "./ModelComparison.svelte";
 
   const method = (label: string, run: string) => ({

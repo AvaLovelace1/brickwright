@@ -2,25 +2,19 @@
   import { Button as BitsButton, Dialog as BitsDialog } from "bits-ui";
   import { prefersReducedMotion } from "svelte/motion";
   import type { ClassValue } from "svelte/elements";
-  import Bullet from "./Bullet.svelte";
-  import Button from "./Button.svelte";
-  import Dialog from "./Dialog.svelte";
-  import HardShadow from "./HardShadow.svelte";
-  import Slider from "./Slider.svelte";
-  import Tooltip from "./Tooltip.svelte";
+  import Bullet from "#lib/components/Bullet.svelte";
+  import Button from "#lib/components/Button.svelte";
+  import Dialog from "#lib/components/Dialog.svelte";
+  import HardShadow from "#lib/components/HardShadow.svelte";
+  import Slider from "#lib/components/Slider.svelte";
+  import Tooltip from "#lib/components/Tooltip.svelte";
   import {
     loadDiagnostics,
     isPhysicallyValid,
     type DiagnosticDisplay,
-  } from "#lib/model-diagnostics.js";
-  import { activeView, type ModelView } from "#lib/models.js";
-  import {
-    expandedView,
-    inlineCanvas,
-    viewers,
-    type CanvasState,
-    type Viewer,
-  } from "#lib/viewers.svelte.js";
+  } from "#lib/viewer/model-diagnostics.js";
+  import { activeView, type ModelView } from "#lib/viewer/models.js";
+  import { getViewerHost, type Viewer } from "#lib/viewer/viewers.svelte.js";
 
   interface ViewerBadge {
     text: string;
@@ -59,6 +53,7 @@
 
   let dialogContent: HTMLElement | null = $state(null);
   let inlineWindow = $state<HTMLElement>();
+  let expandedWindow = $state<HTMLElement>();
   let paused = $state(true);
   let initialized = false;
 
@@ -171,6 +166,9 @@
     get window() {
       return inlineWindow;
     },
+    get expandedWindow() {
+      return expandedWindow;
+    },
     get highlightCollisions() {
       return highlightCollisions;
     },
@@ -186,20 +184,11 @@
     },
   };
 
+  const host = getViewerHost();
   $effect(() => {
-    viewers.add(viewer);
-    return () => viewers.delete(viewer);
+    host.viewers.add(viewer);
+    return () => host.viewers.delete(viewer);
   });
-
-  function showExpandedCanvas(target: HTMLElement) {
-    expandedView.viewer = viewer;
-    expandedView.window = target;
-    return () => {
-      if (expandedView.window !== target) return;
-      expandedView.viewer = undefined;
-      expandedView.window = undefined;
-    };
-  }
 
   // The outline sits outside the canvas, so a zoomed model can't cover it.
   const WINDOW_CLASS =
@@ -247,9 +236,9 @@
   </div>
 {/snippet}
 
-{#snippet loadStatus(canvas: CanvasState)}
-  {#if canvas.retry}
-    {@render failure("Unable to load the 3D viewer.", "Retry viewer", canvas.retry)}
+{#snippet loadStatus(retryCanvas?: () => void)}
+  {#if retryCanvas}
+    {@render failure("Unable to load the 3D viewer.", "Retry viewer", retryCanvas)}
   {:else if model.status === "error"}
     {@render failure(
       "Unable to load the 3D model.",
@@ -289,14 +278,14 @@
 
 <figure
   {@attach trackViewport}
-  aria-busy={!inlineCanvas.retry && (model.status === "idle" || model.status === "loading")}
+  aria-busy={!host.retry.inline && (model.status === "idle" || model.status === "loading")}
   class={["@container relative", className]}
   aria-label={model.caption}
 >
   <HardShadow class="size-full">
     <div class={WINDOW_CLASS} bind:this={inlineWindow}></div>
   </HardShadow>
-  {@render loadStatus(inlineCanvas)}
+  {@render loadStatus(host.retry.inline)}
   {#if badge || model.diagnosticsError}
     <div
       class="pointer-events-none absolute top-1 right-2 left-1 z-10 flex flex-wrap items-center gap-x-3 gap-y-1 p-1 text-text"
@@ -344,8 +333,8 @@
     aria-label="Expanded model view"
   >
     <HardShadow class="size-full">
-      <div class={WINDOW_CLASS} {@attach showExpandedCanvas}></div>
-      {@render loadStatus(expandedView)}
+      <div class={WINDOW_CLASS} bind:this={expandedWindow}></div>
+      {@render loadStatus(host.retry.expanded)}
       {@render toolbar(true)}
     </HardShadow>
   </Dialog>

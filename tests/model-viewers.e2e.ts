@@ -104,6 +104,19 @@ test("offscreen sections do not allocate WebGL canvases", async ({ page, mainPag
   await expect(page.locator("canvas")).toHaveCount(1);
 });
 
+test("the shared 3D canvas never lengthens the page", async ({ page, mainPage }) => {
+  await mainPage.goto();
+  await mainPage.viewer().view.waitFor();
+  const pageHeight = () => page.evaluate(() => document.documentElement.scrollHeight);
+  const height = await pageHeight();
+  // The canvas follows the viewport, so it reaches furthest down at the end of the page.
+  await page.evaluate(async () => {
+    scrollTo({ top: document.documentElement.scrollHeight, behavior: "instant" });
+    for (let frame = 0; frame < 3; frame++) await new Promise(requestAnimationFrame);
+  });
+  expect(await pageHeight()).toBe(height);
+});
+
 test("a dragged carousel build stays inside the carousel", async ({ page, mainPage }) => {
   await page.emulateMedia({ reducedMotion: "reduce" });
   await mainPage.goto("experiments");

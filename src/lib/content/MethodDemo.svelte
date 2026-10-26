@@ -3,7 +3,7 @@
   import Button from "#lib/components/Button.svelte";
   import Tooltip from "#lib/components/Tooltip.svelte";
   import Bullet from "#lib/components/Bullet.svelte";
-  import { demoSteps } from "#lib/method.js";
+  import { demoSteps } from "#lib/content/method.js";
   import MethodFlowchart from "./MethodFlowchart.svelte";
   import MethodChat from "./MethodChat.svelte";
   import MethodBuildViewer from "./MethodBuildViewer.svelte";

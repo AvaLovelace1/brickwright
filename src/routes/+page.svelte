@@ -1,14 +1,13 @@
 <script lang="ts">
   import SectionDivider from "#lib/components/SectionDivider.svelte";
-  import Overview, { AUTHORS } from "#lib/sections/Overview.svelte";
+  import Overview from "#lib/sections/Overview.svelte";
   import Motivation from "#lib/sections/Motivation.svelte";
   import Method from "#lib/sections/Method.svelte";
   import Experiments from "#lib/sections/Experiments.svelte";
   import Acknowledgments from "#lib/sections/Acknowledgments.svelte";
   import Citation from "#lib/sections/Citation.svelte";
+  import { AUTHORS, SITE_URL, TITLE } from "#lib/paper.js";
 
-  const SITE_URL = "https://avalovelace1.github.io/brickwright/";
-  const TITLE = "BrickWright: Agentic Creation of Physically Feasible Brick Builds";
   const DESCRIPTION =
     "BrickWright enables pre-trained coding agents to generate high-fidelity, physically feasible LEGO® builds from text or image prompts.";
   const AUTHOR_NAMES = AUTHORS.map(({ name }) =>

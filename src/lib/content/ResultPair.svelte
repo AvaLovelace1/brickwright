@@ -1,8 +1,12 @@
 <script lang="ts">
-  import { createModel } from "#lib/models.js";
-  import ModelViewer from "#lib/components/ModelViewer.svelte";
-  import { resultModelName, type Agent, type ResultPrompt } from "#lib/experiment-results.js";
-  import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
+  import { createModel } from "#lib/viewer/models.js";
+  import ModelViewer from "#lib/viewer/ModelViewer.svelte";
+  import {
+    resultModelName,
+    type Agent,
+    type ResultPrompt,
+  } from "#lib/content/experiment-results.js";
+  import type { DiagnosticDisplay } from "#lib/viewer/model-diagnostics.js";
 
   interface Props extends DiagnosticDisplay {
     agent: Agent;

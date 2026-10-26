@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { createModel } from "#lib/models.js";
-  import { agents } from "#lib/experiment-results.js";
+  import { createModel } from "#lib/viewer/models.js";
+  import { agents } from "#lib/content/experiment-results.js";
   import ModelComparison from "./ModelComparison.svelte";
 
   let groups = $state(

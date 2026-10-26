@@ -1,6 +1,6 @@
 import { existsSync, readFileSync } from "node:fs";
 import { expect, test } from "vitest";
-import provenance from "./assets/models/results/source.json";
+import provenance from "../assets/models/results/source.json";
 import {
   agents,
   prompts,

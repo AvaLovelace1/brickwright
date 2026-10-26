@@ -7,8 +7,8 @@
   } from "three";
   import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
   import envMapUrl from "#lib/assets/studio_kontrast_02_1k.hdr?url";
-  import { cached } from "#lib/cached.js";
-  import { buildSteps, loadModel } from "#lib/ldraw.js";
+  import { cached } from "#lib/viewer/cached.js";
+  import { buildSteps, loadModel } from "#lib/viewer/ldraw.js";
 
   export const CAMERA = { position: [3, 0, 3] as Vector3Tuple, fov: 35 };
 
@@ -27,25 +27,13 @@
   import { on } from "svelte/events";
   import { viewerSettings } from "#lib/settings.svelte.js";
   import type { OrbitControls as OrbitControlsImpl } from "three/addons/controls/OrbitControls.js";
-  import { createDiagnosticView, type DiagnosticView } from "#lib/model-diagnostic-view.js";
-  import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
-  import { activeView, type ModelView } from "#lib/models.js";
+  import { createDiagnosticView, type DiagnosticView } from "#lib/viewer/model-diagnostic-view.js";
+  import { activeView } from "#lib/viewer/models.js";
+  import type { Viewer } from "#lib/viewer/viewers.svelte.js";
   const { invalidate, dom } = useThrelte();
 
-  interface Props extends Partial<DiagnosticDisplay> {
-    model: ModelView;
-    view?: "inline" | "expanded";
-    onload: (steps: number) => void;
-    onerror: () => void;
-  }
-  let {
-    model,
-    onload,
-    onerror,
-    highlightCollisions = false,
-    showIntersections = false,
-    view = "inline",
-  }: Props = $props();
+  let { viewer, view = "inline" }: { viewer: Viewer; view?: "inline" | "expanded" } = $props();
+  const model = $derived(viewer.model);
   let ldrawGroup = $state<Object3D>();
   const steps = $derived(ldrawGroup ? buildSteps(ldrawGroup) : []);
   let envMapTexture = $state<Texture>();
@@ -75,25 +63,23 @@
   $effect(() => {
     if (!diagnosticView) return;
     diagnosticView.update({
-      highlightCollisions,
+      highlightCollisions: viewer.highlightCollisions,
       // Intersection lines describe the finished assembly, so they appear once every step is shown.
-      showIntersections: showIntersections && model.stepsShown >= model.maxSteps,
+      showIntersections: viewer.showIntersections && model.stepsShown >= model.maxSteps,
     });
     invalidate();
   });
 
   $effect(() => {
-    // Reruns when Retry sets an errored model back to loading.
-    if (ldrawGroup || model.status === "error") return;
     let disposed = false;
     loadModel(model.ldrPacked).then(
       (group) => {
         if (disposed) return;
         ldrawGroup = group;
-        onload(steps.length);
+        viewer.loaded(steps.length);
       },
       () => {
-        if (!disposed) onerror();
+        if (!disposed) viewer.failed();
       },
     );
     return () => {

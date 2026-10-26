@@ -1,13 +1,13 @@
-import draft1Source from "./assets/method/house-draft1.py?raw";
-import draft2Source from "./assets/method/house-draft2.py?raw";
-import finalSource from "./assets/method/house-final.py?raw";
-import draft1Report from "./assets/method/house-draft1.report.json";
-import draft2Report from "./assets/method/house-draft2.report.json";
-import finalReport from "./assets/method/house-final.report.json";
+import draft1Source from "../assets/method/house-draft1.py?raw";
+import draft2Source from "../assets/method/house-draft2.py?raw";
+import finalSource from "../assets/method/house-final.py?raw";
+import draft1Report from "../assets/method/house-draft1.report.json";
+import draft2Report from "../assets/method/house-draft2.report.json";
+import finalReport from "../assets/method/house-final.report.json";
 
-import draft1Download from "./assets/method/house-draft1.py?url&no-inline";
-import draft2Download from "./assets/method/house-draft2.py?url&no-inline";
-import finalDownload from "./assets/method/house-final.py?url&no-inline";
+import draft1Download from "../assets/method/house-draft1.py?url&no-inline";
+import draft2Download from "../assets/method/house-draft2.py?url&no-inline";
+import finalDownload from "../assets/method/house-final.py?url&no-inline";
 
 export const methodBuilds = {
   draft1: { source: draft1Source, download: draft1Download, report: draft1Report },

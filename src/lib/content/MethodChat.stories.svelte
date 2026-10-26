@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, waitFor, within } from "storybook/test";
-  import { systemMessage, type DemoStep } from "#lib/method.js";
+  import { systemMessage, type DemoStep } from "#lib/content/method.js";
   import MethodChat from "./MethodChat.svelte";
 
   const { Story } = defineMeta({

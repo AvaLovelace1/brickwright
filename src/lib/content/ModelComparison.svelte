@@ -1,8 +1,8 @@
 <script lang="ts">
   import type { Snippet } from "svelte";
-  import type { ModelView } from "#lib/models.js";
-  import ModelDiagnosticControls from "#lib/components/ModelDiagnosticControls.svelte";
-  import ModelViewer from "#lib/components/ModelViewer.svelte";
+  import type { ModelView } from "#lib/viewer/models.js";
+  import ModelDiagnosticControls from "#lib/viewer/ModelDiagnosticControls.svelte";
+  import ModelViewer from "#lib/viewer/ModelViewer.svelte";
 
   interface Props {
     title: string;

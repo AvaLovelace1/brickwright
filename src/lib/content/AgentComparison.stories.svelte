@@ -1,7 +1,7 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
-  import { expect, screen, waitFor, within } from "storybook/test";
-  import { waitForModel, waitForView } from "#lib/story-helpers.js";
+  import { expect, waitFor, within } from "storybook/test";
+  import { openExpandedView, waitForModel, waitForView } from "#lib/story-helpers.js";
   import AgentComparison from "./AgentComparison.svelte";
 
   const { Story } = defineMeta({
@@ -65,9 +65,7 @@
     });
     await step("Expanded views draw on a second canvas", async () => {
       // Leave the dialog open for the accessibility audit.
-      await userEvent.click(within(viewers[0]).getByRole("button", { name: "Expand view" }));
-      const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
-      await waitFor(() => expect(dialog.querySelector("canvas")).not.toBeNull());
+      await openExpandedView(viewers[0], userEvent);
       await expect(document.querySelectorAll("canvas")).toHaveLength(2);
     });
   }}

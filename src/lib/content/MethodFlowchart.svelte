@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { stageColors, type Flow, type Stage } from "#lib/method.js";
+  import { stageColors, type Flow, type Stage } from "#lib/content/method.js";
   import PythonCode from "#lib/components/PythonCode.svelte";
   import Bullet from "#lib/components/Bullet.svelte";
 

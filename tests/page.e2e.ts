@@ -1,8 +1,8 @@
 import AxeBuilder from "@axe-core/playwright";
 import { expect, test } from "./fixtures";
-import { prompts } from "../src/lib/experiment-results";
+import { prompts } from "../src/lib/content/experiment-results";
+import { SITE_URL } from "../src/lib/paper";
 
-const SITE_URL = "https://avalovelace1.github.io/brickwright/";
 const SECTIONS = ["overview", "motivation", "method", "experiments", "acknowledgments", "citation"];
 
 test(

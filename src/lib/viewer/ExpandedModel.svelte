@@ -1,11 +1,13 @@
 <script lang="ts">
   import { Canvas } from "@threlte/core";
   import ViewerModel from "./ViewerModel.svelte";
-  import { expandedView } from "#lib/viewers.svelte.js";
+  import type { Viewer } from "#lib/viewer/viewers.svelte.js";
+
+  let { viewer }: { viewer?: Viewer } = $props();
 
   // Every expanded dialog borrows this canvas while open, so they share one WebGL context.
   function moveIntoDialog(element: HTMLElement) {
-    const target = expandedView.window;
+    const target = viewer?.expandedWindow;
     if (!target) return;
     target.append(element);
     return () => element.remove();
@@ -14,9 +16,9 @@
 
 <div class="size-full" {@attach moveIntoDialog}>
   <Canvas dpr={Math.min(window.devicePixelRatio, 2)}>
-    {#key expandedView.viewer}
-      {#if expandedView.viewer}
-        <ViewerModel viewer={expandedView.viewer} view="expanded" />
+    {#key viewer}
+      {#if viewer}
+        <ViewerModel {viewer} view="expanded" />
       {/if}
     {/key}
   </Canvas>

@@ -1,6 +1,6 @@
 <script lang="ts">
-  import type { DiagnosticDisplay } from "#lib/model-diagnostics.js";
-  import Checkbox from "./Checkbox.svelte";
+  import type { DiagnosticDisplay } from "#lib/viewer/model-diagnostics.js";
+  import Checkbox from "#lib/components/Checkbox.svelte";
 
   let { showIntersections = $bindable(), highlightCollisions = $bindable() }: DiagnosticDisplay =
     $props();

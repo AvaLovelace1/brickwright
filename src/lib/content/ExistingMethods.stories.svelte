@@ -1,8 +1,8 @@
 <script module lang="ts">
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, waitFor, within } from "storybook/test";
-  import { isPhysicallyValid, loadDiagnostics } from "#lib/model-diagnostics.js";
-  import { modelFiles } from "#lib/models.js";
+  import { isPhysicallyValid, loadDiagnostics } from "#lib/viewer/model-diagnostics.js";
+  import { modelFiles } from "#lib/viewer/models.js";
   import { waitForModel } from "#lib/story-helpers.js";
   import ExistingMethods from "./ExistingMethods.svelte";
 

@@ -3,7 +3,7 @@
   import ElementView from "./ElementView.svelte";
   import FollowViewport from "./FollowViewport.svelte";
   import ViewerModel from "./ViewerModel.svelte";
-  import type { Viewer } from "#lib/viewers.svelte.js";
+  import type { Viewer } from "#lib/viewer/viewers.svelte.js";
 
   let { viewers }: { viewers: Viewer[] } = $props();
 </script>

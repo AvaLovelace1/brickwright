@@ -4,8 +4,9 @@
   import ModelViewer from "./ModelViewer.svelte";
   import { expect, screen, spyOn, waitFor, within, type MockInstance } from "storybook/test";
   import { flushSync } from "svelte";
-  import { createModel, type ModelView } from "#lib/models.js";
-  import { FEASIBILITY_CHECKS } from "#lib/model-diagnostics.js";
+  import { createModel, type ModelView } from "#lib/viewer/models.js";
+  import { FEASIBILITY_CHECKS } from "#lib/viewer/model-diagnostics.js";
+  import { openExpandedView } from "#lib/story-helpers.js";
 
   const { Story } = defineMeta({
     title: "Components/Model Viewer",
@@ -100,15 +101,21 @@
 
   let releaseStalled = () => {};
   /**
-   * Serves diagnostics for a moved part, which cannot be matched to the model, for URLs ending in
-   * `#mismatch`, and holds downloads ending in `#stalled` until the story releases them.
+   * Fails the first download of a URL ending in `#retry`, serves diagnostics for a moved part,
+   * which cannot be matched to the model, for URLs ending in `#mismatch`, and holds downloads
+   * ending in `#stalled` until the story releases them.
    */
   function interceptModelFiles() {
     const realFetch = globalThis.fetch;
     const stalled = Promise.withResolvers<void>();
     releaseStalled = stalled.resolve;
+    let failed = false;
     const fetch = spyOn(globalThis, "fetch").mockImplementation(async (input, init) => {
       const url = String(input);
+      if (url.endsWith("#retry") && !failed) {
+        failed = true;
+        return new Response(null, { status: 503 });
+      }
       if (url.endsWith("#stalled")) await stalled.promise;
       const response = await realFetch(input, init);
       if (!url.endsWith("#mismatch")) return response;
@@ -318,16 +325,10 @@
   name="Retry After Failed Download"
   args={{ model: retryModel, class: "size-64" }}
   beforeEach={() => {
-    const realFetch = globalThis.fetch;
-    let failed = false;
-    const fetch = spyOn(globalThis, "fetch").mockImplementation((input, init) => {
-      if (failed || !String(input).endsWith("#retry")) return realFetch(input, init);
-      failed = true;
-      return Promise.resolve(new Response(null, { status: 503 }));
-    });
+    const restoreFetch = interceptModelFiles();
     consoleWarn = spyOn(console, "warn");
     return () => {
-      fetch.mockRestore();
+      restoreFetch();
       consoleWarn.mockRestore();
     };
   }}
@@ -497,9 +498,7 @@
   parameters={{ a11y: { context: "body" } }}
   beforeEach={interceptModelFiles}
   play={async ({ canvas, userEvent }) => {
-    await userEvent.click(canvas.getByRole("button", { name: "Expand view" }));
-    const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
-    await waitFor(() => expect(dialog.querySelector("canvas")).not.toBeNull());
+    const dialog = await openExpandedView(canvas.getByRole("figure"), userEvent);
     releaseStalled();
     await expect(
       await within(dialog).findByRole("alert", {}, { timeout: 45_000 }),
@@ -513,9 +512,7 @@
   play={async ({ canvas, userEvent }) => {
     let first: HTMLCanvasElement | undefined;
     for (let open = 0; open < 3; open++) {
-      await userEvent.click(canvas.getByRole("button", { name: "Expand view" }));
-      const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
-      await waitFor(() => expect(dialog.querySelector("canvas")).not.toBeNull());
+      const dialog = await openExpandedView(canvas.getByRole("figure"), userEvent);
       const current = dialog.querySelector("canvas")!;
       first ??= current;
       // Every expanded view draws on one canvas, keeping its WebGL context.

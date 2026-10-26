@@ -18,15 +18,15 @@ export interface ModelView {
 // Import URLs only; viewers fetch geometry and diagnostics when they become visible.
 const urls = import.meta.glob<string>(
   [
-    "./assets/models/**/*.ldr",
-    "./assets/models/**/*.packed.mpd",
-    "./assets/models/**/*.diagnostics.json",
+    "../assets/models/**/*.ldr",
+    "../assets/models/**/*.packed.mpd",
+    "../assets/models/**/*.diagnostics.json",
   ],
   { eager: true, query: "?url&no-inline", import: "default" },
 );
 
 export function modelFiles(name: string): Pick<ModelView, "ldr" | "ldrPacked" | "diagnosticsUrl"> {
-  const path = `./assets/models/${name}`;
+  const path = `../assets/models/${name}`;
   return {
     ldr: urls[`${path}.ldr`],
     ldrPacked: urls[`${path}.packed.mpd`],

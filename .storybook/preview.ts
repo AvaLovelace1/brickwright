@@ -2,7 +2,7 @@ import type { Preview, SvelteRenderer } from "@storybook/sveltekit";
 import { withThemeByDataAttribute } from "@storybook/addon-themes";
 import { Tooltip } from "bits-ui";
 import { configure } from "storybook/test";
-import SharedCanvas from "../src/lib/components/SharedCanvas.svelte";
+import SharedCanvas from "../src/lib/viewer/SharedCanvas.svelte";
 
 import "../src/app.css";
 

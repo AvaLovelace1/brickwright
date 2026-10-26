@@ -2,7 +2,7 @@
   import { defineMeta } from "@storybook/addon-svelte-csf";
   import { expect, within } from "storybook/test";
   import QuantitativeResults from "./QuantitativeResults.svelte";
-  import { fullAgentName, results, metricColumns } from "#lib/experiment-results.js";
+  import { fullAgentName, results, metricColumns } from "#lib/content/experiment-results.js";
 
   const { Story } = defineMeta({
     title: "Content/QuantitativeResults",

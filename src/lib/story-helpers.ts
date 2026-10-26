@@ -1,4 +1,4 @@
-import { expect, waitFor, within } from "storybook/test";
+import { expect, screen, waitFor, within, type UserEventObject } from "storybook/test";
 
 /** Scrolls a model viewer into view and waits for its model to finish loading. */
 export async function waitForModel(figure: HTMLElement) {
@@ -16,6 +16,14 @@ export async function waitForView(figure: HTMLElement) {
       ).toBeInTheDocument(),
     { timeout: 15_000 },
   );
+}
+
+/** Opens a model viewer's expanded dialog and waits for the expanded canvas to move into it. */
+export async function openExpandedView(figure: HTMLElement, userEvent: UserEventObject) {
+  await userEvent.click(within(figure).getByRole("button", { name: "Expand view" }));
+  const dialog = await screen.findByRole("dialog", { name: "Expanded model view" });
+  await waitFor(() => expect(dialog.querySelector("canvas")).not.toBeNull());
+  return dialog;
 }
 
 /** Expects a visible viewer's controls to receive clicks above the 3D canvas. */

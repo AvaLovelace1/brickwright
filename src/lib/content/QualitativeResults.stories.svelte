@@ -3,8 +3,8 @@
   import { expect, screen, waitFor, within } from "storybook/test";
   import type Swiper from "swiper";
   import QualitativeResults from "./QualitativeResults.svelte";
-  import { agents, prompts, resultModelName } from "#lib/experiment-results.js";
-  import { modelFiles } from "#lib/models.js";
+  import { agents, prompts, resultModelName } from "#lib/content/experiment-results.js";
+  import { modelFiles } from "#lib/viewer/models.js";
   import { waitForModel } from "#lib/story-helpers.js";
 
   const { Story } = defineMeta({
@@ -14,6 +14,13 @@
     render: template,
     parameters: { layout: "fullscreen" },
   });
+
+  /** The carousel element, once Swiper has initialized it. */
+  async function initializedCarousel(canvasElement: HTMLElement) {
+    const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
+    await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
+    return carousel;
+  }
 
   /** The drawn 3D views on the carousel's current slide. */
   function activeViews(canvasElement: HTMLElement) {
@@ -41,8 +48,7 @@
     await expect(collisions).toBeChecked();
     await expect(progress).toHaveTextContent(`1 / ${prompts.length}`);
     // Jump to a non-default prompt without animating.
-    const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
-    await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
+    const carousel = await initializedCarousel(canvasElement);
     carousel.swiper.slideToLoop(promptIndex, 0);
     await waitFor(() => expect(progress).toHaveTextContent(position));
 
@@ -86,8 +92,7 @@
 <Story
   name="Slide Animation"
   play={async ({ canvas, canvasElement }) => {
-    const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
-    await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
+    const carousel = await initializedCarousel(canvasElement);
     const wrapper = carousel.querySelector<HTMLElement>(".swiper-wrapper")!;
     const positions = [wrapper.getBoundingClientRect().left];
     canvas.getByRole("button", { name: "Next prompt" }).click();
@@ -116,8 +121,7 @@
   play={async ({ canvas, canvasElement }) => {
     const progress = canvas.getByRole("status", { name: "Prompt position" });
     const next = canvas.getByRole("button", { name: "Next prompt" });
-    const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
-    await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
+    const carousel = await initializedCarousel(canvasElement);
     // Instant slides, as with reduced motion, let each click land within frames of the resize.
     carousel.swiper.params.speed = 0;
     const frames = async (count: number) => {
@@ -137,8 +141,7 @@
   name="Browsing Keeps the 3D Canvas"
   play={async ({ canvas, canvasElement }) => {
     const progress = canvas.getByRole("status", { name: "Prompt position" });
-    const carousel = canvasElement.querySelector(".swiper") as HTMLElement & { swiper: Swiper };
-    await waitFor(() => expect(carousel.swiper?.initialized).toBe(true));
+    const carousel = await initializedCarousel(canvasElement);
     await waitFor(() => expect(activeViews(canvasElement)).toHaveLength(2), { timeout: 15_000 });
     const webGLCanvas = document.querySelector("canvas");
     for (let promptIndex = 1; promptIndex <= 3; promptIndex++) {

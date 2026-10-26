@@ -5,7 +5,7 @@
     metricColumns,
     fullAgentName,
     metricEmphasis,
-  } from "#lib/experiment-results.js";
+  } from "#lib/content/experiment-results.js";
 
   const uid = $props.id();
   const directionArrows = { higher: "↑", lower: "↓" };

@@ -1,6 +1,6 @@
 import type { Locator, Page } from "@playwright/test";
 import { ModelViewer } from "./ModelViewer";
-import { prompts } from "../../src/lib/experiment-results";
+import { prompts } from "../../src/lib/content/experiment-results";
 
 export class Experiments {
   readonly section: Locator;
