@@ -100,8 +100,29 @@ export async function parsePackedModel(loader: LDrawLoader, text: string): Promi
   return parse(text);
 }
 
+const isPart = (object: Object3D) => /Part|Shortcut/.test(object.userData.type ?? "");
+
 /** Every part in file order, including parts nested in submodels. */
 export function listParts(object: Object3D): Object3D[] {
-  if (/Part|Shortcut/.test(object.userData.type ?? "")) return [object];
+  if (isPart(object)) return [object];
   return object.children.flatMap(listParts);
+}
+
+/**
+ * The placement each build step adds: submodels are built part by part where they first
+ * appear, and their later copies are added whole.
+ */
+export function buildSteps(model: Object3D): Object3D[] {
+  const built = new Set<string>();
+  function build(assembly: Object3D): Object3D[] {
+    return assembly.children.flatMap((placement) => {
+      // LDraw filenames are case-insensitive.
+      const filename = placement.name.toLowerCase();
+      if (isPart(placement) || !placement.children.length || built.has(filename))
+        return [placement];
+      built.add(filename);
+      return build(placement);
+    });
+  }
+  return build(model);
 }

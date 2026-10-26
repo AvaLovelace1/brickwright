@@ -1,7 +1,14 @@
 import { readFile } from "node:fs/promises";
 import { expect, test, vi } from "vitest";
 import { Box3, Mesh, Vector3, type Group, type Object3D } from "three";
-import { createLoader, createPartWarmup, listParts, loadModel, parsePackedModel } from "./ldraw";
+import {
+  buildSteps,
+  createLoader,
+  createPartWarmup,
+  listParts,
+  loadModel,
+  parsePackedModel,
+} from "./ldraw";
 
 test.each(["", "0 FILE main.ldr\n"])(
   "preserves repeated part placements, transforms, and colors with root header %j",
@@ -143,6 +150,55 @@ test("lists nested part placements in file order with their transforms and color
   expect(partPlacements[3].children[0]).toMatchObject({
     material: { color: { r: 0, g: 0, b: 1 } },
   });
+});
+
+test("builds each submodel part by part where it first appears and adds later copies whole", async () => {
+  const model = await parsePackedModel(createLoader(), NESTED_MODEL);
+  const steps = buildSteps(model);
+  expect(steps.map(({ name }) => name)).toEqual([
+    "brick.dat",
+    "BRICK.DAT",
+    "assembly.dat",
+    "tower-a.ldr",
+    "brick.dat",
+    "tower-a.ldr",
+  ]);
+  expect(steps.map((step) => step.getWorldPosition(new Vector3()).x)).toEqual([
+    11, 12, 13, 54, 55, 100,
+  ]);
+});
+
+const BRICK = `0 FILE brick.dat
+0 !LDRAW_ORG Part
+3 16 0 0 0 10 0 0 0 10 0`;
+
+test("adds a later copy of a submodel whole, whatever case references it", async () => {
+  const model = await parsePackedModel(
+    createLoader(),
+    `0 FILE main.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 tower.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 TOWER.LDR
+0 FILE tower.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 brick.dat
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 brick.dat
+${BRICK}`,
+  );
+  expect(buildSteps(model).map(({ name }) => name)).toEqual([
+    "brick.dat",
+    "brick.dat",
+    "TOWER.LDR",
+  ]);
+});
+
+test("adds a model's loose geometry as one step", async () => {
+  const model = await parsePackedModel(
+    createLoader(),
+    `0 FILE main.ldr
+1 16 0 0 0 1 0 0 0 1 0 0 0 1 brick.dat
+3 16 0 0 0 10 0 0 0 10 0
+${BRICK}`,
+  );
+  expect(buildSteps(model).map(({ type }) => type)).toEqual(["Group", "Mesh"]);
 });
 
 test("loads the full Victoria Harbour model with its tower submodels", async () => {

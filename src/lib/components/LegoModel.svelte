@@ -8,7 +8,7 @@
   import { HDRLoader } from "three/addons/loaders/HDRLoader.js";
   import envMapUrl from "#lib/assets/studio_kontrast_02_1k.hdr?url";
   import { cached } from "#lib/cached.js";
-  import { loadModel } from "#lib/ldraw.js";
+  import { buildSteps, loadModel } from "#lib/ldraw.js";
 
   export const CAMERA = { position: [3, 0, 3] as Vector3Tuple, fov: 35 };
 
@@ -47,6 +47,7 @@
     view = "inline",
   }: Props = $props();
   let ldrawGroup = $state<Object3D>();
+  const steps = $derived(ldrawGroup ? buildSteps(ldrawGroup) : []);
   let envMapTexture = $state<Texture>();
   let diagnosticView = $state<DiagnosticView>();
   let controls = $state<OrbitControlsImpl>();
@@ -57,8 +58,7 @@
 
   $effect(() => {
     if (!ldrawGroup) return;
-    // A step reveals one top-level object: a part or an entire submodel.
-    for (const [i, step] of ldrawGroup.children.entries()) step.visible = i < model.stepsShown;
+    for (const [i, step] of steps.entries()) step.visible = i < model.stepsShown;
     invalidate();
   });
 
@@ -90,7 +90,7 @@
       (group) => {
         if (disposed) return;
         ldrawGroup = group;
-        onload(group.children.length);
+        onload(steps.length);
       },
       () => {
         if (!disposed) onerror();
