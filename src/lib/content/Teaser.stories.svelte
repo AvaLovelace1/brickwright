@@ -109,10 +109,15 @@
         const referenceLink = canvas.queryByRole("link", { name: "View reference image" });
         if (image) {
           await expect(referenceLink).toHaveAttribute("href", image);
-          const referenceImage = within(referenceLink!).getByRole("img");
-          await expect(referenceImage).toHaveAttribute("src", image);
+          const referenceImage = within(referenceLink!).getByRole<HTMLImageElement>("img");
           await expect(referenceImage).toHaveAccessibleName();
           await waitFor(() => expect(referenceImage).toBeVisible());
+          // The thumbnail loads a downscaled copy of the original it links to.
+          const original = new Image();
+          original.src = image;
+          await original.decode();
+          await waitFor(() => expect(referenceImage.naturalWidth).toBeGreaterThan(0));
+          await expect(referenceImage.naturalWidth).toBeLessThan(original.naturalWidth);
         } else {
           await expect(referenceLink).toBeNull();
         }

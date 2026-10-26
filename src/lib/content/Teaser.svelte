@@ -6,12 +6,19 @@
   import ExternalLink from "#lib/components/ExternalLink.svelte";
   import { FEASIBILITY_CHECKS } from "#lib/viewer/model-diagnostics.js";
 
-  import starryNightImage from "#lib/assets/models/teaser/starry-night-reference.jpg";
-  import combineHarvesterImage from "#lib/assets/models/teaser/combine-harvester-reference.png";
-  import spaceNeedleImage from "#lib/assets/models/teaser/space-needle-reference.jpg";
-  import houseImage from "#lib/assets/models/teaser/house-reference.png";
-  import foxImage from "#lib/assets/models/teaser/fox-reference.png";
-  import flowerPotImage from "#lib/assets/models/teaser/flower-pot-reference.png";
+  import type { Picture } from "@sveltejs/enhanced-img";
+
+  // Reference images by file name: thumbnails resized at build time, and the originals they link to.
+  const thumbnails = import.meta.glob<Picture>("../assets/models/teaser/*-reference.*", {
+    eager: true,
+    import: "default",
+    query: { enhanced: true, w: "384;192" },
+  });
+  const originals = import.meta.glob<string>("../assets/models/teaser/*-reference.*", {
+    eager: true,
+    import: "default",
+  });
+  const referencePath = (file: string) => `../assets/models/teaser/${file}`;
 
   const prompts = [
     {
@@ -24,10 +31,8 @@
       model: "teaser/starry-night",
       text: "Recreate this painting as a sculptural 3D LEGO scene using varied pieces. No mosaics.",
       image: {
-        src: starryNightImage,
+        file: "starry-night-reference.jpg",
         alt: "Van Gogh’s The Starry Night: swirling blue sky, crescent moon, dark cypress, and a village",
-        width: 1280,
-        height: 1014,
         credit: {
           author: "Vincent van Gogh",
           source:
@@ -42,10 +47,8 @@
       model: "teaser/combine-harvester",
       text: "Match the image as closely as possible.",
       image: {
-        src: combineHarvesterImage,
+        file: "combine-harvester-reference.png",
         alt: "Green combine harvester with yellow wheels and a wide cutting header in a field",
-        width: 460,
-        height: 269,
       },
     },
     {
@@ -53,10 +56,8 @@
       model: "teaser/space-needle",
       text: "Seattle’s Space Needle, with tapered legs, a saucer observation deck, and its slender spire.",
       image: {
-        src: spaceNeedleImage,
+        file: "space-needle-reference.jpg",
         alt: "Seattle’s Space Needle against a clear sky, with the city behind it",
-        width: 1280,
-        height: 2523,
         credit: {
           author: "Jordon Kalilich",
           source: "https://commons.wikimedia.org/wiki/File:Space_Needle_2011-07-04.jpg",
@@ -70,10 +71,8 @@
       model: "teaser/house",
       text: "Match the image as closely as possible.",
       image: {
-        src: houseImage,
+        file: "house-reference.png",
         alt: "Red wooden house with white trim, a columned porch, a balcony, and a dark tiled roof",
-        width: 1260,
-        height: 709,
       },
     },
     {
@@ -81,10 +80,8 @@
       model: "teaser/fox",
       text: "Match the image as closely as possible.",
       image: {
-        src: foxImage,
+        file: "fox-reference.png",
         alt: "Red fox sitting at the edge of a road",
-        width: 390,
-        height: 378,
       },
     },
     {
@@ -92,10 +89,8 @@
       model: "teaser/flower-pot",
       text: "Match the image as closely as possible.",
       image: {
-        src: flowerPotImage,
+        file: "flower-pot-reference.png",
         alt: "Lavender stems in a square white flower pot",
-        width: 500,
-        height: 529,
       },
     },
     {
@@ -156,17 +151,16 @@
         {#if "image" in prompt}
           {@const image = prompt.image}
           <a
-            href={image.src}
+            href={originals[referencePath(image.file)]}
             target="_blank"
             rel="external noopener"
             aria-label="View reference image"
             class="mt-1 block w-fit max-w-full rounded-(--bb-border-radius) focus-visible:outline-2 focus-visible:outline-offset-3 focus-visible:outline-line active:outline-2 active:outline-offset-3 active:outline-primary"
           >
-            <img
-              src={image.src}
+            <enhanced:img
+              src={thumbnails[referencePath(image.file)]}
               alt={image.alt}
-              width={image.width}
-              height={image.height}
+              sizes="12rem"
               class="h-auto max-h-40 w-auto max-w-48 bb-border"
             />
           </a>
