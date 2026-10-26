@@ -5,7 +5,7 @@
   import { A11y } from "swiper/modules";
   import "swiper/css";
   import "swiper/css/a11y";
-  import Button from "#lib/components/Button.svelte";
+  import PromptStepper from "#lib/components/PromptStepper.svelte";
   import Select from "#lib/components/Select.svelte";
   import ModelDiagnosticControls from "#lib/viewer/ModelDiagnosticControls.svelte";
   import ResultPair from "./ResultPair.svelte";
@@ -102,28 +102,11 @@
       Swipe the prompt or use the arrows to browse. Red lines indicate brick intersections. Drag a
       build to rotate it.
     </p>
-    <div class="bb-btn-container flex shrink-0 items-center gap-3 pt-1 pl-1">
-      <Button
-        text="Previous prompt"
-        action={() => swiper?.slidePrev()}
-        icon="tdesign--chevron-left"
-        iconOnly
-      />
-      <p
-        role="status"
-        aria-label="Prompt position"
-        aria-live="polite"
-        aria-atomic="true"
-        class="relative -top-1 -left-0.5 min-w-8 text-center tabular-nums"
-      >
-        {activePromptIndex + 1} / {prompts.length}
-      </p>
-      <Button
-        text="Next prompt"
-        action={() => swiper?.slideNext()}
-        icon="tdesign--chevron-right"
-        iconOnly
-      />
-    </div>
+    <PromptStepper
+      index={activePromptIndex}
+      count={prompts.length}
+      onprevious={() => swiper?.slidePrev()}
+      onnext={() => swiper?.slideNext()}
+    />
   </div>
 </section>

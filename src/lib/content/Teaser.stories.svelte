@@ -50,7 +50,9 @@
       ).toBeVisible();
     });
     await step("Shows the physical validity guarantees", async () => {
-      await expect(canvas.getByRole("status")).toHaveTextContent("Physically feasible");
+      await expect(within(canvas.getByRole("figure")).getByRole("status")).toHaveTextContent(
+        "Physically feasible",
+      );
     });
     await step("The selected model starts building once it loads", async () => {
       await waitFor(
@@ -126,6 +128,41 @@
     await step("Every prompt's viewer draws on the same canvas", async () => {
       await waitForView(canvas.getByRole("figure"));
       await expect(document.querySelector("canvas")).toBe(webGLCanvas);
+    });
+  }}
+/>
+
+<Story
+  name="Step Through Prompts"
+  play={async ({ canvas, userEvent, step }) => {
+    const trigger = canvas.getByRole("combobox", { name: /^Help me build…/ });
+    const position = canvas.getByRole("status", { name: "Prompt position" });
+    await userEvent.click(trigger);
+    const labels = (await screen.findAllByRole("option")).map((option) =>
+      option.textContent!.trim(),
+    );
+    await userEvent.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("listbox")).toBeNull());
+    async function expectPrompt(index: number) {
+      await expect(trigger).toHaveAccessibleName(`Help me build… ${labels[index]}`);
+      await expect(position).toHaveTextContent(`${index + 1} / ${labels.length}`);
+      await expect(canvas.getByRole("figure", { name: labels[index] })).toBeVisible();
+    }
+    await expectPrompt(0);
+
+    await step("Next shows the following prompt", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: "Next prompt" }));
+      await expectPrompt(1);
+    });
+    await step("Previous wraps from the first prompt to the last", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: "Previous prompt" }));
+      await expectPrompt(0);
+      await userEvent.click(canvas.getByRole("button", { name: "Previous prompt" }));
+      await expectPrompt(labels.length - 1);
+    });
+    await step("Next wraps from the last prompt to the first", async () => {
+      await userEvent.click(canvas.getByRole("button", { name: "Next prompt" }));
+      await expectPrompt(0);
     });
   }}
 />

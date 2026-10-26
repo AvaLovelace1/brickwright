@@ -1,6 +1,7 @@
 <script lang="ts">
   import { createModel } from "#lib/viewer/models.js";
   import Select from "#lib/components/Select.svelte";
+  import PromptStepper from "#lib/components/PromptStepper.svelte";
   import ModelViewer from "#lib/viewer/ModelViewer.svelte";
   import SpeechBubble from "#lib/components/SpeechBubble.svelte";
   import ExternalLink from "#lib/components/ExternalLink.svelte";
@@ -128,6 +129,9 @@
   let selected = $state("0");
   const index = $derived(Number(selected));
   const prompt = $derived(prompts[index]);
+  const step = (offset: number) => {
+    selected = String((index + offset + prompts.length) % prompts.length);
+  };
   const BUBBLE_SIZES = {
     class: "min-w-0 gap-5 [--speaker-anchor:2.75rem] sm:gap-6",
     avatarClass: "size-8 text-xl sm:size-12 sm:text-2xl",
@@ -138,7 +142,7 @@
 
 <section aria-label="Prompt to brick build" class="mb-12 grid gap-6">
   <SpeechBubble speaker="user" {...BUBBLE_SIZES}>
-    <div class="grid items-center gap-x-2 gap-y-1 text-base sm:grid-cols-[auto_minmax(0,1fr)]">
+    <div class="grid items-center gap-x-2 gap-y-1 text-base lg:grid-cols-[auto_minmax(0,1fr)_auto]">
       <Select
         label="Help me build…"
         labelClass="font-semibold italic text-lg"
@@ -146,7 +150,14 @@
         {options}
         bind:value={selected}
       />
-      <div class="mt-1 min-w-0 sm:col-start-2">
+      <PromptStepper
+        class="justify-self-end"
+        {index}
+        count={prompts.length}
+        onprevious={() => step(-1)}
+        onnext={() => step(1)}
+      />
+      <div class="mt-1 min-w-0 lg:col-span-2 lg:col-start-2">
         <p class="text-sm italic">“{prompt.text}”</p>
         {#if "image" in prompt}
           {@const image = prompt.image}
