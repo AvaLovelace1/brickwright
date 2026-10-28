@@ -1,0 +1,25 @@
+{
+  "name": "brickwright",
+  "displayName": "BrickWright",
+  "version": "0.1.0",
+  "description": "Design and build LEGO models from a text description or reference image, producing an LDraw .ldr file the user can download and open in BrickLink Studio. Use whenever the user asks to create, design, generate, or edit a LEGO model, build, or MOC.",
+  "author": {
+    "name": "BrickWright Authors",
+    "url": "https://avalovelace1.github.io/brickwright/"
+  },
+  "homepage": "https://avalovelace1.github.io/brickwright/",
+  "repository": "https://github.com/AvaLovelace1/brickwright",
+  "license": "MIT",
+  "keywords": [
+    "lego",
+    "ldraw",
+    "bricks",
+    "3d-modeling",
+    "moc"
+  ],
+  "icon": "./.claude-plugin/icon.png",
+  "documentationUrl": "https://avalovelace1.github.io/brickwright/",
+  "supportUrl": "https://github.com/AvaLovelace1/brickwright/issues",
+  "privacyPolicyUrl": "https://github.com/AvaLovelace1/brickwright/blob/plugin/PRIVACY.md",
+  "termsOfServiceUrl": "https://github.com/AvaLovelace1/brickwright/blob/plugin/TERMS.md"
+}
