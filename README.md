@@ -53,6 +53,17 @@ uv run ruff format .   # format
 uv run ty check        # type-check
 ```
 
+## Related & concurrent work
+
+Check out these other awesome papers on LEGO® generation!
+
+- [BrickBench: Evaluating Agentic Brick Design](https://brickben.ch) (October 2026)—a benchmark and environment for agentic LEGO® design
+- [BrickNet: Graph-Backed Generative Brick Assembly](https://kulits.github.io/BrickNet/) (April 2026)
+- [LegoACE: Autoregressive Construction Engine for Expressive LEGO® Assemblies](https://dl.acm.org/doi/10.1145/3757377.3763881) (December 2025)
+- [LEGO®-Maker: Autoregressive Image-Conditioned LEGO® Model Creation](https://dl.acm.org/doi/10.1145/3763285) (December 2025)
+- [Generating Physically Stable and Buildable Brick Structures from Text](https://avalovelace1.github.io/BrickGPT/) (May 2025)
+- [Learn to Create Simple LEGO Micro Buildings](https://dl.acm.org/doi/10.1145/3687755) (November 2024)
+
 ## Citation
 
 If you've used BrickWright in your work, please cite us!
